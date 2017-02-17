@@ -13,6 +13,18 @@ public class AnnotatedBlock {
         this.body = body;
     }
 
+    public SourceCodePosition getStartPosition() {
+        return startPosition;
+    }
+
+    public SourceCodePosition getEndPosition() {
+        return endPosition;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
     static AnnotatedBlock fromNode(final Node node) {
         SourceCodePosition start = node.getBegin().isPresent()
                 ? SourceCodePosition.create(node.getBegin().get())
