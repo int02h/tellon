@@ -1,7 +1,7 @@
 package com.dpforge.tellon;
 
 public enum BlockType {
-    CLASS_OR_INTERFACE,
+    TYPE,
     CONSTRUCTOR,
     FIELD,
     METHOD

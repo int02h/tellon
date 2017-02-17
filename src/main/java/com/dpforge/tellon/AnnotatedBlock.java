@@ -41,7 +41,7 @@ public class AnnotatedBlock {
     }
 
     static AnnotatedBlock fromNode(final ClassOrInterfaceDeclaration node) {
-        return create(node, BlockType.CLASS_OR_INTERFACE);
+        return create(node, BlockType.TYPE);
     }
 
     static AnnotatedBlock fromNode(final ConstructorDeclaration node) {
