@@ -1,7 +1,6 @@
 package com.test;
 
-
-import com.dpforge.javatree.NotifyChanges;
+import com.dpforge.tellon.annotations.NotifyChanges;
 import com.sun.istack.internal.NotNull;
 
 public class User {

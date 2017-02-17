@@ -1,4 +1,4 @@
-package com.dpforge.javatree;
+package com.dpforge.tellon;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;

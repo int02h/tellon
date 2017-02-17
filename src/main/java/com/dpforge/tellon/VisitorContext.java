@@ -1,5 +1,6 @@
-package com.dpforge.javatree;
+package com.dpforge.tellon;
 
+import com.dpforge.tellon.annotations.NotifyChanges;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.PackageDeclaration;
 

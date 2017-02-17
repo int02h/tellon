@@ -1,12 +1,12 @@
 package com.test;
 
-import com.dpforge.javatree.*;
+import com.dpforge.tellon.annotations.*;
 
 @NotifyChanges({"mailto:d.popov@corp.mail", "icq:449221964"})
 public class Foo {
     static String CONST1 = "";
 
-    @com.dpforge.javatree.NotifyChanges("test")
+    @com.dpforge.tellon.annotations.NotifyChanges("test")
     static String CONST2 = "";
 
     @NotifyChanges("test2")
@@ -23,7 +23,7 @@ public class Foo {
 
     }
 
-    @com.dpforge.javatree.NotifyChanges("test4")
+    @com.dpforge.tellon.annotations.NotifyChanges("test4")
     public void bar() {
         int a = 123;
         int b = -456;
