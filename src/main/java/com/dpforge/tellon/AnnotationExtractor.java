@@ -6,7 +6,6 @@ import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 
 class AnnotationExtractor {
-
     private static final String NOTIFICATION_NAME = NotifyChanges.class.getSimpleName();
 
     private final VisitorContext visitorContext;
