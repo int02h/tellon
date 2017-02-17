@@ -25,6 +25,10 @@ class VisitorContext {
         annotatedBlocks.add(block);
     }
 
+    List<AnnotatedBlock> getAnnotatedBlocks() {
+        return annotatedBlocks;
+    }
+
     void addImport(ImportDeclaration declaration) {
         if (!annotationImported) {
             if (declaration.isAsterisk()) {

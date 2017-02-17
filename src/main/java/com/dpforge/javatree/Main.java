@@ -1,5 +1,6 @@
 package com.dpforge.javatree;
 
+import com.dpforge.tellon.SourceCodeFile;
 import com.dpforge.tellon.SourceCodeParser;
 
 import java.io.File;
@@ -16,7 +17,7 @@ public class Main {
         assert files != null;
         for (File file : files) {
             System.out.println("-----[" + file.getName() + "]-----");
-            SourceCodeParser.parse(file);
+            SourceCodeFile src = SourceCodeParser.parse(file);
             System.out.println();
         }
     }

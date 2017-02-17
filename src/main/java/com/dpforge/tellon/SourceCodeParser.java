@@ -15,10 +15,11 @@ public class SourceCodeParser {
     private SourceCodeParser() {
     }
 
-    public static void parse(final File file) throws FileNotFoundException {
+    public static SourceCodeFile parse(final File file) throws FileNotFoundException {
         final CompilationUnit unit = JavaParser.parse(file);
         final VisitorContext visitorContext = new VisitorContext();
         new Visitor().visit(unit, visitorContext);
+        return new SourceCodeFile(file, visitorContext.getAnnotatedBlocks());
     }
 
     private static class Visitor extends VoidVisitorAdapter<VisitorContext> {
