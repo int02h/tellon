@@ -34,7 +34,6 @@ public class SourceCodeParser {
         public void visit(MethodDeclaration declaration, VisitorContext visitorContext) {
             final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
             if (values != null) {
-                System.out.format("Method '%s' annotated with '%s'\n", declaration.getDeclarationAsString(), Arrays.toString(values));
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
             }
             super.visit(declaration, visitorContext);
@@ -44,7 +43,6 @@ public class SourceCodeParser {
         public void visit(ConstructorDeclaration declaration, VisitorContext visitorContext) {
             final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
             if (values != null) {
-                System.out.format("Constructor '%s' annotated with '%s'\n", declaration.getDeclarationAsString(), Arrays.toString(values));
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
             }
             super.visit(declaration, visitorContext);
@@ -54,9 +52,6 @@ public class SourceCodeParser {
         public void visit(FieldDeclaration declaration, VisitorContext visitorContext) {
             final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
             if (values != null) {
-                for (VariableDeclarator var : declaration.getVariables()) {
-                    System.out.format("Field '%s' annotated with '%s'\n", var.getName(), Arrays.toString(values));
-                }
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
             }
             super.visit(declaration, visitorContext);
@@ -66,7 +61,24 @@ public class SourceCodeParser {
         public void visit(ClassOrInterfaceDeclaration declaration, VisitorContext visitorContext) {
             final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
             if (values != null) {
-                System.out.format("Type '%s' annotated with '%s'\n", declaration.getName(), Arrays.toString(values));
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
+            }
+            super.visit(declaration, visitorContext);
+        }
+
+        @Override
+        public void visit(AnnotationDeclaration declaration, VisitorContext visitorContext) {
+            final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
+            if (values != null) {
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
+            }
+            super.visit(declaration, visitorContext);
+        }
+
+        @Override
+        public void visit(AnnotationMemberDeclaration declaration, VisitorContext visitorContext) {
+            final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
+            if (values != null) {
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
             }
             super.visit(declaration, visitorContext);

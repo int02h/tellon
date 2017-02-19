@@ -11,10 +11,16 @@ public class SourceCodePosition {
         this.column = column;
     }
 
+    /**
+     * Zero-base line in source code
+     */
     public int getLine() {
         return line;
     }
 
+    /**
+     * Zero-base column in source code
+     */
     public int getColumn() {
         return column;
     }
@@ -25,6 +31,6 @@ public class SourceCodePosition {
     }
 
     static SourceCodePosition create(Position position) {
-        return new SourceCodePosition(position.line, position.column);
+        return new SourceCodePosition(position.line - 1, position.column - 1);
     }
 }

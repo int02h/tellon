@@ -1,10 +1,7 @@
 package com.dpforge.tellon;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.*;
 
 public class AnnotatedBlock {
     private final SourceCodePosition startPosition;
@@ -44,6 +41,10 @@ public class AnnotatedBlock {
         return create(node, BlockType.TYPE);
     }
 
+    static AnnotatedBlock fromNode(final AnnotationDeclaration node) {
+        return create(node, BlockType.ANNOTATION);
+    }
+
     static AnnotatedBlock fromNode(final ConstructorDeclaration node) {
         return create(node, BlockType.CONSTRUCTOR);
     }
@@ -54,6 +55,10 @@ public class AnnotatedBlock {
 
     static AnnotatedBlock fromNode(final FieldDeclaration node) {
         return create(node, BlockType.FIELD);
+    }
+
+    static AnnotatedBlock fromNode(AnnotationMemberDeclaration node) {
+        return create(node, BlockType.ANNOTATION_MEMBER);
     }
 
     private static AnnotatedBlock create(final Node node, final BlockType type) {
