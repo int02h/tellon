@@ -153,6 +153,24 @@ public class ParserTest {
         assertBlocks(SourceCodeParser.parse(code), BlockType.ANNOTATION_MEMBER, BlockType.ANNOTATION_MEMBER);
     }
 
+    @Test
+    public void positionTest() {
+        final String code = "package com.test;\n" +
+                "import com.dpforge.tellon.annotations.NotifyChanges;\n" +
+                "class Foo {\n" +
+                "    @NotifyChanges(\"test\")\n" +
+                "    @NonNull\n" +
+                "    @Deprecated\n" +
+                "    void check() { }\n" +
+                "}";
+        SourceCode sourceCode = SourceCodeParser.parse(code);
+        AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
+        assertEquals(4, block.getStartPosition().getColumn());
+        assertEquals(3, block.getStartPosition().getLine());
+        assertEquals(19, block.getEndPosition().getColumn());
+        assertEquals(6, block.getEndPosition().getLine());
+    }
+
     private static void assertBlocks(final SourceCode sourceCode, final BlockType... blockTypes) {
         assertEquals(blockTypes.length, sourceCode.getAnnotatedBlocks().size());
         for (int i = 0; i < blockTypes.length; i++) {
