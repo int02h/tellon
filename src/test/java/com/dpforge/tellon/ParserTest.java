@@ -171,6 +171,23 @@ public class ParserTest {
         assertEquals(6, block.getEndPosition().getLine());
     }
 
+    @Test
+    public void noAnnotatedMembers() {
+        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
+                "class Foo {" +
+                "    static final int TAG = 123;" +
+                "    int a;" +
+                "    String qwe, asd, zxc;" +
+                "    Foo() {}" +
+                "    Foo(int value) {}" +
+                "    void bar() {}" +
+                "    class Bar { int innerValue; }" +
+                "    static class StaticBar { String innerValue; }" +
+                "}";
+        SourceCode sourceCode = SourceCodeParser.parse(code);
+        assertTrue(sourceCode.getAnnotatedBlocks().isEmpty());
+    }
+
     private static void assertBlocks(final SourceCode sourceCode, final BlockType... blockTypes) {
         assertEquals(blockTypes.length, sourceCode.getAnnotatedBlocks().size());
         for (int i = 0; i < blockTypes.length; i++) {
