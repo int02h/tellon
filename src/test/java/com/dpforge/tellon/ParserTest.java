@@ -80,6 +80,18 @@ public class ParserTest {
     }
 
     @Test
+    public void annotatedCompoundField() {
+        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
+                "class Foo {" +
+                "    @NotifyChanges(\"field\")" +
+                "    int a, b, c;" +
+                "    @NotifyChanges(\"field\")" +
+                "    String x, y, z;" +
+                "}";
+        assertBlocks(SourceCodeParser.parse(code), BlockType.FIELD, BlockType.FIELD);
+    }
+
+    @Test
     public void annotatedInnerClassMembers() {
         final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
                 "class Foo {" +
