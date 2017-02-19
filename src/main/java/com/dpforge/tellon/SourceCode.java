@@ -3,17 +3,11 @@ package com.dpforge.tellon;
 import java.io.File;
 import java.util.List;
 
-public class SourceCodeFile {
-    private final File file;
+public class SourceCode {
     private final List<AnnotatedBlock> annotatedBlocks;
 
-    SourceCodeFile(File file, List<AnnotatedBlock> annotatedBlocks) {
-        this.file = file;
+    SourceCode(List<AnnotatedBlock> annotatedBlocks) {
         this.annotatedBlocks = annotatedBlocks;
-    }
-
-    public File getFile() {
-        return file;
     }
 
     public List<AnnotatedBlock> getAnnotatedBlocks() {
