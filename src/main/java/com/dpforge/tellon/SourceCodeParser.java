@@ -16,7 +16,14 @@ public class SourceCodeParser {
     }
 
     public static SourceCode parse(final File file) throws FileNotFoundException {
-        final CompilationUnit unit = JavaParser.parse(file);
+        return parse(JavaParser.parse(file));
+    }
+
+    public static SourceCode parse(final String code) {
+        return parse(JavaParser.parse(code));
+    }
+
+    private static SourceCode parse(CompilationUnit unit) {
         final VisitorContext visitorContext = new VisitorContext();
         new Visitor().visit(unit, visitorContext);
         return new SourceCode(visitorContext.getAnnotatedBlocks());
