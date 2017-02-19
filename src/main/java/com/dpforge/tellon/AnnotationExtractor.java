@@ -6,7 +6,8 @@ import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 
 class AnnotationExtractor {
-    private static final String NOTIFICATION_NAME = NotifyChanges.class.getSimpleName();
+    private static final String ANNOTATION_NAME = NotifyChanges.class.getSimpleName();
+    private static final String ANNOTATION_QUALIFIED_NAME = NotifyChanges.class.getName();
 
     private final VisitorContext visitorContext;
 
@@ -22,11 +23,18 @@ class AnnotationExtractor {
         }
 
         for (AnnotationExpr a : annotations) {
-            if (visitorContext.isAnnotationImported() && NOTIFICATION_NAME.equals(a.getNameAsString())) {
+            if (verifyAnnotation(a)) {
                 return extractArguments(a);
             }
         }
         return null;
+    }
+
+    private boolean verifyAnnotation(AnnotationExpr annotation) {
+        if (visitorContext.isAnnotationImported()) {
+            return ANNOTATION_NAME.equals(annotation.getNameAsString());
+        }
+        return ANNOTATION_QUALIFIED_NAME.equals(annotation.getNameAsString());
     }
 
     private static String[] extractArguments(AnnotationExpr annotation) {
