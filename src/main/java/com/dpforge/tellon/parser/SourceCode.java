@@ -1,4 +1,4 @@
-package com.dpforge.tellon;
+package com.dpforge.tellon.parser;
 
 import java.util.List;
 

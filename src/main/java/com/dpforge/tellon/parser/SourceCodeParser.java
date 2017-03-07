@@ -1,4 +1,4 @@
-package com.dpforge.tellon;
+package com.dpforge.tellon.parser;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -9,7 +9,6 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 
 public class SourceCodeParser {
     private SourceCodeParser() {

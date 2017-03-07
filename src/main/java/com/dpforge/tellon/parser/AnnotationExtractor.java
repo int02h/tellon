@@ -1,4 +1,4 @@
-package com.dpforge.tellon;
+package com.dpforge.tellon.parser;
 
 import com.dpforge.tellon.annotations.NotifyChanges;
 import com.github.javaparser.ast.NodeList;

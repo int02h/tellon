@@ -1,7 +1,7 @@
 package com.dpforge.javatree;
 
-import com.dpforge.tellon.SourceCode;
-import com.dpforge.tellon.SourceCodeParser;
+import com.dpforge.tellon.parser.SourceCode;
+import com.dpforge.tellon.parser.SourceCodeParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;

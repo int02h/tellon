@@ -1,5 +1,9 @@
 package com.dpforge.tellon;
 
+import com.dpforge.tellon.parser.AnnotatedBlock;
+import com.dpforge.tellon.parser.BlockType;
+import com.dpforge.tellon.parser.SourceCode;
+import com.dpforge.tellon.parser.SourceCodeParser;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
