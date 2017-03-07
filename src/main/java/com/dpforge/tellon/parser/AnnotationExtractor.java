@@ -31,10 +31,16 @@ class AnnotationExtractor {
     }
 
     private boolean verifyAnnotation(AnnotationExpr annotation) {
+        if (ANNOTATION_QUALIFIED_NAME.equals(annotation.getNameAsString())) {
+            return true;
+        }
+
+        //noinspection SimplifiableIfStatement
         if (visitorContext.isAnnotationImported()) {
             return ANNOTATION_NAME.equals(annotation.getNameAsString());
         }
-        return ANNOTATION_QUALIFIED_NAME.equals(annotation.getNameAsString());
+
+        return false;
     }
 
     private static String[] extractArguments(AnnotationExpr annotation) {
