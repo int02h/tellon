@@ -1,5 +1,6 @@
 package com.dpforge.javatree;
 
+import com.dpforge.tellon.app.FileWalker;
 import com.dpforge.tellon.app.config.AppConfig;
 import com.dpforge.tellon.app.config.AppConfigReader;
 import com.dpforge.tellon.app.config.ProjectConfig;
@@ -21,9 +22,9 @@ public class Main {
     }
 
     private static void processProject(String path) throws FileNotFoundException {
-        final File[] files = new File(path).listFiles();
-        assert files != null;
-        for (File file : files) {
+        final FileWalker walker = FileWalker.create(path);
+        File file;
+        while ((file = walker.nextFile()) != null) {
             System.out.println("-----[" + file.getName() + "]-----");
             SourceCode src = SourceCodeParser.parse(file);
             for (AnnotatedBlock block : src.getAnnotatedBlocks()) {
