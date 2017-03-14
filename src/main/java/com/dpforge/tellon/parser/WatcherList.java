@@ -13,6 +13,10 @@ public class WatcherList {
         return watchers.length;
     }
 
+    public String get(int index) {
+        return watchers[index];
+    }
+
     @Override
     public String toString() {
         return Arrays.toString(watchers);

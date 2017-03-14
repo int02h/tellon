@@ -192,6 +192,37 @@ public class ParserTest {
         assertTrue(sourceCode.getAnnotatedBlocks().isEmpty());
     }
 
+    @Test
+    public void singleWatcher() {
+        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
+                "class Foo {" +
+                "    @NotifyChanges(\"some_watcher@example.com\")" +
+                "    int a;" +
+                "}";
+        SourceCode sourceCode = SourceCodeParser.parse(code);
+        assertEquals(1, sourceCode.getAnnotatedBlocks().size());
+
+        AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
+        assertEquals(1, block.getWatchers().size());
+        assertEquals("some_watcher@example.com", block.getWatchers().get(0));
+    }
+
+    @Test
+    public void multipleWatchers() {
+        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
+                "class Foo {" +
+                "    @NotifyChanges({\"watcher1@example.com\", \"watcher2@example.com\"})" +
+                "    int a;" +
+                "}";
+        SourceCode sourceCode = SourceCodeParser.parse(code);
+        assertEquals(1, sourceCode.getAnnotatedBlocks().size());
+
+        AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
+        assertEquals(2, block.getWatchers().size());
+        assertEquals("watcher1@example.com", block.getWatchers().get(0));
+        assertEquals("watcher2@example.com", block.getWatchers().get(1));
+    }
+
     private static void assertBlocks(final SourceCode sourceCode, final BlockType... blockTypes) {
         assertEquals(blockTypes.length, sourceCode.getAnnotatedBlocks().size());
         for (int i = 0; i < blockTypes.length; i++) {
