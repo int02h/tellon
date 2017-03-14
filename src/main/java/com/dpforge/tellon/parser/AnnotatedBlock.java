@@ -9,6 +9,7 @@ public class AnnotatedBlock {
     private final String body;
     private final BlockType type;
     private final String description;
+    private final WatcherList watchers;
 
     AnnotatedBlock(Builder builder) {
         this.startPosition = builder.startPosition;
@@ -16,6 +17,7 @@ public class AnnotatedBlock {
         this.body = builder.body;
         this.type = builder.type;
         this.description = builder.description;
+        this.watchers = builder.watchers;
     }
 
     public SourceCodePosition getStartPosition() {
@@ -38,28 +40,44 @@ public class AnnotatedBlock {
         return description;
     }
 
+    public WatcherList getWatchers() {
+        return watchers;
+    }
+
     @Override
     public String toString() {
-        return type + " '" + description + "' " + startPosition + " - " + endPosition;
+        return type + " '" + description + "' " + startPosition + " - " + endPosition + " " + watchers;
     }
 
-    static AnnotatedBlock fromNode(final ClassOrInterfaceDeclaration node) {
-        return create(node, BlockType.TYPE, node.getNameAsString());
+    static AnnotatedBlock fromNode(final ClassOrInterfaceDeclaration node, final WatcherList watchers) {
+        return createBuilder(node, BlockType.TYPE)
+                .description(node.getNameAsString())
+                .watchers(watchers)
+                .build();
     }
 
-    static AnnotatedBlock fromNode(final AnnotationDeclaration node) {
-        return create(node, BlockType.ANNOTATION, node.getNameAsString());
+    static AnnotatedBlock fromNode(final AnnotationDeclaration node, final WatcherList watchers) {
+        return createBuilder(node, BlockType.ANNOTATION)
+                .description(node.getNameAsString())
+                .watchers(watchers)
+                .build();
     }
 
-    static AnnotatedBlock fromNode(final ConstructorDeclaration node) {
-        return create(node, BlockType.CONSTRUCTOR, node.getNameAsString());
+    static AnnotatedBlock fromNode(final ConstructorDeclaration node, final WatcherList watchers) {
+        return createBuilder(node, BlockType.CONSTRUCTOR)
+                .description(node.getNameAsString())
+                .watchers(watchers)
+                .build();
     }
 
-    static AnnotatedBlock fromNode(final MethodDeclaration node) {
-        return create(node, BlockType.METHOD, node.getNameAsString());
+    static AnnotatedBlock fromNode(final MethodDeclaration node, final WatcherList watchers) {
+        return createBuilder(node, BlockType.METHOD)
+                .description(node.getNameAsString())
+                .watchers(watchers)
+                .build();
     }
 
-    static AnnotatedBlock fromNode(final FieldDeclaration node) {
+    static AnnotatedBlock fromNode(final FieldDeclaration node, final WatcherList watchers) {
         StringBuilder builder = new StringBuilder();
         for (VariableDeclarator var : node.getVariables()) {
             if (builder.length() > 0) {
@@ -67,19 +85,21 @@ public class AnnotatedBlock {
             }
             builder.append(var.getNameAsString());
         }
-        return create(node, BlockType.FIELD, builder.toString());
+        return createBuilder(node, BlockType.FIELD)
+                .description(builder.toString())
+                .watchers(watchers)
+                .build();
     }
 
-    static AnnotatedBlock fromNode(AnnotationMemberDeclaration node) {
-        return create(node, BlockType.ANNOTATION_MEMBER, node.getNameAsString());
+    static AnnotatedBlock fromNode(AnnotationMemberDeclaration node, final WatcherList watchers) {
+        return createBuilder(node, BlockType.ANNOTATION_MEMBER)
+                .description(node.getNameAsString())
+                .watchers(watchers)
+                .build();
     }
 
-    private static AnnotatedBlock create(final Node node, final BlockType type, final String description) {
+    private static Builder createBuilder(final Node node, final BlockType type) {
         final Builder builder = new Builder(node.toString(), type);
-
-        if (description != null) {
-            builder.description(description);
-        }
 
         if (node.getBegin().isPresent()) {
             builder.startPosition(SourceCodePosition.create(node.getBegin().get()));
@@ -89,7 +109,7 @@ public class AnnotatedBlock {
             builder.endPosition(SourceCodePosition.create(node.getEnd().get()));
         }
 
-        return builder.build();
+        return builder;
     }
 
     private static class Builder {
@@ -99,6 +119,7 @@ public class AnnotatedBlock {
         private String description;
         private SourceCodePosition startPosition;
         private SourceCodePosition endPosition;
+        private WatcherList watchers;
 
         Builder(String body, BlockType type) {
             this.body = body;
@@ -117,6 +138,11 @@ public class AnnotatedBlock {
 
         Builder endPosition(SourceCodePosition position) {
             this.endPosition = position;
+            return this;
+        }
+
+        Builder watchers(WatcherList watchers) {
+            this.watchers = watchers;
             return this;
         }
 

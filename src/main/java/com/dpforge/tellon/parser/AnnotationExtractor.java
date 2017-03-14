@@ -15,7 +15,7 @@ class AnnotationExtractor {
         this.visitorContext = visitorContext;
     }
 
-    String[] tryExtract(NodeWithAnnotations<?> node) {
+    WatcherList tryExtractWatchers(NodeWithAnnotations<?> node) {
         final NodeList<AnnotationExpr> annotations = node.getAnnotations();
 
         if (annotations.isEmpty()) {
@@ -24,7 +24,8 @@ class AnnotationExtractor {
 
         for (AnnotationExpr a : annotations) {
             if (verifyAnnotation(a)) {
-                return extractArguments(a);
+                final String[] watchers =  extractArguments(a);
+                return new WatcherList(watchers);
             }
         }
         return null;

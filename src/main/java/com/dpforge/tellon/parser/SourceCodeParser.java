@@ -31,54 +31,54 @@ public class SourceCodeParser {
     private static class Visitor extends VoidVisitorAdapter<VisitorContext> {
         @Override
         public void visit(MethodDeclaration declaration, VisitorContext visitorContext) {
-            final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
-            if (values != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
+            final WatcherList watcherList = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            if (watcherList != null) {
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watcherList));
             }
             super.visit(declaration, visitorContext);
         }
 
         @Override
         public void visit(ConstructorDeclaration declaration, VisitorContext visitorContext) {
-            final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
-            if (values != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
+            final WatcherList watcherList = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            if (watcherList != null) {
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watcherList));
             }
             super.visit(declaration, visitorContext);
         }
 
         @Override
         public void visit(FieldDeclaration declaration, VisitorContext visitorContext) {
-            final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
-            if (values != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
+            final WatcherList watchers = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            if (watchers != null) {
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
             }
             super.visit(declaration, visitorContext);
         }
 
         @Override
         public void visit(ClassOrInterfaceDeclaration declaration, VisitorContext visitorContext) {
-            final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
-            if (values != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
+            final WatcherList watchers = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            if (watchers != null) {
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
             }
             super.visit(declaration, visitorContext);
         }
 
         @Override
         public void visit(AnnotationDeclaration declaration, VisitorContext visitorContext) {
-            final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
-            if (values != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
+            final WatcherList watchers = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            if (watchers != null) {
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
             }
             super.visit(declaration, visitorContext);
         }
 
         @Override
         public void visit(AnnotationMemberDeclaration declaration, VisitorContext visitorContext) {
-            final String[] values = visitorContext.getAnnotationExtractor().tryExtract(declaration);
-            if (values != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration));
+            final WatcherList watchers = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            if (watchers != null) {
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
             }
             super.visit(declaration, visitorContext);
         }
