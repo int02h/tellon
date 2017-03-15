@@ -1,10 +1,9 @@
-package com.dpforge.tellon;
+package com.dpforge.tellon.core.parser;
 
-import com.dpforge.tellon.parser.SourceCode;
-import com.dpforge.tellon.parser.SourceCodeParser;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ImportTest {
     @Test

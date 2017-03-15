@@ -1,2 +1,4 @@
 rootProject.name = 'tellon'
+include 'tellon-core'
+include 'tellon-annotations'
 

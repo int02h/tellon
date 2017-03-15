@@ -4,9 +4,9 @@ import com.dpforge.tellon.app.FileWalker;
 import com.dpforge.tellon.app.config.AppConfig;
 import com.dpforge.tellon.app.config.AppConfigReader;
 import com.dpforge.tellon.app.config.ProjectConfig;
-import com.dpforge.tellon.parser.AnnotatedBlock;
-import com.dpforge.tellon.parser.SourceCode;
-import com.dpforge.tellon.parser.SourceCodeParser;
+import com.dpforge.tellon.core.parser.AnnotatedBlock;
+import com.dpforge.tellon.core.parser.SourceCode;
+import com.dpforge.tellon.core.parser.SourceCodeParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;

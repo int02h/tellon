@@ -1,4 +1,4 @@
-package com.dpforge.tellon.parser;
+package com.dpforge.tellon.core.parser;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;

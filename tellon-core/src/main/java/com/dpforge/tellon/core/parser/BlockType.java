@@ -1,4 +1,4 @@
-package com.dpforge.tellon.parser;
+package com.dpforge.tellon.core.parser;
 
 public enum BlockType {
     TYPE,
