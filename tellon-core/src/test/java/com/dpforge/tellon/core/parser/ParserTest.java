@@ -11,7 +11,7 @@ public class ParserTest {
         final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
                 "@NotifyChanges(\"someone\")" +
                 "class Foo {}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.TYPE);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
     }
 
     @Test
@@ -20,7 +20,7 @@ public class ParserTest {
                 "class Foo {" +
                 "    @NotifyChanges(\"someone\") class Bar {}" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.TYPE);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
     }
 
     @Test
@@ -29,7 +29,7 @@ public class ParserTest {
                 "class Foo {" +
                 "    @NotifyChanges(\"someone\") static class Bar {}" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.TYPE);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class ParserTest {
         final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
                 "@NotifyChanges(\"someone\")" +
                 "interface Foo {}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.TYPE);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ParserTest {
                 "interface Foo {" +
                 "    @NotifyChanges(\"someone\") interface Bar {}" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.TYPE);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class ParserTest {
         final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
                 "@NotifyChanges(\"someone\")" +
                 "@interface Foo {}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.ANNOTATION);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.ANNOTATION);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ParserTest {
                 "@interface Foo {" +
                 "    @NotifyChanges(\"someone\") @interface Bar {}" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.ANNOTATION);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.ANNOTATION);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class ParserTest {
                 "    @NotifyChanges(\"field\")" +
                 "    int value;" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.CONSTRUCTOR, BlockType.METHOD, BlockType.FIELD);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.CONSTRUCTOR, BlockType.METHOD, BlockType.FIELD);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ParserTest {
                 "    @NotifyChanges(\"field\")" +
                 "    String x, y, z;" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.FIELD, BlockType.FIELD);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.FIELD, BlockType.FIELD);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ParserTest {
                 "        int value;" +
                 "    }" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.CONSTRUCTOR, BlockType.METHOD, BlockType.FIELD);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.CONSTRUCTOR, BlockType.METHOD, BlockType.FIELD);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class ParserTest {
                 "    @NotifyChanges(\"test\")" +
                 "    static String doIt(int param) { return null; }" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.FIELD, BlockType.METHOD);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.FIELD, BlockType.METHOD);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class ParserTest {
                 "    @NotifyChanges(\"test\")" +
                 "    void method2();" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.METHOD, BlockType.METHOD);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.METHOD, BlockType.METHOD);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class ParserTest {
                 "    @NotifyChanges(\"test\")" +
                 "    static void bar() {}" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.METHOD);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.METHOD);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class ParserTest {
                 "    @NotifyChanges(\"test\")" +
                 "    int[] data();" +
                 "}";
-        assertBlocks(SourceCodeParser.parse(code), BlockType.ANNOTATION_MEMBER, BlockType.ANNOTATION_MEMBER);
+        assertBlocks(new SourceCodeParser().parse(code), BlockType.ANNOTATION_MEMBER, BlockType.ANNOTATION_MEMBER);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class ParserTest {
                 "    @Deprecated\n" +
                 "    void check() { }\n" +
                 "}";
-        SourceCode sourceCode = SourceCodeParser.parse(code);
+        SourceCode sourceCode = new SourceCodeParser().parse(code);
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
         assertEquals(4, block.getStartPosition().getColumn());
         assertEquals(3, block.getStartPosition().getLine());
@@ -185,7 +185,7 @@ public class ParserTest {
                 "    class Bar { int innerValue; }" +
                 "    static class StaticBar { String innerValue; }" +
                 "}";
-        SourceCode sourceCode = SourceCodeParser.parse(code);
+        SourceCode sourceCode = new SourceCodeParser().parse(code);
         assertTrue(sourceCode.getAnnotatedBlocks().isEmpty());
     }
 
@@ -196,7 +196,7 @@ public class ParserTest {
                 "    @NotifyChanges(\"some_watcher@example.com\")" +
                 "    int a;" +
                 "}";
-        SourceCode sourceCode = SourceCodeParser.parse(code);
+        SourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
@@ -211,7 +211,7 @@ public class ParserTest {
                 "    @NotifyChanges({\"watcher1@example.com\", \"watcher2@example.com\"})" +
                 "    int a;" +
                 "}";
-        SourceCode sourceCode = SourceCodeParser.parse(code);
+        SourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);

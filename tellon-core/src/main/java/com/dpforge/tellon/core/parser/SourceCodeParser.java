@@ -11,18 +11,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class SourceCodeParser {
-    private SourceCodeParser() {
+    public SourceCodeParser() {
     }
 
-    public static SourceCode parse(final File file) throws FileNotFoundException {
+    public SourceCode parse(final File file) throws FileNotFoundException {
         return parse(JavaParser.parse(file));
     }
 
-    public static SourceCode parse(final String code) {
+    public SourceCode parse(final String code) {
         return parse(JavaParser.parse(code));
     }
 
-    private static SourceCode parse(CompilationUnit unit) {
+    private SourceCode parse(CompilationUnit unit) {
         final VisitorContext visitorContext = new VisitorContext();
         new Visitor().visit(unit, visitorContext);
         return new SourceCode(visitorContext.getAnnotatedBlocks());

@@ -23,10 +23,11 @@ public class Main {
 
     private static void processProject(String path) throws FileNotFoundException {
         final FileWalker walker = FileWalker.create(path);
+        final SourceCodeParser parser = new SourceCodeParser();
         File file;
         while ((file = walker.nextFile()) != null) {
             System.out.println("-----[" + file.getName() + "]-----");
-            SourceCode src = SourceCodeParser.parse(file);
+            SourceCode src = parser.parse(file);
             for (AnnotatedBlock block : src.getAnnotatedBlocks()) {
                 System.out.println(block.toString());
             }

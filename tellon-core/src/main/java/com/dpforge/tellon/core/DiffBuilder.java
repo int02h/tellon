@@ -9,9 +9,8 @@ import java.util.Map;
 
 public class DiffBuilder {
     public Diff build(String oldSrc, String newSrc) {
-        final SourceCode oldCode = SourceCodeParser.parse(oldSrc);
-        final SourceCode newCode = SourceCodeParser.parse(newSrc);
-        return build(oldCode, newCode);
+        final SourceCodeParser parser = new SourceCodeParser();
+        return build(parser.parse(oldSrc), parser.parse(newSrc));
     }
 
     private static Diff build(SourceCode oldCode, SourceCode newCode) {
