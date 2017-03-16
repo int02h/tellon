@@ -5,7 +5,7 @@ import com.dpforge.tellon.core.parser.AnnotatedBlock;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Diff {
+public class Changes {
     private final List<Update> updated = new ArrayList<>();
     private final List<AnnotatedBlock> deleted = new ArrayList<>();
     private final List<AnnotatedBlock> added = new ArrayList<>();

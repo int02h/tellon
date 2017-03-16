@@ -11,14 +11,14 @@ class VisitorContext {
     private static final String NOTIFY_CHANGES_ANNOTATION = NotifyChanges.class.getName();
     private static final String NOTIFY_CHANGED_ANNOTATION_PACKAGE = NotifyChanges.class.getPackage().getName();
 
-    private final AnnotationExtractor annotationExtractor = new AnnotationExtractor(this);
+    private final WatchersExtractor watchersExtractor = new WatchersExtractor(this);
 
     private boolean annotationImported;
 
     private final List<AnnotatedBlock> annotatedBlocks = new ArrayList<>();
 
-    AnnotationExtractor getAnnotationExtractor() {
-        return annotationExtractor;
+    WatchersExtractor getWatchersExtractor() {
+        return watchersExtractor;
     }
 
     void addAnnotatedBlock(AnnotatedBlock block) {

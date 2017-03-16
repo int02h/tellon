@@ -31,7 +31,7 @@ public class SourceCodeParser {
     private static class Visitor extends VoidVisitorAdapter<VisitorContext> {
         @Override
         public void visit(MethodDeclaration declaration, VisitorContext visitorContext) {
-            final WatcherList watcherList = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            final WatcherList watcherList = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watcherList != null) {
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watcherList));
             }
@@ -40,7 +40,7 @@ public class SourceCodeParser {
 
         @Override
         public void visit(ConstructorDeclaration declaration, VisitorContext visitorContext) {
-            final WatcherList watcherList = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            final WatcherList watcherList = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watcherList != null) {
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watcherList));
             }
@@ -49,7 +49,7 @@ public class SourceCodeParser {
 
         @Override
         public void visit(FieldDeclaration declaration, VisitorContext visitorContext) {
-            final WatcherList watchers = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            final WatcherList watchers = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watchers != null) {
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
             }
@@ -58,7 +58,7 @@ public class SourceCodeParser {
 
         @Override
         public void visit(ClassOrInterfaceDeclaration declaration, VisitorContext visitorContext) {
-            final WatcherList watchers = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            final WatcherList watchers = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watchers != null) {
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
             }
@@ -67,7 +67,7 @@ public class SourceCodeParser {
 
         @Override
         public void visit(AnnotationDeclaration declaration, VisitorContext visitorContext) {
-            final WatcherList watchers = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            final WatcherList watchers = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watchers != null) {
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
             }
@@ -76,7 +76,7 @@ public class SourceCodeParser {
 
         @Override
         public void visit(AnnotationMemberDeclaration declaration, VisitorContext visitorContext) {
-            final WatcherList watchers = visitorContext.getAnnotationExtractor().tryExtractWatchers(declaration);
+            final WatcherList watchers = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watchers != null) {
                 visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
             }

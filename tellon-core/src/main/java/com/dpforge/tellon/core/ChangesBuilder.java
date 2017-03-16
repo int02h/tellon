@@ -7,14 +7,14 @@ import com.dpforge.tellon.core.parser.SourceCodeParser;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiffBuilder {
-    public Diff build(String oldSrc, String newSrc) {
+public class ChangesBuilder {
+    public Changes build(String oldSrc, String newSrc) {
         final SourceCodeParser parser = new SourceCodeParser();
         return build(parser.parse(oldSrc), parser.parse(newSrc));
     }
 
-    private static Diff build(SourceCode oldCode, SourceCode newCode) {
-        final Diff diff = new Diff();
+    private static Changes build(SourceCode oldCode, SourceCode newCode) {
+        final Changes changes = new Changes();
 
         final Map<String, AnnotatedBlock> oldBlocks = new HashMap<>();
         for (AnnotatedBlock block : oldCode.getAnnotatedBlocks()) {
@@ -25,18 +25,18 @@ public class DiffBuilder {
             final AnnotatedBlock oldBlock = oldBlocks.get(newBlock.getDescription());
             if (oldBlock != null && oldBlock.getType() == newBlock.getType()) {
                 if (!oldBlock.getBody().equals(newBlock.getBody())) {
-                    diff.addChanged(oldBlock, newBlock);
+                    changes.addChanged(oldBlock, newBlock);
                 }
                 oldBlocks.remove(newBlock.getDescription());
             } else {
-                diff.addInserted(newBlock);
+                changes.addInserted(newBlock);
             }
         }
 
         for (AnnotatedBlock oldBlock : oldBlocks.values()) {
-            diff.addDeleted(oldBlock);
+            changes.addDeleted(oldBlock);
         }
 
-        return diff;
+        return changes;
     }
 }

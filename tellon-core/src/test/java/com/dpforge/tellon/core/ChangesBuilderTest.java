@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class DiffBuilderTest {
+public class ChangesBuilderTest {
     @Test
     public void swappedFields() {
         final String src1 = createSourceCode("" +
@@ -23,8 +23,8 @@ public class DiffBuilderTest {
                 "    int a;" +
                 "}");
 
-        final Diff diff = new DiffBuilder().build(src1, src2);
-        assertTrue(diff.isEmpty());
+        final Changes changes = new ChangesBuilder().build(src1, src2);
+        assertTrue(changes.isEmpty());
     }
 
     @Test
@@ -45,11 +45,11 @@ public class DiffBuilderTest {
                 "    Integer a;" +
                 "}");
 
-        final Diff diff = new DiffBuilder().build(src1, src2);
-        assertFalse(diff.isEmpty());
-        assertFalse(diff.hasDeleted());
-        assertFalse(diff.hasAdded());
-        assertTrue(diff.hasUpdated());
+        final Changes changes = new ChangesBuilder().build(src1, src2);
+        assertFalse(changes.isEmpty());
+        assertFalse(changes.hasDeleted());
+        assertFalse(changes.hasAdded());
+        assertTrue(changes.hasUpdated());
     }
 
     @Test
@@ -70,11 +70,11 @@ public class DiffBuilderTest {
                 "    Integer aaa;" +
                 "}");
 
-        final Diff diff = new DiffBuilder().build(src1, src2);
-        assertFalse(diff.isEmpty());
-        assertTrue(diff.hasDeleted());
-        assertTrue(diff.hasAdded());
-        assertFalse(diff.hasUpdated());
+        final Changes changes = new ChangesBuilder().build(src1, src2);
+        assertFalse(changes.isEmpty());
+        assertTrue(changes.hasDeleted());
+        assertTrue(changes.hasAdded());
+        assertFalse(changes.hasUpdated());
     }
 
     @Test
@@ -93,9 +93,9 @@ public class DiffBuilderTest {
                 "    int a;" +
                 "}");
 
-        final Diff diff = new DiffBuilder().build(src1, src2);
-        assertFalse(diff.isEmpty());
-        assertTrue(diff.hasUpdated());
+        final Changes changes = new ChangesBuilder().build(src1, src2);
+        assertFalse(changes.isEmpty());
+        assertTrue(changes.hasUpdated());
     }
 
     @Test
@@ -111,9 +111,9 @@ public class DiffBuilderTest {
                 "    String b;" +
                 "}");
 
-        final Diff diff = new DiffBuilder().build(src1, src2);
-        assertFalse(diff.isEmpty());
-        assertTrue(diff.hasDeleted());
+        final Changes changes = new ChangesBuilder().build(src1, src2);
+        assertFalse(changes.isEmpty());
+        assertTrue(changes.hasDeleted());
     }
 
     @Test
@@ -129,9 +129,9 @@ public class DiffBuilderTest {
                 "    int a;" +
                 "}");
 
-        final Diff diff = new DiffBuilder().build(src1, src2);
-        assertFalse(diff.isEmpty());
-        assertTrue(diff.hasAdded());
+        final Changes changes = new ChangesBuilder().build(src1, src2);
+        assertFalse(changes.isEmpty());
+        assertTrue(changes.hasAdded());
     }
 
     @Test
@@ -148,9 +148,9 @@ public class DiffBuilderTest {
                 "    Integer a;" +
                 "}");
 
-        final Diff diff = new DiffBuilder().build(src1, src2);
-        assertFalse(diff.isEmpty());
-        assertTrue(diff.hasUpdated());
+        final Changes changes = new ChangesBuilder().build(src1, src2);
+        assertFalse(changes.isEmpty());
+        assertTrue(changes.hasUpdated());
     }
 
     @Test
@@ -166,10 +166,10 @@ public class DiffBuilderTest {
                 "    int a() { return 0; }" +
                 "}");
 
-        final Diff diff = new DiffBuilder().build(src1, src2);
-        assertFalse(diff.hasUpdated());
-        assertTrue(diff.hasDeleted());
-        assertTrue(diff.hasAdded());
+        final Changes changes = new ChangesBuilder().build(src1, src2);
+        assertFalse(changes.hasUpdated());
+        assertTrue(changes.hasDeleted());
+        assertTrue(changes.hasAdded());
     }
 
     private static String createSourceCode(final String clazz) {

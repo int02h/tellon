@@ -5,13 +5,13 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 
-class AnnotationExtractor {
+class WatchersExtractor {
     private static final String ANNOTATION_NAME = NotifyChanges.class.getSimpleName();
     private static final String ANNOTATION_QUALIFIED_NAME = NotifyChanges.class.getName();
 
     private final VisitorContext visitorContext;
 
-    AnnotationExtractor(VisitorContext visitorContext) {
+    WatchersExtractor(VisitorContext visitorContext) {
         this.visitorContext = visitorContext;
     }
 
