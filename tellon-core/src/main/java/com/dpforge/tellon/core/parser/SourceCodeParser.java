@@ -9,9 +9,14 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class SourceCodeParser {
     public SourceCodeParser() {
+    }
+
+    public ParsedSourceCode parse(SourceCode sourceCode) throws IOException {
+        return parse(sourceCode.toCompilationUnit());
     }
 
     public ParsedSourceCode parse(final File file) throws FileNotFoundException {
