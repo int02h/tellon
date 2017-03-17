@@ -2,11 +2,11 @@ package com.dpforge.tellon.core.parser;
 
 import com.github.javaparser.Position;
 
-public class SourceCodePosition {
+public class FilePosition {
     private final int line;
     private final int column;
 
-    private SourceCodePosition(int line, int column) {
+    private FilePosition(int line, int column) {
         this.line = line;
         this.column = column;
     }
@@ -30,7 +30,7 @@ public class SourceCodePosition {
         return "{column=" + column + ", line=" + line + "}";
     }
 
-    static SourceCodePosition create(Position position) {
-        return new SourceCodePosition(position.line - 1, position.column - 1);
+    static FilePosition create(Position position) {
+        return new FilePosition(position.line - 1, position.column - 1);
     }
 }

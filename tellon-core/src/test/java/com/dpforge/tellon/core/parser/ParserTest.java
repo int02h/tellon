@@ -164,7 +164,7 @@ public class ParserTest {
                 "    @Deprecated\n" +
                 "    void check() { }\n" +
                 "}";
-        SourceCode sourceCode = new SourceCodeParser().parse(code);
+        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
         assertEquals(4, block.getStartPosition().getColumn());
         assertEquals(3, block.getStartPosition().getLine());
@@ -185,7 +185,7 @@ public class ParserTest {
                 "    class Bar { int innerValue; }" +
                 "    static class StaticBar { String innerValue; }" +
                 "}";
-        SourceCode sourceCode = new SourceCodeParser().parse(code);
+        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertTrue(sourceCode.getAnnotatedBlocks().isEmpty());
     }
 
@@ -196,7 +196,7 @@ public class ParserTest {
                 "    @NotifyChanges(\"some_watcher@example.com\")" +
                 "    int a;" +
                 "}";
-        SourceCode sourceCode = new SourceCodeParser().parse(code);
+        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
@@ -211,7 +211,7 @@ public class ParserTest {
                 "    @NotifyChanges({\"watcher1@example.com\", \"watcher2@example.com\"})" +
                 "    int a;" +
                 "}";
-        SourceCode sourceCode = new SourceCodeParser().parse(code);
+        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
@@ -220,7 +220,7 @@ public class ParserTest {
         assertEquals("watcher2@example.com", block.getWatchers().get(1));
     }
 
-    private static void assertBlocks(final SourceCode sourceCode, final BlockType... blockTypes) {
+    private static void assertBlocks(final ParsedSourceCode sourceCode, final BlockType... blockTypes) {
         assertEquals(blockTypes.length, sourceCode.getAnnotatedBlocks().size());
         for (int i = 0; i < blockTypes.length; i++) {
             assertEquals(blockTypes[i], sourceCode.getAnnotatedBlocks().get(i).getType());

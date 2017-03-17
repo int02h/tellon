@@ -5,7 +5,7 @@ import com.dpforge.tellon.app.config.AppConfig;
 import com.dpforge.tellon.app.config.AppConfigReader;
 import com.dpforge.tellon.app.config.ProjectConfig;
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
-import com.dpforge.tellon.core.parser.SourceCode;
+import com.dpforge.tellon.core.parser.ParsedSourceCode;
 import com.dpforge.tellon.core.parser.SourceCodeParser;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class Main {
         File file;
         while ((file = walker.nextFile()) != null) {
             System.out.println("-----[" + file.getName() + "]-----");
-            SourceCode src = parser.parse(file);
+            ParsedSourceCode src = parser.parse(file);
             for (AnnotatedBlock block : src.getAnnotatedBlocks()) {
                 System.out.println(block.toString());
             }

@@ -4,8 +4,8 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;
 
 public class AnnotatedBlock {
-    private final SourceCodePosition startPosition;
-    private final SourceCodePosition endPosition;
+    private final FilePosition startPosition;
+    private final FilePosition endPosition;
     private final String body;
     private final BlockType type;
     private final String description;
@@ -20,11 +20,11 @@ public class AnnotatedBlock {
         this.watchers = builder.watchers;
     }
 
-    public SourceCodePosition getStartPosition() {
+    public FilePosition getStartPosition() {
         return startPosition;
     }
 
-    public SourceCodePosition getEndPosition() {
+    public FilePosition getEndPosition() {
         return endPosition;
     }
 
@@ -102,11 +102,11 @@ public class AnnotatedBlock {
         final Builder builder = new Builder(node.toString(), type);
 
         if (node.getBegin().isPresent()) {
-            builder.startPosition(SourceCodePosition.create(node.getBegin().get()));
+            builder.startPosition(FilePosition.create(node.getBegin().get()));
         }
 
         if (node.getEnd().isPresent()) {
-            builder.endPosition(SourceCodePosition.create(node.getEnd().get()));
+            builder.endPosition(FilePosition.create(node.getEnd().get()));
         }
 
         return builder;
@@ -117,8 +117,8 @@ public class AnnotatedBlock {
         private final BlockType type;
 
         private String description;
-        private SourceCodePosition startPosition;
-        private SourceCodePosition endPosition;
+        private FilePosition startPosition;
+        private FilePosition endPosition;
         private WatcherList watchers;
 
         Builder(String body, BlockType type) {
@@ -131,12 +131,12 @@ public class AnnotatedBlock {
             return this;
         }
 
-        Builder startPosition(SourceCodePosition position) {
+        Builder startPosition(FilePosition position) {
             this.startPosition = position;
             return this;
         }
 
-        Builder endPosition(SourceCodePosition position) {
+        Builder endPosition(FilePosition position) {
             this.endPosition = position;
             return this;
         }

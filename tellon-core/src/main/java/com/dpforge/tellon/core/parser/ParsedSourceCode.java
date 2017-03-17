@@ -2,10 +2,10 @@ package com.dpforge.tellon.core.parser;
 
 import java.util.List;
 
-public class SourceCode {
+public class ParsedSourceCode {
     private final List<AnnotatedBlock> annotatedBlocks;
 
-    SourceCode(List<AnnotatedBlock> annotatedBlocks) {
+    ParsedSourceCode(List<AnnotatedBlock> annotatedBlocks) {
         this.annotatedBlocks = annotatedBlocks;
     }
 

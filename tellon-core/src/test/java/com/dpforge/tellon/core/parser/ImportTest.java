@@ -11,7 +11,7 @@ public class ImportTest {
         final String code = "package com.test;" +
                 "import com.dpforge.tellon.annotations.NotifyChanges;" +
                 "@NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
     }
 
@@ -20,7 +20,7 @@ public class ImportTest {
         final String code = "package com.test;" +
                 "import com.dpforge.tellon.annotations.*;" +
                 "@NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
     }
 
@@ -28,7 +28,7 @@ public class ImportTest {
     public void qualifiedName() {
         final String code = "package com.test;" +
                 "@com.dpforge.tellon.annotations.NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
     }
 
@@ -36,7 +36,7 @@ public class ImportTest {
     public void samePackage() {
         final String code = "package com.dpforge.tellon.annotations;" +
                 "@NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
     }
 
@@ -44,7 +44,7 @@ public class ImportTest {
     public void wrongPackageAnnotation() {
         final String code = "package com.test;" +
                 "@NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertTrue(sourceCode.getAnnotatedBlocks().isEmpty());
     }
 
@@ -53,7 +53,7 @@ public class ImportTest {
         final String code = "package com.test;" +
                 "import com.wrongpackage.NotifyChanges;" +
                 "@NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertTrue(sourceCode.getAnnotatedBlocks().isEmpty());
     }
 
@@ -62,7 +62,7 @@ public class ImportTest {
         final String code = "package com.test;" +
                 "import com.dpforge.tellon.annotations.NotifyChanges;" +
                 "@com.dpforge.tellon.annotations.NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
     }
 
@@ -71,7 +71,7 @@ public class ImportTest {
         final String code = "package com.test;" +
                 "import com.dpforge.tellon.annotations.*;" +
                 "@com.dpforge.tellon.annotations.NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
     }
 
@@ -79,7 +79,7 @@ public class ImportTest {
     public void qualifiedAndSamePackage() {
         final String code = "package com.dpforge.tellon.annotations;" +
                 "@com.dpforge.tellon.annotations.NotifyChanges(\"someone\") class Foo {}";
-        final SourceCode sourceCode = new SourceCodeParser().parse(code);
+        final ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
     }
 }

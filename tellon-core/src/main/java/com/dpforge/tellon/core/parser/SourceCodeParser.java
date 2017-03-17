@@ -14,18 +14,18 @@ public class SourceCodeParser {
     public SourceCodeParser() {
     }
 
-    public SourceCode parse(final File file) throws FileNotFoundException {
+    public ParsedSourceCode parse(final File file) throws FileNotFoundException {
         return parse(JavaParser.parse(file));
     }
 
-    public SourceCode parse(final String code) {
+    public ParsedSourceCode parse(final String code) {
         return parse(JavaParser.parse(code));
     }
 
-    private SourceCode parse(CompilationUnit unit) {
+    private ParsedSourceCode parse(CompilationUnit unit) {
         final VisitorContext visitorContext = new VisitorContext();
         new Visitor().visit(unit, visitorContext);
-        return new SourceCode(visitorContext.getAnnotatedBlocks());
+        return new ParsedSourceCode(visitorContext.getAnnotatedBlocks());
     }
 
     private static class Visitor extends VoidVisitorAdapter<VisitorContext> {

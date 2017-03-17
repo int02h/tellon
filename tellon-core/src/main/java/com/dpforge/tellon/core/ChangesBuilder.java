@@ -1,7 +1,7 @@
 package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
-import com.dpforge.tellon.core.parser.SourceCode;
+import com.dpforge.tellon.core.parser.ParsedSourceCode;
 import com.dpforge.tellon.core.parser.SourceCodeParser;
 
 import java.util.HashMap;
@@ -13,7 +13,7 @@ public class ChangesBuilder {
         return build(parser.parse(oldSrc), parser.parse(newSrc));
     }
 
-    private static Changes build(SourceCode oldCode, SourceCode newCode) {
+    private static Changes build(ParsedSourceCode oldCode, ParsedSourceCode newCode) {
         final Changes changes = new Changes();
 
         final Map<String, AnnotatedBlock> oldBlocks = new HashMap<>();
