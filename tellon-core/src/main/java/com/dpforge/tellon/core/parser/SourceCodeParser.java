@@ -7,8 +7,6 @@ import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class SourceCodeParser {
@@ -19,11 +17,10 @@ public class SourceCodeParser {
         return parse(sourceCode.toCompilationUnit());
     }
 
-    public ParsedSourceCode parse(final File file) throws FileNotFoundException {
-        return parse(JavaParser.parse(file));
-    }
-
-    public ParsedSourceCode parse(final String code) {
+    /**
+     * for tests
+     */
+    ParsedSourceCode parse(final String code) {
         return parse(JavaParser.parse(code));
     }
 

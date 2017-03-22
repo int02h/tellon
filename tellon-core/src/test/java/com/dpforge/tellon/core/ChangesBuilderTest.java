@@ -1,13 +1,14 @@
 package com.dpforge.tellon.core;
 
+import com.dpforge.tellon.core.parser.SourceCode;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class ChangesBuilderTest {
     @Test
-    public void swappedFields() {
-        final String src1 = createSourceCode("" +
+    public void swappedFields() throws Exception {
+        final SourceCode src1 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"a\")" +
                 "    int a;" +
@@ -15,7 +16,7 @@ public class ChangesBuilderTest {
                 "    String b;" +
                 "}");
 
-        final String src2 = createSourceCode("" +
+        final SourceCode src2 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"b\")" +
                 "    String b;" +
@@ -28,8 +29,8 @@ public class ChangesBuilderTest {
     }
 
     @Test
-    public void swappedAndUpdatedFields() {
-        final String src1 = createSourceCode("" +
+    public void swappedAndUpdatedFields() throws Exception {
+        final SourceCode src1 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"a\")" +
                 "    int a;" +
@@ -37,7 +38,7 @@ public class ChangesBuilderTest {
                 "    String b;" +
                 "}");
 
-        final String src2 = createSourceCode("" +
+        final SourceCode src2 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"b\")" +
                 "    String b;" +
@@ -53,8 +54,8 @@ public class ChangesBuilderTest {
     }
 
     @Test
-    public void swappedAndRenamedFields() {
-        final String src1 = createSourceCode("" +
+    public void swappedAndRenamedFields() throws Exception {
+        final SourceCode src1 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"a\")" +
                 "    int a;" +
@@ -62,7 +63,7 @@ public class ChangesBuilderTest {
                 "    String b;" +
                 "}");
 
-        final String src2 = createSourceCode("" +
+        final SourceCode src2 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"b\")" +
                 "    String b;" +
@@ -78,15 +79,15 @@ public class ChangesBuilderTest {
     }
 
     @Test
-    public void swappedClassContent() {
-        final String src1 = createSourceCode("" +
+    public void swappedClassContent() throws Exception {
+        final SourceCode src1 = createSourceCode("" +
                 "@NotifyChanges(\"all\")" +
                 "class Foo {" +
                 "    int a;" +
                 "    String b;" +
                 "}");
 
-        final String src2 = createSourceCode("" +
+        final SourceCode src2 = createSourceCode("" +
                 "@NotifyChanges(\"all\")" +
                 "class Foo {" +
                 "    String b;" +
@@ -99,14 +100,14 @@ public class ChangesBuilderTest {
     }
 
     @Test
-    public void deletedField() {
-        final String src1 = createSourceCode("" +
+    public void deletedField() throws Exception {
+        final SourceCode src1 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"a\")" +
                 "    int a;" +
                 "}");
 
-        final String src2 = createSourceCode("" +
+        final SourceCode src2 = createSourceCode("" +
                 "class Foo {" +
                 "    String b;" +
                 "}");
@@ -117,13 +118,13 @@ public class ChangesBuilderTest {
     }
 
     @Test
-    public void addedField() {
-        final String src1 = createSourceCode("" +
+    public void addedField() throws Exception {
+        final SourceCode src1 = createSourceCode("" +
                 "class Foo {" +
                 "    String b;" +
                 "}");
 
-        final String src2 = createSourceCode("" +
+        final SourceCode src2 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"a\")" +
                 "    int a;" +
@@ -135,14 +136,14 @@ public class ChangesBuilderTest {
     }
 
     @Test
-    public void updatedField() {
-        final String src1 = createSourceCode("" +
+    public void updatedField() throws Exception {
+        final SourceCode src1 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"a\")" +
                 "    int a;" +
                 "}");
 
-        final String src2 = createSourceCode("" +
+        final SourceCode src2 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"a\")" +
                 "    Integer a;" +
@@ -154,13 +155,13 @@ public class ChangesBuilderTest {
     }
 
     @Test
-    public void sameName() {
-        final String src1 = createSourceCode("" +
+    public void sameName() throws Exception {
+        final SourceCode src1 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"field\")" +
                 "    int a;" +
                 "}");
-        final String src2 = createSourceCode("" +
+        final SourceCode src2 = createSourceCode("" +
                 "class Foo {" +
                 "    @NotifyChanges(\"field\")" +
                 "    int a() { return 0; }" +
@@ -172,9 +173,10 @@ public class ChangesBuilderTest {
         assertTrue(changes.hasAdded());
     }
 
-    private static String createSourceCode(final String clazz) {
-        return "package com.test; " +
+    private static SourceCode createSourceCode(final String clazz) {
+        return SourceCode.createFromContent("" +
+                "package com.test; " +
                 "import com.dpforge.tellon.annotations.NotifyChanges; " +
-                clazz;
+                clazz);
     }
 }
