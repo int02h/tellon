@@ -44,7 +44,7 @@ public class Main {
         while ((file = walker.nextFile()) != null) {
             final SourceCode actual = provider.getActual(file);
             final SourceCode prev = provider.getPrevious(file);
-            final Changes changes = changesBuilder.build(prev, actual);
+            final Changes changes = changesBuilder.build(file, prev, actual);
 
             System.out.format("File '%s'\n", file);
 

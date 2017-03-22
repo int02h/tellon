@@ -3,6 +3,8 @@ package com.dpforge.tellon.core;
 import com.dpforge.tellon.core.parser.SourceCode;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 public class ChangesBuilderTest {
@@ -24,7 +26,7 @@ public class ChangesBuilderTest {
                 "    int a;" +
                 "}");
 
-        final Changes changes = new ChangesBuilder().build(src1, src2);
+        final Changes changes = buildChanges(src1, src2);
         assertTrue(changes.isEmpty());
     }
 
@@ -46,7 +48,7 @@ public class ChangesBuilderTest {
                 "    Integer a;" +
                 "}");
 
-        final Changes changes = new ChangesBuilder().build(src1, src2);
+        final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
         assertFalse(changes.hasDeleted());
         assertFalse(changes.hasAdded());
@@ -71,7 +73,7 @@ public class ChangesBuilderTest {
                 "    Integer aaa;" +
                 "}");
 
-        final Changes changes = new ChangesBuilder().build(src1, src2);
+        final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
         assertTrue(changes.hasDeleted());
         assertTrue(changes.hasAdded());
@@ -94,7 +96,7 @@ public class ChangesBuilderTest {
                 "    int a;" +
                 "}");
 
-        final Changes changes = new ChangesBuilder().build(src1, src2);
+        final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
         assertTrue(changes.hasUpdated());
     }
@@ -112,7 +114,7 @@ public class ChangesBuilderTest {
                 "    String b;" +
                 "}");
 
-        final Changes changes = new ChangesBuilder().build(src1, src2);
+        final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
         assertTrue(changes.hasDeleted());
     }
@@ -130,7 +132,7 @@ public class ChangesBuilderTest {
                 "    int a;" +
                 "}");
 
-        final Changes changes = new ChangesBuilder().build(src1, src2);
+        final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
         assertTrue(changes.hasAdded());
     }
@@ -149,7 +151,7 @@ public class ChangesBuilderTest {
                 "    Integer a;" +
                 "}");
 
-        final Changes changes = new ChangesBuilder().build(src1, src2);
+        final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
         assertTrue(changes.hasUpdated());
     }
@@ -167,7 +169,7 @@ public class ChangesBuilderTest {
                 "    int a() { return 0; }" +
                 "}");
 
-        final Changes changes = new ChangesBuilder().build(src1, src2);
+        final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.hasUpdated());
         assertTrue(changes.hasDeleted());
         assertTrue(changes.hasAdded());
@@ -178,5 +180,9 @@ public class ChangesBuilderTest {
                 "package com.test; " +
                 "import com.dpforge.tellon.annotations.NotifyChanges; " +
                 clazz);
+    }
+
+    private static Changes buildChanges(final SourceCode src1, final SourceCode src2) throws IOException {
+        return new ChangesBuilder().build(null, src1, src2);
     }
 }
