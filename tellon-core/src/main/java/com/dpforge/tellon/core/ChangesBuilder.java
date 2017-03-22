@@ -2,13 +2,20 @@ package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
 import com.dpforge.tellon.core.parser.ParsedSourceCode;
+import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.SourceCodeParser;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChangesBuilder {
     public Changes build(String oldSrc, String newSrc) {
+        final SourceCodeParser parser = new SourceCodeParser();
+        return build(parser.parse(oldSrc), parser.parse(newSrc));
+    }
+
+    public Changes build(SourceCode oldSrc, SourceCode newSrc) throws IOException {
         final SourceCodeParser parser = new SourceCodeParser();
         return build(parser.parse(oldSrc), parser.parse(newSrc));
     }

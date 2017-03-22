@@ -10,15 +10,15 @@ public class Changes {
     private final List<AnnotatedBlock> deleted = new ArrayList<>();
     private final List<AnnotatedBlock> added = new ArrayList<>();
 
-    public void addChanged(AnnotatedBlock oldBlock, AnnotatedBlock newBlock) {
+    void addChanged(AnnotatedBlock oldBlock, AnnotatedBlock newBlock) {
         updated.add(new Update(oldBlock, newBlock));
     }
 
-    public void addDeleted(AnnotatedBlock oldBlock) {
+    void addDeleted(AnnotatedBlock oldBlock) {
         deleted.add(oldBlock);
     }
 
-    public void addInserted(AnnotatedBlock newBlock) {
+    void addInserted(AnnotatedBlock newBlock) {
         added.add(newBlock);
     }
 
@@ -38,6 +38,18 @@ public class Changes {
         return !added.isEmpty();
     }
 
+    public List<Update> getUpdated() {
+        return new ArrayList<>(updated);
+    }
+
+    public List<AnnotatedBlock> getDeleted() {
+        return new ArrayList<>(deleted);
+    }
+
+    public List<AnnotatedBlock> getAdded() {
+        return new ArrayList<>(added);
+    }
+
     public static class Update {
         private final AnnotatedBlock oldBlock;
         private final AnnotatedBlock newBlock;
@@ -45,6 +57,14 @@ public class Changes {
         public Update(AnnotatedBlock oldBlock, AnnotatedBlock newBlock) {
             this.oldBlock = oldBlock;
             this.newBlock = newBlock;
+        }
+
+        public AnnotatedBlock getOldBlock() {
+            return oldBlock;
+        }
+
+        public AnnotatedBlock getNewBlock() {
+            return newBlock;
         }
     }
 }

@@ -1,4 +1,4 @@
-group 'com.dpforge'
+group 'com.test'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -10,7 +10,5 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
-    compile project(':tellon-annotations')
     compile project(':tellon-core')
-    compile project(':fake-source-provider')
 }

@@ -1,4 +1,5 @@
 rootProject.name = 'tellon'
 include 'tellon-core'
 include 'tellon-annotations'
+include 'fake-source-provider'
 
