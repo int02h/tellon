@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 
 public abstract class SourceCode {
+    private SourceCode() {
+    }
 
     abstract CompilationUnit toCompilationUnit() throws IOException;
 
