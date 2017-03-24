@@ -7,6 +7,8 @@ public interface ProjectWalker {
 
     String getName();
 
+    String getDescription();
+
     ProjectInfo getProjectInfo();
 
     boolean hasNext();

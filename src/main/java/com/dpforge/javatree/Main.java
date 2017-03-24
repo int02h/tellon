@@ -12,10 +12,23 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         final Arguments arguments = new Arguments();
-        try {
-            arguments.parse(args);
-            process(arguments);
-        } catch (ParseException e) {
+
+        if (args.length > 0) {
+            final String action = args[0];
+            switch (action) {
+                case "verify":
+                    verify();
+                    break;
+                default:
+                    try {
+                        arguments.parse(args);
+                        process(arguments);
+                    } catch (ParseException e) {
+                        arguments.printHelp();
+                    }
+                    break;
+            }
+        } else {
             arguments.printHelp();
         }
     }
@@ -61,5 +74,23 @@ public class Main {
             }
         }
         return null;
+    }
+
+    private static void verify() {
+        final List<ChangesNotifier> notifiers = Extensions.getInstance().getNotifiers();
+        System.out.println("Notifiers");
+        for (ChangesNotifier notifier : notifiers) {
+            System.out.format("%s - %s", notifier.getName(), notifier.getDescription());
+            System.out.println();
+        }
+
+        System.out.println();
+
+        final List<ProjectWalker> walkers = Extensions.getInstance().getProjectWalkers();
+        System.out.println("Projects walkers");
+        for (ProjectWalker walker: walkers) {
+            System.out.format("%s - %s", walker.getName(), walker.getDescription());
+            System.out.println();
+        }
     }
 }

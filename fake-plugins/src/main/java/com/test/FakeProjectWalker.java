@@ -59,7 +59,12 @@ public class FakeProjectWalker implements ProjectWalker {
 
     @Override
     public String getName() {
-        return "test";
+        return "fake";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Fake project walker";
     }
 
     @Override
