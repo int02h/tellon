@@ -46,7 +46,6 @@ class XmlAppConfigReader extends AppConfigReader {
 
         builder.name(element.getAttribute("name"));
         builder.path(element.getAttribute("path"));
-        builder.workDir(element.getAttribute("work-dir"));
 
         final NodeList contactNodes = element.getElementsByTagName("master-contact");
         final List<String> masterContacts = new ArrayList<>(contactNodes.getLength());

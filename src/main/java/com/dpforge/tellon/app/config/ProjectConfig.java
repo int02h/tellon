@@ -7,14 +7,12 @@ import java.util.List;
 public class ProjectConfig {
     private final String name;
     private final String path;
-    private final String workDir;
-    private final List<String> contacts;
+    private final List<String> masterContacts;
 
     private ProjectConfig(Builder builder) {
         name = builder.name;
         path = builder.path;
-        workDir = builder.workDir;
-        contacts = builder.contacts;
+        masterContacts = builder.masterContacts;
     }
 
     public String getName() {
@@ -25,19 +23,14 @@ public class ProjectConfig {
         return path;
     }
 
-    public String getWorkDir() {
-        return workDir;
-    }
-
-    public List<String> getContacts() {
-        return new ArrayList<>(contacts);
+    public List<String> getMasterContacts() {
+        return new ArrayList<>(masterContacts);
     }
 
     static class Builder {
         private String name;
         private String path;
-        private String workDir;
-        private List<String> contacts;
+        private List<String> masterContacts;
 
         Builder name(String name) {
             this.name = name;
@@ -49,19 +42,14 @@ public class ProjectConfig {
             return this;
         }
 
-        Builder workDir(String workDir) {
-            this.workDir = workDir;
-            return this;
-        }
-
-        Builder masterContacts(List<String> contacts) {
-            this.contacts = contacts;
+        Builder masterContacts(List<String> masterContacts) {
+            this.masterContacts = masterContacts;
             return this;
         }
 
         ProjectConfig build() {
-            if (contacts == null) {
-                contacts = Collections.emptyList();
+            if (masterContacts == null) {
+                masterContacts = Collections.emptyList();
             }
             return new ProjectConfig(this);
         }
