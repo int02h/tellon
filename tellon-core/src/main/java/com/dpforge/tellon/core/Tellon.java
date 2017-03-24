@@ -36,7 +36,7 @@ public class Tellon {
         notifiers.onFinishedProject();
     }
 
-    private static class Notifiers implements ChangesNotifier {
+    private static class Notifiers {
         private final List<ChangesNotifier> list = new ArrayList<>();
 
         void add(ChangesNotifier notifier) {
@@ -47,31 +47,18 @@ public class Tellon {
             list.addAll(notifiers);
         }
 
-        @Override
-        public String getName() {
-            return "compound";
-        }
-
-        @Override
-        public String getDescription() {
-            return getName();
-        }
-
-        @Override
         public void onStartProject(ProjectInfo projectInfo) {
             for (ChangesNotifier notifier : list) {
                 notifier.onStartProject(projectInfo);
             }
         }
 
-        @Override
         public void onFinishedProject() {
             for (ChangesNotifier notifier : list) {
                 notifier.onFinishedProject();
             }
         }
 
-        @Override
         public void notifyChanges(ProjectItem item, Changes changes) {
             for (ChangesNotifier notifier : list) {
                 notifier.notifyChanges(item, changes);
