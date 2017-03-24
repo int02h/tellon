@@ -26,6 +26,7 @@ public class FakeSourceProvider implements SourceCodeProvider {
         return SourceCode.createFromContent("" +
                 "package com.test; " +
                 "import com.dpforge.tellon.annotations.NotifyChanges; " +
+                "@NotifyChanges(\"test\")" +
                 "class " + getClassName(file) + " {" +
                 "    @NotifyChanges(\"test\")" +
                 "    Integer changed;" +
@@ -39,7 +40,8 @@ public class FakeSourceProvider implements SourceCodeProvider {
         return SourceCode.createFromContent("" +
                 "package com.test; " +
                 "import com.dpforge.tellon.annotations.NotifyChanges; " +
-                "class " + getClassName(file) + " {" +
+                "@NotifyChanges(\"test\")" +
+                "final class " + getClassName(file) + " {" +
                 "    @NotifyChanges(\"test\")" +
                 "    int changed;" +
                 "    @NotifyChanges(\"test\")" +
@@ -51,7 +53,7 @@ public class FakeSourceProvider implements SourceCodeProvider {
         final String name = file.getName();
         final int index = name.indexOf('.');
         return (index > 0)
-                ? name.substring(0, index - 1)
+                ? name.substring(0, index)
                 : "Foo";
     }
 }

@@ -12,5 +12,5 @@ dependencies {
 
     compile project(':tellon-annotations')
     compile project(':tellon-core')
-    compile project(':fake-source-provider')
+    compile project(':fake-plugins')
 }

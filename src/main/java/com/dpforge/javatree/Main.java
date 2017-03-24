@@ -6,12 +6,15 @@ import com.dpforge.tellon.app.config.AppConfigReader;
 import com.dpforge.tellon.app.config.ProjectConfig;
 import com.dpforge.tellon.core.Changes;
 import com.dpforge.tellon.core.ChangesBuilder;
-import com.dpforge.tellon.core.parser.AnnotatedBlock;
+import com.dpforge.tellon.core.notifier.ChangesNotifier;
+import com.dpforge.tellon.core.notifier.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.provider.SourceCodeProvider;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ServiceLoader;
 
 public class Main {
@@ -30,13 +33,24 @@ public class Main {
             throw new IllegalArgumentException("No source code provider found");
         }
 
+        final Notifiers notifiers = new Notifiers();
+        for (ChangesNotifier notifier : ServiceLoader.load(ChangesNotifier.class)) {
+            notifiers.add(notifier);
+        }
+
+        if (notifiers.isEmpty()) {
+            throw new IllegalArgumentException("No changes notifier found");
+        }
+
         final AppConfig config = AppConfigReader.read("/Users/d.popov/Desktop/tellon.xml");
         for (ProjectConfig project : config.getProjects()) {
-            processProject(project.getPath(), sourceCodeProvider);
+            notifiers.onStartProject(new ProjectInfo(project.getName(), project.getPath()));
+            processProject(project.getPath(), sourceCodeProvider, notifiers);
+            notifiers.onFinishedProject();
         }
     }
 
-    private static void processProject(String path, SourceCodeProvider provider) throws IOException {
+    private static void processProject(String path, SourceCodeProvider provider, Notifiers notifiers) throws IOException {
         final FileWalker walker = FileWalker.create(path);
         final ChangesBuilder changesBuilder = new ChangesBuilder();
 
@@ -45,32 +59,49 @@ public class Main {
             final SourceCode actual = provider.getActual(file);
             final SourceCode prev = provider.getPrevious(file);
             final Changes changes = changesBuilder.build(file, prev, actual);
+            notifiers.notifyChanges(changes);
+        }
+    }
 
-            System.out.format("File '%s'\n", file);
+    private static class Notifiers implements ChangesNotifier {
+        private final List<ChangesNotifier> list = new ArrayList<>();
 
-            if (changes.hasAdded()) {
-                System.out.println("Added:");
-                for (AnnotatedBlock block : changes.getAdded()) {
-                    System.out.println(block.toString());
-                }
-                System.out.println();
+        void add(ChangesNotifier notifier) {
+            list.add(notifier);
+        }
+
+        boolean isEmpty() {
+            return list.isEmpty();
+        }
+
+        @Override
+        public String getName() {
+            return "compound";
+        }
+
+        @Override
+        public String getDescription() {
+            return getName();
+        }
+
+        @Override
+        public void onStartProject(ProjectInfo projectInfo) {
+            for (ChangesNotifier notifier : list) {
+                notifier.onStartProject(projectInfo);
             }
+        }
 
-            if (changes.hasDeleted()) {
-                System.out.println("Deleted:");
-                for (AnnotatedBlock block : changes.getDeleted()) {
-                    System.out.println(block.toString());
-                }
-                System.out.println();
+        @Override
+        public void onFinishedProject() {
+            for (ChangesNotifier notifier : list) {
+                notifier.onFinishedProject();
             }
+        }
 
-            if (changes.hasUpdated()) {
-                System.out.println("Updated:");
-                for (Changes.Update update : changes.getUpdated()) {
-                    System.out.format("\tOld block: %s\n", update.getOldBlock());
-                    System.out.format("\tNew block: %s\n", update.getNewBlock());
-                }
-                System.out.println();
+        @Override
+        public void notifyChanges(Changes changes) {
+            for (ChangesNotifier notifier : list) {
+                notifier.notifyChanges(changes);
             }
         }
     }
