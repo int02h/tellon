@@ -53,8 +53,13 @@ public class FakeProjectWalker implements ProjectWalker {
     }
 
     @Override
-    public void init(String parameter) {
-        System.out.println("Initialized with parameter: " + parameter);
+    public void init(String args) {
+        System.out.println("Initialized with args: " + args);
+    }
+
+    @Override
+    public String getName() {
+        return "test";
     }
 
     @Override

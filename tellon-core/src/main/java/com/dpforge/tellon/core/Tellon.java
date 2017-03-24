@@ -6,6 +6,7 @@ import com.dpforge.tellon.core.parser.SourceCode;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Tellon {
@@ -13,6 +14,11 @@ public class Tellon {
 
     public Tellon addNotifier(final ChangesNotifier notifier) {
         notifiers.add(notifier);
+        return this;
+    }
+
+    public Tellon addNotifiers(final Collection<ChangesNotifier> notifiers) {
+        this.notifiers.addAll(notifiers);
         return this;
     }
 
@@ -35,6 +41,10 @@ public class Tellon {
 
         void add(ChangesNotifier notifier) {
             list.add(notifier);
+        }
+
+        void addAll(Collection<ChangesNotifier> notifiers) {
+            list.addAll(notifiers);
         }
 
         @Override
