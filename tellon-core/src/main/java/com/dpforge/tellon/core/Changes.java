@@ -2,23 +2,13 @@ package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Changes {
-    private final File file;
     private final List<Update> updated = new ArrayList<>();
     private final List<AnnotatedBlock> deleted = new ArrayList<>();
     private final List<AnnotatedBlock> added = new ArrayList<>();
-
-    public Changes(File file) {
-        this.file = file;
-    }
-
-    public File getFile() {
-        return file;
-    }
 
     void addChanged(AnnotatedBlock oldBlock, AnnotatedBlock newBlock) {
         updated.add(new Update(oldBlock, newBlock));

@@ -183,6 +183,6 @@ public class ChangesBuilderTest {
     }
 
     private static Changes buildChanges(final SourceCode src1, final SourceCode src2) throws IOException {
-        return new ChangesBuilder().build(null, src1, src2);
+        return new ChangesBuilder().build(src1, src2);
     }
 }

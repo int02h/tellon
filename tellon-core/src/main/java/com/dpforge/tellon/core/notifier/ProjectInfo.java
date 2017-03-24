@@ -2,18 +2,25 @@ package com.dpforge.tellon.core.notifier;
 
 public class ProjectInfo {
     private final String name;
-    private final String path;
 
-    public ProjectInfo(String name, String path) {
-        this.name = name;
-        this.path = path;
+    private ProjectInfo(Builder builder) {
+        name = builder.name;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPath() {
-        return path;
+    public static class Builder {
+        private String name;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ProjectInfo build() {
+            return new ProjectInfo(this);
+        }
     }
 }

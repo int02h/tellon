@@ -1,6 +1,7 @@
 package com.dpforge.tellon.core.notifier;
 
 import com.dpforge.tellon.core.Changes;
+import com.dpforge.tellon.core.ProjectItem;
 
 public interface ChangesNotifier {
     String getName();
@@ -11,5 +12,5 @@ public interface ChangesNotifier {
 
     void onFinishedProject();
 
-    void notifyChanges(final Changes changes);
+    void notifyChanges(final ProjectItem item, final Changes changes);
 }

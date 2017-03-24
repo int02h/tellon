@@ -5,18 +5,19 @@ import com.dpforge.tellon.core.parser.ParsedSourceCode;
 import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.SourceCodeParser;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChangesBuilder {
-    public Changes build(File file, SourceCode oldSrc, SourceCode newSrc) throws IOException {
+    public Changes build(SourceCode oldSrc, SourceCode newSrc) throws IOException {
         final SourceCodeParser parser = new SourceCodeParser();
-        return fillChanges(new Changes(file), parser.parse(oldSrc), parser.parse(newSrc));
+        return buildChanges(parser.parse(oldSrc), parser.parse(newSrc));
     }
 
-    private static Changes fillChanges(Changes changes, ParsedSourceCode oldCode, ParsedSourceCode newCode) {
+    private static Changes buildChanges(ParsedSourceCode oldCode, ParsedSourceCode newCode) {
+        final Changes changes = new Changes();
+
         final Map<String, AnnotatedBlock> oldBlocks = new HashMap<>();
         for (AnnotatedBlock block : oldCode.getAnnotatedBlocks()) {
             oldBlocks.put(block.getDescription(), block);

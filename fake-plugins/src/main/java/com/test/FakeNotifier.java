@@ -1,6 +1,7 @@
 package com.test;
 
 import com.dpforge.tellon.core.Changes;
+import com.dpforge.tellon.core.ProjectItem;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ProjectInfo;
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
@@ -27,8 +28,8 @@ public class FakeNotifier implements ChangesNotifier {
     }
 
     @Override
-    public void notifyChanges(Changes changes) {
-        System.out.format("File '%s'\n", changes.getFile());
+    public void notifyChanges(ProjectItem item, Changes changes) {
+        System.out.println("[" + item.getDescription() + "]");
 
         if (changes.hasAdded()) {
             System.out.println("Added:");
