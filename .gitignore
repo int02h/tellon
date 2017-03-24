@@ -1,4 +1,6 @@
 /build
 /tellon-annotations/build
 /tellon-core/build
+/fake-plugins/build
 /.idea
+/out
