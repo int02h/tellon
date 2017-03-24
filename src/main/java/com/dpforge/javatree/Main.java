@@ -12,28 +12,21 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         final Arguments arguments = new Arguments();
-
-        if (args.length > 0) {
-            final String action = args[0];
-            switch (action) {
-                case "verify":
-                    verify();
-                    break;
-                default:
-                    try {
-                        arguments.parse(args);
-                        process(arguments);
-                    } catch (ParseException e) {
-                        arguments.printHelp();
-                    }
-                    break;
-            }
-        } else {
+        try {
+            arguments.parse(args);
+        } catch (ParseException e) {
             arguments.printHelp();
+            return;
+        }
+
+        if (arguments.hasVerify()) {
+            verify();
+        } else {
+            notifyChanges(arguments);
         }
     }
 
-    private static void process(final Arguments arguments) throws IOException {
+    private static void notifyChanges(final Arguments arguments) throws IOException {
         final List<ProjectWalker> walkers = Extensions.getInstance().getProjectWalkers();
 
         final ProjectWalker projectWalker;
@@ -88,7 +81,7 @@ public class Main {
 
         final List<ProjectWalker> walkers = Extensions.getInstance().getProjectWalkers();
         System.out.println("Projects walkers");
-        for (ProjectWalker walker: walkers) {
+        for (ProjectWalker walker : walkers) {
             System.out.format("%s - %s", walker.getName(), walker.getDescription());
             System.out.println();
         }

@@ -12,28 +12,30 @@ class Arguments {
     private static final String PROJECT_WALKER_NAME_SHORT = "w";
     private static final String PROJECT_WALKER_NAME_DESCRIPTION = "Name of walker to use (if you have multiple)";
 
+    private static final String VERIFY = "verify";
+    private static final String VERIFY_DESCRIPTION = "Show information and environment";
+
     private final Options options = new Options();
 
     private CommandLine cmd;
 
     Arguments() {
-        Option opt;
+        options.addOption(Option.builder()
+                .longOpt(PROJECT_WALKER_ARGS)
+                .desc(PROJECT_WALKER_ARGS_DESCRIPTION)
+                .numberOfArgs(1)
+                .build());
 
-        opt = new Option(
-                null,
-                PROJECT_WALKER_ARGS,
-                true,
-                PROJECT_WALKER_ARGS_DESCRIPTION);
-        opt.setRequired(true);
-        options.addOption(opt);
+        options.addOption(Option.builder(PROJECT_WALKER_NAME_SHORT)
+                .longOpt(PROJECT_WALKER_NAME)
+                .desc(PROJECT_WALKER_NAME_DESCRIPTION)
+                .numberOfArgs(1)
+                .build());
 
-        opt = new Option(
-                PROJECT_WALKER_NAME_SHORT,
-                PROJECT_WALKER_NAME,
-                true,
-                PROJECT_WALKER_NAME_DESCRIPTION);
-        opt.setRequired(false);
-        options.addOption(opt);
+        options.addOption(Option.builder()
+                .longOpt(VERIFY)
+                .desc(VERIFY_DESCRIPTION)
+                .build());
     }
 
     void parse(String[] args) throws ParseException {
@@ -54,6 +56,11 @@ class Arguments {
     String getProjectWalkerName() {
         checkParsed();
         return cmd.getOptionValue(PROJECT_WALKER_NAME, null);
+    }
+
+    boolean hasVerify() {
+        checkParsed();
+        return cmd.hasOption(VERIFY);
     }
 
     private void checkParsed() {
