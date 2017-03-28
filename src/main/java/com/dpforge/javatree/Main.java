@@ -1,6 +1,7 @@
 package com.dpforge.javatree;
 
 import com.dpforge.tellon.core.ProjectWalker;
+import com.dpforge.tellon.core.ProjectWalkerException;
 import com.dpforge.tellon.core.Tellon;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import org.apache.commons.cli.ParseException;
@@ -48,7 +49,11 @@ public class Main {
             }
         }
 
-        projectWalker.init(arguments.getProjectWalkerArgs());
+        try {
+            projectWalker.init(arguments.getProjectWalkerArgs());
+        } catch (ProjectWalkerException e) {
+            throw new IllegalArgumentException("Fail to initialize project walker", e);
+        }
 
         final List<ChangesNotifier> notifiers = Extensions.getInstance().getNotifiers();
         if (notifiers.isEmpty()) {
