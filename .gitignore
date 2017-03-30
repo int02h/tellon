@@ -2,5 +2,6 @@
 /tellon-annotations/build
 /tellon-core/build
 /fake-plugins/build
+/git-walker/build
 /.idea
 /out
