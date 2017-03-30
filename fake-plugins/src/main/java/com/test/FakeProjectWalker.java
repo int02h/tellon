@@ -2,11 +2,13 @@ package com.test;
 
 import com.dpforge.tellon.core.ProjectItem;
 import com.dpforge.tellon.core.ProjectWalker;
+import com.dpforge.tellon.core.ProjectWalkerException;
 import com.dpforge.tellon.core.notifier.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FakeProjectWalker implements ProjectWalker {
     private final ProjectInfo projectInfo = new ProjectInfo.Builder().name("Test Project").build();
@@ -63,8 +65,12 @@ public class FakeProjectWalker implements ProjectWalker {
     }
 
     @Override
-    public void init(String args) {
-        System.out.println("Initialized with args: " + args);
+    public void init(Map<String, String> args) throws ProjectWalkerException {
+        final StringBuilder builder = new StringBuilder();
+        for (Map.Entry<String, String> arg : args.entrySet()) {
+            builder.append(arg.getKey()).append("=").append(arg.getValue()).append('\n');
+        }
+        System.out.println("Initialized with args: \n" + builder.toString());
     }
 
     @Override

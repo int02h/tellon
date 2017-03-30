@@ -18,10 +18,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GitProjectWalker implements ProjectWalker {
     private static final String NAME = "git-walker";
     private static final String DESCRIPTION = "Tellon project walker over local git repository";
+
+    private static final String ARG_GIT_PATH = "gitPath";
 
     private File gitFile;
 
@@ -32,7 +35,7 @@ public class GitProjectWalker implements ProjectWalker {
     private int index;
 
     @Override
-    public void init(String args) throws ProjectWalkerException {
+    public void init(Map<String, String> args) throws ProjectWalkerException {
         parseArguments(args);
 
         projectInfo = new ProjectInfo.Builder()
@@ -78,15 +81,15 @@ public class GitProjectWalker implements ProjectWalker {
         return items.get(index++);
     }
 
-    private void parseArguments(final String args) throws ProjectWalkerException {
-        final String[] values = args.split(";");
-        if (values.length == 0) {
+    private void parseArguments(final Map<String, String> args) throws ProjectWalkerException {
+        String gitPath = args.get(ARG_GIT_PATH);
+        if (gitPath == null) {
             throw new ProjectWalkerException("Path to .git directory not provided");
         }
 
-        gitFile = new File(values[0]);
+        gitFile = new File(gitPath);
         if (!gitFile.exists()) {
-            throw new ProjectWalkerException(String.format(".git folder '%s' not found", values[0]));
+            throw new ProjectWalkerException(String.format(".git folder '%s' not found", gitPath));
         }
     }
 
