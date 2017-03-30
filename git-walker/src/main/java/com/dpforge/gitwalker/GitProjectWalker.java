@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,8 @@ public class GitProjectWalker implements ProjectWalker {
     private static final String DESCRIPTION = "Tellon project walker over local git repository";
 
     private static final String ARG_GIT_PATH = "gitPath";
+    private static final String ARG_NEW_REVISION = "newRev";
+    private static final String ARG_OLD_REVISION = "oldRev";
 
     private File gitFile;
 
@@ -33,6 +36,10 @@ public class GitProjectWalker implements ProjectWalker {
     private List<ProjectItem> items;
 
     private int index;
+
+    private String newRevision;
+
+    private String oldRevision;
 
     @Override
     public void init(Map<String, String> args) throws ProjectWalkerException {
@@ -46,10 +53,14 @@ public class GitProjectWalker implements ProjectWalker {
             try (final Repository repository = new FileRepositoryBuilder()
                     .setGitDir(gitFile)
                     .build()) {
-                final ObjectId newId = repository.resolve("HEAD^{tree}");
-                final ObjectId oldId = repository.resolve("HEAD^^{tree}");
-                List<DiffEntry> diff = buildDiff(repository, oldId, newId);
-                items = buildProjectItems(repository, diff);
+                final ObjectId newId = repository.resolve(newRevision + "^{tree}");
+                final ObjectId oldId = repository.resolve(oldRevision + "^{tree}");
+                if (newId != null && oldId != null) {
+                    List<DiffEntry> diff = buildDiff(repository, oldId, newId);
+                    items = buildProjectItems(repository, diff);
+                } else {
+                    items = Collections.emptyList();
+                }
             }
         } catch (IOException | GitAPIException e) {
             throw new ProjectWalkerException(e);
@@ -82,7 +93,7 @@ public class GitProjectWalker implements ProjectWalker {
     }
 
     private void parseArguments(final Map<String, String> args) throws ProjectWalkerException {
-        String gitPath = args.get(ARG_GIT_PATH);
+        final String gitPath = args.get(ARG_GIT_PATH);
         if (gitPath == null) {
             throw new ProjectWalkerException("Path to .git directory not provided");
         }
@@ -90,6 +101,16 @@ public class GitProjectWalker implements ProjectWalker {
         gitFile = new File(gitPath);
         if (!gitFile.exists()) {
             throw new ProjectWalkerException(String.format(".git folder '%s' not found", gitPath));
+        }
+
+        newRevision = args.get(ARG_NEW_REVISION);
+        if (newRevision == null) {
+            newRevision = "HEAD";
+        }
+
+        oldRevision = args.get(ARG_OLD_REVISION);
+        if (oldRevision == null) {
+            oldRevision = newRevision + "^";
         }
     }
 
