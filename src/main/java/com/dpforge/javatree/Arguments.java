@@ -8,7 +8,7 @@ import java.util.Map;
 class Arguments {
     private static final String APP_NAME = "tellon";
 
-    private static final String PROJECT_WALKER_ARG = "walker-args";
+    private static final String PROJECT_WALKER_ARG = "warg";
     private static final String PROJECT_WALKER_ARG_DESCRIPTION = "Argument string for project walker";
 
     private static final String PROJECT_WALKER_NAME = "walker";
