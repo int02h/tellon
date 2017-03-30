@@ -28,15 +28,23 @@ public class Tellon {
         notifiers.onStartProject(walker.getProjectInfo());
         while (walker.hasNext()) {
             final ProjectItem item = walker.next();
-            final SourceCode actual = item.getActual();
-            final SourceCode prev = item.getPrevious();
-            final Changes changes = changesBuilder.build(prev, actual);
-            notifiers.notifyChanges(item, changes);
+            final boolean hasActual = item.hasActual();
+            final boolean hasPrev = item.hasPrevious();
+            if (hasActual && hasPrev) {
+                final SourceCode actual = item.getActual();
+                final SourceCode prev = item.getPrevious();
+                final Changes changes = changesBuilder.build(prev, actual);
+                notifiers.notifyChanges(item, changes);
+            } else if (hasActual) {
+                notifiers.notifyItemAdded(item);
+            } else if (hasPrev) {
+                notifiers.notifyItemDeleted(item);
+            }
         }
         notifiers.onFinishedProject();
     }
 
-    private static class Notifiers {
+    private static class Notifiers implements ChangesNotifier {
         private final List<ChangesNotifier> list = new ArrayList<>();
 
         void add(ChangesNotifier notifier) {
@@ -47,21 +55,53 @@ public class Tellon {
             list.addAll(notifiers);
         }
 
+        @Override
+        public String getName() {
+            return "compound";
+        }
+
+        @Override
+        public String getDescription() {
+            return "compound";
+        }
+
+        @Override
+        public String getPrefix() {
+            return "";
+        }
+
+        @Override
         public void onStartProject(ProjectInfo projectInfo) {
             for (ChangesNotifier notifier : list) {
                 notifier.onStartProject(projectInfo);
             }
         }
 
+        @Override
         public void onFinishedProject() {
             for (ChangesNotifier notifier : list) {
                 notifier.onFinishedProject();
             }
         }
 
+        @Override
         public void notifyChanges(ProjectItem item, Changes changes) {
             for (ChangesNotifier notifier : list) {
                 notifier.notifyChanges(item, changes);
+            }
+        }
+
+        @Override
+        public void notifyItemAdded(ProjectItem item) {
+            for (ChangesNotifier notifier : list) {
+                notifier.notifyItemAdded(item);
+            }
+        }
+
+        @Override
+        public void notifyItemDeleted(ProjectItem item) {
+            for (ChangesNotifier notifier : list) {
+                notifier.notifyItemDeleted(item);
             }
         }
     }

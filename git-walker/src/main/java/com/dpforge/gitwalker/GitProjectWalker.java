@@ -8,10 +8,7 @@ import com.dpforge.tellon.core.parser.SourceCode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.ObjectStream;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
@@ -96,26 +93,34 @@ public class GitProjectWalker implements ProjectWalker {
     private static List<ProjectItem> buildProjectItems(Repository repository, List<DiffEntry> diff) {
         final List<ProjectItem> items = new ArrayList<>(diff.size());
         for (DiffEntry entry : diff) {
-            if (entry.getChangeType() == DiffEntry.ChangeType.MODIFY) { // TODO support another
-                items.add(new ProjectItem() {
-                    @Override
-                    public String getDescription() {
-                        return entry.toString();
-                    }
+            items.add(new ProjectItem() {
+                @Override
+                public String getDescription() {
+                    return entry.toString();
+                }
 
-                    @Override
-                    public SourceCode getActual() throws IOException {
-                        ObjectStream os = repository.open(entry.getNewId().toObjectId()).openStream();
-                        return SourceCode.createFromContent(getStreamContent(os));
-                    }
+                @Override
+                public boolean hasActual() {
+                    return entry.getChangeType() != DiffEntry.ChangeType.DELETE;
+                }
 
-                    @Override
-                    public SourceCode getPrevious() throws IOException {
-                        ObjectStream os = repository.open(entry.getOldId().toObjectId()).openStream();
-                        return SourceCode.createFromContent(getStreamContent(os));
-                    }
-                });
-            }
+                @Override
+                public SourceCode getActual() throws IOException {
+                    ObjectStream os = repository.open(entry.getNewId().toObjectId()).openStream();
+                    return SourceCode.createFromContent(getStreamContent(os));
+                }
+
+                @Override
+                public boolean hasPrevious() {
+                    return entry.getChangeType() != DiffEntry.ChangeType.ADD;
+                }
+
+                @Override
+                public SourceCode getPrevious() throws IOException {
+                    ObjectStream os = repository.open(entry.getOldId().toObjectId()).openStream();
+                    return SourceCode.createFromContent(getStreamContent(os));
+                }
+            });
         }
         return items;
     }
@@ -138,7 +143,6 @@ public class GitProjectWalker implements ProjectWalker {
             CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
             newTreeIter.reset(reader, newId);
 
-            // finally get the list of changed files
             try (Git git = new Git(repo)) {
                 return git.diff()
                         .setNewTree(newTreeIter)

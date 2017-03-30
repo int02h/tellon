@@ -61,4 +61,14 @@ public class FakeNotifier implements ChangesNotifier {
             System.out.println();
         }
     }
+
+    @Override
+    public void notifyItemAdded(ProjectItem item) {
+        System.out.println("Item added: " + item.getDescription());
+    }
+
+    @Override
+    public void notifyItemDeleted(ProjectItem item) {
+        System.out.println("Item deleted: " + item.getDescription());
+    }
 }

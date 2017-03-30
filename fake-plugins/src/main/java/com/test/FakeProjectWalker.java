@@ -23,6 +23,11 @@ public class FakeProjectWalker implements ProjectWalker {
             }
 
             @Override
+            public boolean hasActual() {
+                return true;
+            }
+
+            @Override
             public SourceCode getActual() {
                 return SourceCode.createFromContent("" +
                         "package com.test; " +
@@ -34,6 +39,11 @@ public class FakeProjectWalker implements ProjectWalker {
                         "    @NotifyChanges(\"test@test.com\")" +
                         "    String added;" +
                         "}");
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return true;
             }
 
             @Override

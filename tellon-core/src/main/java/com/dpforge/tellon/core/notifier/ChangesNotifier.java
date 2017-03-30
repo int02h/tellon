@@ -15,4 +15,8 @@ public interface ChangesNotifier {
     void onFinishedProject();
 
     void notifyChanges(final ProjectItem item, final Changes changes);
+
+    void notifyItemAdded(final ProjectItem item);
+
+    void notifyItemDeleted(final ProjectItem item);
 }
