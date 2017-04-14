@@ -66,11 +66,6 @@ public class Tellon {
         }
 
         @Override
-        public String getPrefix() {
-            return "";
-        }
-
-        @Override
         public void onStartProject(ProjectInfo projectInfo) {
             for (ChangesNotifier notifier : list) {
                 notifier.onStartProject(projectInfo);

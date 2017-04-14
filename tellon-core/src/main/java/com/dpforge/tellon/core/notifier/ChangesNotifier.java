@@ -8,8 +8,6 @@ public interface ChangesNotifier {
 
     String getDescription();
 
-    String getPrefix();
-
     void onStartProject(final ProjectInfo projectInfo);
 
     void onFinishedProject();

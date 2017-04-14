@@ -78,7 +78,7 @@ public class Main {
         final List<ChangesNotifier> notifiers = Extensions.getInstance().getNotifiers();
         System.out.println("Notifiers");
         for (ChangesNotifier notifier : notifiers) {
-            System.out.format("%s (%s:) - %s", notifier.getName(), notifier.getPrefix(), notifier.getDescription());
+            System.out.format("%s - %s", notifier.getName(), notifier.getDescription());
             System.out.println();
         }
 

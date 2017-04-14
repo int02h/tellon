@@ -17,11 +17,6 @@ public class FakeNotifier implements ChangesNotifier {
     }
 
     @Override
-    public String getPrefix() {
-        return "fake";
-    }
-
-    @Override
     public void onStartProject(ProjectInfo projectInfo) {
         System.out.format("***** %s *****", projectInfo.getName());
         System.out.println();
