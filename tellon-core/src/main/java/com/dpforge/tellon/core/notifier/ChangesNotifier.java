@@ -8,13 +8,15 @@ public interface ChangesNotifier {
 
     String getDescription();
 
+    void init() throws ChangesNotifierException;
+
     void onStartProject(final ProjectInfo projectInfo);
 
     void onFinishedProject();
 
     void notifyChanges(final ProjectItem item, final Changes changes);
 
-    void notifyItemAdded(final ProjectItem item);
+    void notifyItemAdded(final ProjectItem item, final Changes changes);
 
-    void notifyItemDeleted(final ProjectItem item);
+    void notifyItemDeleted(final ProjectItem item, final Changes changes);
 }

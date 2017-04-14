@@ -3,6 +3,7 @@ package com.test;
 import com.dpforge.tellon.core.Changes;
 import com.dpforge.tellon.core.ProjectItem;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
+import com.dpforge.tellon.core.notifier.ChangesNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectInfo;
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
 
@@ -14,6 +15,11 @@ public class FakeNotifier implements ChangesNotifier {
 
     public String getDescription() {
         return "Fake implementation for test and debug purposes";
+    }
+
+    @Override
+    public void init() throws ChangesNotifierException {
+
     }
 
     @Override
@@ -58,12 +64,12 @@ public class FakeNotifier implements ChangesNotifier {
     }
 
     @Override
-    public void notifyItemAdded(ProjectItem item) {
+    public void notifyItemAdded(ProjectItem item, Changes changes) {
         System.out.println("Item added: " + item.getDescription());
     }
 
     @Override
-    public void notifyItemDeleted(ProjectItem item) {
+    public void notifyItemDeleted(ProjectItem item, Changes changes) {
         System.out.println("Item deleted: " + item.getDescription());
     }
 }

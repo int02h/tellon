@@ -4,6 +4,7 @@ import com.dpforge.tellon.core.ProjectWalker;
 import com.dpforge.tellon.core.ProjectWalkerException;
 import com.dpforge.tellon.core.Tellon;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
+import com.dpforge.tellon.core.notifier.ChangesNotifierException;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class Main {
 
         final ProjectWalker projectWalker;
         if (walkers.isEmpty()) {
-            throw new IllegalArgumentException("No project walker found");
+            throw new IllegalStateException("No project walker found");
         }
 
         if (arguments.getProjectWalkerName() != null) {
@@ -45,7 +46,7 @@ public class Main {
             if (walkers.size() == 1) {
                 projectWalker = walkers.get(0);
             } else {
-                throw new IllegalArgumentException("More than one project walkers found. Choose one of them.");
+                throw new IllegalStateException("More than one project walkers found. Choose one of them.");
             }
         }
 
@@ -57,7 +58,15 @@ public class Main {
 
         final List<ChangesNotifier> notifiers = Extensions.getInstance().getNotifiers();
         if (notifiers.isEmpty()) {
-            throw new IllegalArgumentException("No changes notifier found");
+            throw new IllegalStateException("No changes notifier found");
+        }
+
+        for (ChangesNotifier notifier : notifiers) {
+            try {
+                notifier.init();
+            } catch (ChangesNotifierException e) {
+                throw new IllegalStateException("Fail to initialize notifier " + notifier.getName());
+            }
         }
 
         final Tellon tellon = new Tellon();

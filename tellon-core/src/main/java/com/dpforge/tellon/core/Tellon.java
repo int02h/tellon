@@ -1,6 +1,7 @@
 package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
+import com.dpforge.tellon.core.notifier.ChangesNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
 
@@ -36,9 +37,9 @@ public class Tellon {
                 final Changes changes = changesBuilder.build(prev, actual);
                 notifiers.notifyChanges(item, changes);
             } else if (hasActual) {
-                notifiers.notifyItemAdded(item);
+                notifiers.notifyItemAdded(item, changesBuilder.buildInserted(item.getActual()));
             } else if (hasPrev) {
-                notifiers.notifyItemDeleted(item);
+                notifiers.notifyItemDeleted(item, changesBuilder.buildDeleted(item.getPrevious()));
             }
         }
         notifiers.onFinishedProject();
@@ -66,6 +67,13 @@ public class Tellon {
         }
 
         @Override
+        public void init() throws ChangesNotifierException {
+            for (ChangesNotifier notifier : list) {
+                notifier.init();
+            }
+        }
+
+        @Override
         public void onStartProject(ProjectInfo projectInfo) {
             for (ChangesNotifier notifier : list) {
                 notifier.onStartProject(projectInfo);
@@ -87,16 +95,16 @@ public class Tellon {
         }
 
         @Override
-        public void notifyItemAdded(ProjectItem item) {
+        public void notifyItemAdded(ProjectItem item, Changes changes) {
             for (ChangesNotifier notifier : list) {
-                notifier.notifyItemAdded(item);
+                notifier.notifyItemAdded(item, changes);
             }
         }
 
         @Override
-        public void notifyItemDeleted(ProjectItem item) {
+        public void notifyItemDeleted(ProjectItem item, Changes changes) {
             for (ChangesNotifier notifier : list) {
-                notifier.notifyItemDeleted(item);
+                notifier.notifyItemDeleted(item, changes);
             }
         }
     }

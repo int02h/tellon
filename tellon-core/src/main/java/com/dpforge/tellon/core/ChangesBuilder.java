@@ -15,6 +15,28 @@ public class ChangesBuilder {
         return buildChanges(parser.parse(oldSrc), parser.parse(newSrc));
     }
 
+    public Changes buildInserted(SourceCode src) throws IOException {
+        final ParsedSourceCode code = new SourceCodeParser().parse(src);
+        final Changes changes = new Changes();
+
+        for (AnnotatedBlock block : code.getAnnotatedBlocks()) {
+            changes.addInserted(block);
+        }
+
+        return changes;
+    }
+
+    public Changes buildDeleted(SourceCode src) throws IOException {
+        final ParsedSourceCode code = new SourceCodeParser().parse(src);
+        final Changes changes = new Changes();
+
+        for (AnnotatedBlock block : code.getAnnotatedBlocks()) {
+            changes.addDeleted(block);
+        }
+
+        return changes;
+    }
+
     private static Changes buildChanges(ParsedSourceCode oldCode, ParsedSourceCode newCode) {
         final Changes changes = new Changes();
 
