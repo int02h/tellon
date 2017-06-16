@@ -46,7 +46,7 @@ public class GitProjectWalker implements ProjectWalker {
         parseArguments(args);
 
         projectInfo = new ProjectInfo.Builder()
-                .name(gitFile.getAbsolutePath()) // TODO better name
+                .name(gitFile.getParentFile().getName())
                 .build();
 
         try {
