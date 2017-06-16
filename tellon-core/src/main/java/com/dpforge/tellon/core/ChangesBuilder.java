@@ -42,16 +42,16 @@ public class ChangesBuilder {
 
         final Map<String, AnnotatedBlock> oldBlocks = new HashMap<>();
         for (AnnotatedBlock block : oldCode.getAnnotatedBlocks()) {
-            oldBlocks.put(block.getDescription(), block);
+            oldBlocks.put(block.getName(), block);
         }
 
         for (AnnotatedBlock newBlock : newCode.getAnnotatedBlocks()) {
-            final AnnotatedBlock oldBlock = oldBlocks.get(newBlock.getDescription());
+            final AnnotatedBlock oldBlock = oldBlocks.get(newBlock.getName());
             if (oldBlock != null && oldBlock.getType() == newBlock.getType()) {
                 if (!oldBlock.getBody().equals(newBlock.getBody())) {
                     changes.addChanged(oldBlock, newBlock);
                 }
-                oldBlocks.remove(newBlock.getDescription());
+                oldBlocks.remove(newBlock.getName());
             } else {
                 changes.addInserted(newBlock);
             }

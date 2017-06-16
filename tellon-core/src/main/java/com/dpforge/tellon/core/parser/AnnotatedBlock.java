@@ -8,7 +8,7 @@ public class AnnotatedBlock {
     private final FilePosition endPosition;
     private final String body;
     private final BlockType type;
-    private final String description;
+    private final String name;
     private final WatcherList watchers;
 
     AnnotatedBlock(Builder builder) {
@@ -16,7 +16,7 @@ public class AnnotatedBlock {
         this.endPosition = builder.endPosition;
         this.body = builder.body;
         this.type = builder.type;
-        this.description = builder.description;
+        this.name = builder.name;
         this.watchers = builder.watchers;
     }
 
@@ -36,8 +36,8 @@ public class AnnotatedBlock {
         return type;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
     public WatcherList getWatchers() {
@@ -46,33 +46,33 @@ public class AnnotatedBlock {
 
     @Override
     public String toString() {
-        return type + " '" + description + "' " + startPosition + " - " + endPosition + " " + watchers;
+        return type + " '" + name + "' " + startPosition + " - " + endPosition + " " + watchers;
     }
 
     static AnnotatedBlock fromNode(final ClassOrInterfaceDeclaration node, final WatcherList watchers) {
         return createBuilder(node, BlockType.TYPE)
-                .description(node.getNameAsString())
+                .name(node.getNameAsString())
                 .watchers(watchers)
                 .build();
     }
 
     static AnnotatedBlock fromNode(final AnnotationDeclaration node, final WatcherList watchers) {
         return createBuilder(node, BlockType.ANNOTATION)
-                .description(node.getNameAsString())
+                .name(node.getNameAsString())
                 .watchers(watchers)
                 .build();
     }
 
     static AnnotatedBlock fromNode(final ConstructorDeclaration node, final WatcherList watchers) {
         return createBuilder(node, BlockType.CONSTRUCTOR)
-                .description(node.getNameAsString())
+                .name(node.getNameAsString())
                 .watchers(watchers)
                 .build();
     }
 
     static AnnotatedBlock fromNode(final MethodDeclaration node, final WatcherList watchers) {
         return createBuilder(node, BlockType.METHOD)
-                .description(node.getNameAsString())
+                .name(node.getNameAsString())
                 .watchers(watchers)
                 .build();
     }
@@ -86,14 +86,14 @@ public class AnnotatedBlock {
             builder.append(var.getNameAsString());
         }
         return createBuilder(node, BlockType.FIELD)
-                .description(builder.toString())
+                .name(builder.toString())
                 .watchers(watchers)
                 .build();
     }
 
     static AnnotatedBlock fromNode(AnnotationMemberDeclaration node, final WatcherList watchers) {
         return createBuilder(node, BlockType.ANNOTATION_MEMBER)
-                .description(node.getNameAsString())
+                .name(node.getNameAsString())
                 .watchers(watchers)
                 .build();
     }
@@ -116,7 +116,7 @@ public class AnnotatedBlock {
         private final String body;
         private final BlockType type;
 
-        private String description;
+        private String name;
         private FilePosition startPosition;
         private FilePosition endPosition;
         private WatcherList watchers;
@@ -126,8 +126,8 @@ public class AnnotatedBlock {
             this.type = type;
         }
 
-        Builder description(String description) {
-            this.description = description;
+        Builder name(String name) {
+            this.name = name;
             return this;
         }
 
