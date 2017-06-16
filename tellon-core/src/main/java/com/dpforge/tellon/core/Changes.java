@@ -10,6 +10,9 @@ public class Changes {
     private final List<AnnotatedBlock> deleted = new ArrayList<>();
     private final List<AnnotatedBlock> added = new ArrayList<>();
 
+    Changes() {
+    }
+
     void addChanged(AnnotatedBlock oldBlock, AnnotatedBlock newBlock) {
         updated.add(new Update(oldBlock, newBlock));
     }
