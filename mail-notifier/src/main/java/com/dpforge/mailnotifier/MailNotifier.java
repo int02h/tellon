@@ -60,54 +60,54 @@ public class MailNotifier implements ChangesNotifier {
     @Override
     public void notifyChanges(ProjectItem item, Changes changes) {
         final List<String> watchers = new ArrayList<>();
-        final StringBuilder body = new StringBuilder();
+        final HtmlBuilder body = new HtmlBuilder();
         final MailList mailList = new MailList();
 
         if (changes.hasUpdated()) {
-            body.append("The following source code block(s) has been <b>CHANGED</b>:<br/>");
+            body.text("The following source code block(s) has been ").bold("CHANGED").text(":").br();
             for (Changes.Update update : changes.getUpdated()) {
-                body.append("Was:<br/>");
-                body.append(codeFormatter.getHtml(update.getOldBlock().getBody()));
-                body.append("<br/>Now:<br/>");
-                body.append(codeFormatter.getHtml(update.getNewBlock().getBody()));
+                body.line("Was:");
+                body.line(codeFormatter.getHtml(update.getOldBlock().getBody()));
+                body.line("Now:");
+                body.line(codeFormatter.getHtml(update.getNewBlock().getBody()));
 
                 extractMailWatchers(watchers, update.getOldBlock().getWatchers());
                 extractMailWatchers(watchers, update.getNewBlock().getWatchers());
             }
 
             for (String watcher : watchers) {
-                mailList.add(watcher, body.toString());
+                mailList.add(watcher, body.build());
             }
             watchers.clear();
-            body.setLength(0);
+            body.clear();
         }
 
         if (changes.hasAdded()) {
-            body.append("The following source code block(s) has been <b>ADDED</b>:<br/>");
+            body.text("The following source code block(s) has been ").bold("ADDED").text(":").br();
             for (AnnotatedBlock block : changes.getAdded()) {
-                body.append(codeFormatter.getHtml(block.getBody())).append("<br/>");
+                body.line(codeFormatter.getHtml(block.getBody()));
                 extractMailWatchers(watchers, block.getWatchers());
             }
 
             for (String watcher : watchers) {
-                mailList.add(watcher, body.toString());
+                mailList.add(watcher, body.build());
             }
             watchers.clear();
-            body.setLength(0);
+            body.clear();
         }
 
         if (changes.hasDeleted()) {
-            body.append("The following source code block(s) has been <b>DELETED</b>:<br/>");
+            body.text("The following source code block(s) has been ").bold("DELETED").text(":").br();
             for (AnnotatedBlock block : changes.getDeleted()) {
-                body.append(codeFormatter.getHtml(block.getBody())).append("<br/>");
+                body.line(codeFormatter.getHtml(block.getBody()));
                 extractMailWatchers(watchers, block.getWatchers());
             }
 
             for (String watcher : watchers) {
-                mailList.add(watcher, body.toString());
+                mailList.add(watcher, body.build());
             }
             watchers.clear();
-            body.setLength(0);
+            body.clear();
         }
 
         for (MailData mailData : mailList) {
@@ -118,29 +118,29 @@ public class MailNotifier implements ChangesNotifier {
     @Override
     public void notifyItemAdded(ProjectItem item, Changes changes) {
         final List<String> watchers = new ArrayList<>();
-        final StringBuilder bodyBuilder = new StringBuilder();
+        final HtmlBuilder body = new HtmlBuilder();
 
-        bodyBuilder.append("The following source code block(s) has been <b>ADDED</b>:<br/>");
+        body.text("The following source code block(s) has been ").bold("ADDED").text(":").br();
         for (AnnotatedBlock block : changes.getAdded()) {
-            bodyBuilder.append(codeFormatter.getHtml(block.getBody())).append("<br/>");
+            body.line(codeFormatter.getHtml(block.getBody()));
             extractMailWatchers(watchers, block.getWatchers());
         }
 
-        sendEmail(watchers, "Some code was added in " + currentPorject.getName(), bodyBuilder.toString());
+        sendEmail(watchers, "Some code was added in " + currentPorject.getName(), body.build());
     }
 
     @Override
     public void notifyItemDeleted(ProjectItem item, Changes changes) {
         final List<String> watchers = new ArrayList<>();
-        final StringBuilder bodyBuilder = new StringBuilder();
+        final HtmlBuilder body = new HtmlBuilder();
 
-        bodyBuilder.append("The following source code block(s) has been <b>DELETED</b>:<br/>");
+        body.text("The following source code block(s) has been ").bold("DELETED").text(":").br();
         for (AnnotatedBlock block : changes.getDeleted()) {
-            bodyBuilder.append(codeFormatter.getHtml(block.getBody())).append("<br/>");
+            body.line(codeFormatter.getHtml(block.getBody()));
             extractMailWatchers(watchers, block.getWatchers());
         }
 
-        sendEmail(watchers, "Some code was deleted in " + currentPorject.getName(), bodyBuilder.toString());
+        sendEmail(watchers, "Some code was deleted in " + currentPorject.getName(), body.build());
     }
 
     private void sendEmail(String watcher, String subject, String mailBody) {
