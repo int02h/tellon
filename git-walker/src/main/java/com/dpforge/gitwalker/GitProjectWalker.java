@@ -154,7 +154,7 @@ public class GitProjectWalker implements ProjectWalker {
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(os))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                builder.append(line);
+                builder.append(line).append("\n");
             }
         }
         return builder.toString();
