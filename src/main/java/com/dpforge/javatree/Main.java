@@ -65,7 +65,7 @@ public class Main {
             try {
                 notifier.init();
             } catch (ChangesNotifierException e) {
-                throw new IllegalStateException("Fail to initialize notifier " + notifier.getName());
+                throw new IllegalStateException("Fail to initialize notifier " + notifier.getName(), e);
             }
         }
 

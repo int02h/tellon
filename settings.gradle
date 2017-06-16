@@ -3,4 +3,5 @@ include 'tellon-core'
 include 'tellon-annotations'
 include 'fake-plugins'
 include 'git-walker'
+include 'mail-notifier'
 

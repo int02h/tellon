@@ -1,0 +1,15 @@
+group 'com.dpforge'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    compile project(':tellon-core')
+    compile 'org.simplejavamail:simple-java-mail:4.2.1-java6-release'
+}

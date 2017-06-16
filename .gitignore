@@ -3,5 +3,7 @@
 /tellon-core/build
 /fake-plugins/build
 /git-walker/build
+/mail-notifier/build/
 /.idea
 /out
+mail-notifier.properties
