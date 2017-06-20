@@ -220,6 +220,51 @@ public class ParserTest {
         assertEquals("watcher2@example.com", block.getWatchers().get(1));
     }
 
+    @Test
+    public void blockBody() {
+        final String code = "package com.test;\n" +
+                "import com.dpforge.tellon.annotations.NotifyChanges;\n" +
+                "class Foo {\n" +
+                "    // single line comment\n" +
+                "    @NonNull\n" +
+                "    @NotifyChanges(\"test\")\n" +
+                "    int getSum() {\n" +
+                "        return 1 +\n" +
+                "               2 +\n" +
+                "               3 +\n" +
+                "               4;\n" +
+                "    }\n" +
+                "}";
+        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
+        assertEquals(1, sourceCode.getAnnotatedBlocks().size());
+
+        AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
+        assertEquals("" +
+                        "@NonNull\n" +
+                        "    @NotifyChanges(\"test\")\n" +
+                        "    int getSum() {\n" +
+                        "        return 1 +\n" +
+                        "               2 +\n" +
+                        "               3 +\n" +
+                        "               4;\n" +
+                        "    }",
+                block.getBody());
+    }
+
+    @Test
+    public void singleLineBlockBody() {
+        final String code = "package com.test;\n" +
+                "import com.dpforge.tellon.annotations.NotifyChanges;\n" +
+                "class Foo {\n" +
+                "    @NotifyChanges(\"test\") int sum;\n" +
+                "}";
+        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
+        assertEquals(1, sourceCode.getAnnotatedBlocks().size());
+
+        AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
+        assertEquals("@NotifyChanges(\"test\") int sum;", block.getBody());
+    }
+
     private static void assertBlocks(final ParsedSourceCode sourceCode, final BlockType... blockTypes) {
         assertEquals(blockTypes.length, sourceCode.getAnnotatedBlocks().size());
         for (int i = 0; i < blockTypes.length; i++) {

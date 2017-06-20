@@ -1,7 +1,5 @@
 package com.dpforge.tellon.core.parser;
 
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.*;
@@ -13,20 +11,20 @@ public class SourceCodeParser {
     public SourceCodeParser() {
     }
 
-    public ParsedSourceCode parse(SourceCode sourceCode) throws IOException {
-        return parse(sourceCode.toCompilationUnit());
-    }
-
     /**
      * for tests
      */
     ParsedSourceCode parse(final String code) {
-        return parse(JavaParser.parse(code));
+        try {
+            return parse(SourceCode.createFromContent(code));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private ParsedSourceCode parse(CompilationUnit unit) {
-        final VisitorContext visitorContext = new VisitorContext();
-        new Visitor().visit(unit, visitorContext);
+    public ParsedSourceCode parse(SourceCode sourceCode)throws IOException {
+        final VisitorContext visitorContext = new VisitorContext(sourceCode);
+        new Visitor().visit(sourceCode.toCompilationUnit(), visitorContext);
         return new ParsedSourceCode(visitorContext.getAnnotatedBlocks());
     }
 
@@ -35,7 +33,8 @@ public class SourceCodeParser {
         public void visit(MethodDeclaration declaration, VisitorContext visitorContext) {
             final WatcherList watcherList = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watcherList != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watcherList));
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(visitorContext.getSourceCode(),
+                        declaration, watcherList));
             }
             super.visit(declaration, visitorContext);
         }
@@ -44,7 +43,8 @@ public class SourceCodeParser {
         public void visit(ConstructorDeclaration declaration, VisitorContext visitorContext) {
             final WatcherList watcherList = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watcherList != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watcherList));
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(visitorContext.getSourceCode(),
+                        declaration, watcherList));
             }
             super.visit(declaration, visitorContext);
         }
@@ -53,7 +53,8 @@ public class SourceCodeParser {
         public void visit(FieldDeclaration declaration, VisitorContext visitorContext) {
             final WatcherList watchers = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watchers != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(visitorContext.getSourceCode(),
+                        declaration, watchers));
             }
             super.visit(declaration, visitorContext);
         }
@@ -62,7 +63,8 @@ public class SourceCodeParser {
         public void visit(ClassOrInterfaceDeclaration declaration, VisitorContext visitorContext) {
             final WatcherList watchers = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watchers != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(visitorContext.getSourceCode(),
+                        declaration, watchers));
             }
             super.visit(declaration, visitorContext);
         }
@@ -71,7 +73,8 @@ public class SourceCodeParser {
         public void visit(AnnotationDeclaration declaration, VisitorContext visitorContext) {
             final WatcherList watchers = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watchers != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(visitorContext.getSourceCode(),
+                        declaration, watchers));
             }
             super.visit(declaration, visitorContext);
         }
@@ -80,7 +83,8 @@ public class SourceCodeParser {
         public void visit(AnnotationMemberDeclaration declaration, VisitorContext visitorContext) {
             final WatcherList watchers = visitorContext.getWatchersExtractor().tryExtractWatchers(declaration);
             if (watchers != null) {
-                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(declaration, watchers));
+                visitorContext.addAnnotatedBlock(AnnotatedBlock.fromNode(visitorContext.getSourceCode(),
+                        declaration, watchers));
             }
             super.visit(declaration, visitorContext);
         }

@@ -12,14 +12,14 @@ public class FilePosition {
     }
 
     /**
-     * Zero-base line in source code
+     * Zero-based line in source code
      */
     public int getLine() {
         return line;
     }
 
     /**
-     * Zero-base column in source code
+     * Zero-based column in source code
      */
     public int getColumn() {
         return column;

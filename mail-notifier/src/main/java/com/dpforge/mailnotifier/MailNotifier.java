@@ -67,9 +67,9 @@ public class MailNotifier implements ChangesNotifier {
             body.text("The following source code block(s) has been ").bold("CHANGED").text(":").br();
             for (Changes.Update update : changes.getUpdated()) {
                 body.line("Was:");
-                body.line(codeFormatter.getHtml(update.getOldBlock().getBody()));
+                body.line(codeFormatter.getHtml(update.getOldBlock()));
                 body.line("Now:");
-                body.line(codeFormatter.getHtml(update.getNewBlock().getBody()));
+                body.line(codeFormatter.getHtml(update.getNewBlock()));
 
                 extractMailWatchers(watchers, update.getOldBlock().getWatchers());
                 extractMailWatchers(watchers, update.getNewBlock().getWatchers());
@@ -85,7 +85,7 @@ public class MailNotifier implements ChangesNotifier {
         if (changes.hasAdded()) {
             body.text("The following source code block(s) has been ").bold("ADDED").text(":").br();
             for (AnnotatedBlock block : changes.getAdded()) {
-                body.line(codeFormatter.getHtml(block.getBody()));
+                body.line(codeFormatter.getHtml(block));
                 extractMailWatchers(watchers, block.getWatchers());
             }
 
@@ -99,7 +99,7 @@ public class MailNotifier implements ChangesNotifier {
         if (changes.hasDeleted()) {
             body.text("The following source code block(s) has been ").bold("DELETED").text(":").br();
             for (AnnotatedBlock block : changes.getDeleted()) {
-                body.line(codeFormatter.getHtml(block.getBody()));
+                body.line(codeFormatter.getHtml(block));
                 extractMailWatchers(watchers, block.getWatchers());
             }
 
@@ -122,7 +122,7 @@ public class MailNotifier implements ChangesNotifier {
 
         body.text("The following source code block(s) has been ").bold("ADDED").text(":").br();
         for (AnnotatedBlock block : changes.getAdded()) {
-            body.line(codeFormatter.getHtml(block.getBody()));
+            body.line(codeFormatter.getHtml(block));
             extractMailWatchers(watchers, block.getWatchers());
         }
 
@@ -136,7 +136,7 @@ public class MailNotifier implements ChangesNotifier {
 
         body.text("The following source code block(s) has been ").bold("DELETED").text(":").br();
         for (AnnotatedBlock block : changes.getDeleted()) {
-            body.line(codeFormatter.getHtml(block.getBody()));
+            body.line(codeFormatter.getHtml(block));
             extractMailWatchers(watchers, block.getWatchers());
         }
 

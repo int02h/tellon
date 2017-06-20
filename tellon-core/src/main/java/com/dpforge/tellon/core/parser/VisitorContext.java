@@ -12,10 +12,19 @@ class VisitorContext {
     private static final String NOTIFY_CHANGED_ANNOTATION_PACKAGE = NotifyChanges.class.getPackage().getName();
 
     private final WatchersExtractor watchersExtractor = new WatchersExtractor(this);
+    private final SourceCode sourceCode;
 
     private boolean annotationImported;
 
     private final List<AnnotatedBlock> annotatedBlocks = new ArrayList<>();
+
+    VisitorContext(SourceCode sourceCode) {
+        this.sourceCode = sourceCode;
+    }
+
+    SourceCode getSourceCode() {
+        return sourceCode;
+    }
 
     WatchersExtractor getWatchersExtractor() {
         return watchersExtractor;

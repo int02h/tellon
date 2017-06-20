@@ -3,46 +3,37 @@ package com.dpforge.tellon.core.parser;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
-import java.io.File;
 import java.io.IOException;
 
 public abstract class SourceCode {
     private SourceCode() {
     }
 
-    abstract CompilationUnit toCompilationUnit() throws IOException;
+    public abstract String[] getContent();
 
-    public static SourceCode createFromFile(final File file) {
-        return new FileSourceCode(file);
-    }
+    abstract CompilationUnit toCompilationUnit() throws IOException;
 
     public static SourceCode createFromContent(final String content) {
         return new ContentSourceCode(content);
     }
 
-    private static class FileSourceCode extends SourceCode {
-        private final File file;
-
-        FileSourceCode(File file) {
-            this.file = file;
-        }
-
-        @Override
-        CompilationUnit toCompilationUnit() throws IOException {
-            return JavaParser.parse(file);
-        }
-    }
-
     private static class ContentSourceCode extends SourceCode {
-        private final String content;
+        private final String code;
+        private final String[] lines;
 
-        private ContentSourceCode(String content) {
-            this.content = content;
+        private ContentSourceCode(String code) {
+            this.code = code;
+            this.lines = code.split("\n");
+        }
+
+        @Override
+        public String[] getContent() {
+            return lines;
         }
 
         @Override
         CompilationUnit toCompilationUnit() throws IOException {
-            return JavaParser.parse(content);
+            return JavaParser.parse(code);
         }
     }
 }
