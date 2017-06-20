@@ -5,17 +5,16 @@ import com.dpforge.tellon.core.parser.ParsedSourceCode;
 import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.SourceCodeParser;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChangesBuilder {
-    public Changes build(SourceCode oldSrc, SourceCode newSrc) throws IOException {
+    public Changes build(SourceCode oldSrc, SourceCode newSrc) {
         final SourceCodeParser parser = new SourceCodeParser();
         return buildChanges(parser.parse(oldSrc), parser.parse(newSrc));
     }
 
-    public Changes buildInserted(SourceCode src) throws IOException {
+    public Changes buildInserted(SourceCode src) {
         final ParsedSourceCode code = new SourceCodeParser().parse(src);
         final Changes changes = new Changes();
 
@@ -26,7 +25,7 @@ public class ChangesBuilder {
         return changes;
     }
 
-    public Changes buildDeleted(SourceCode src) throws IOException {
+    public Changes buildDeleted(SourceCode src) {
         final ParsedSourceCode code = new SourceCodeParser().parse(src);
         final Changes changes = new Changes();
 

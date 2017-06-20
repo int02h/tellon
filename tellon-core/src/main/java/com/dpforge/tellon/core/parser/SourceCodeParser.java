@@ -5,8 +5,6 @@ import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
-import java.io.IOException;
-
 public class SourceCodeParser {
     public SourceCodeParser() {
     }
@@ -15,14 +13,10 @@ public class SourceCodeParser {
      * for tests
      */
     ParsedSourceCode parse(final String code) {
-        try {
-            return parse(SourceCode.createFromContent(code));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return parse(SourceCode.createFromContent(code));
     }
 
-    public ParsedSourceCode parse(SourceCode sourceCode)throws IOException {
+    public ParsedSourceCode parse(SourceCode sourceCode) {
         final VisitorContext visitorContext = new VisitorContext(sourceCode);
         new Visitor().visit(sourceCode.toCompilationUnit(), visitorContext);
         return new ParsedSourceCode(visitorContext.getAnnotatedBlocks());

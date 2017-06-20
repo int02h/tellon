@@ -3,15 +3,13 @@ package com.dpforge.tellon.core.parser;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
-import java.io.IOException;
-
 public abstract class SourceCode {
     private SourceCode() {
     }
 
     public abstract String[] getContent();
 
-    abstract CompilationUnit toCompilationUnit() throws IOException;
+    abstract CompilationUnit toCompilationUnit();
 
     public static SourceCode createFromContent(final String content) {
         return new ContentSourceCode(content);
@@ -32,7 +30,7 @@ public abstract class SourceCode {
         }
 
         @Override
-        CompilationUnit toCompilationUnit() throws IOException {
+        CompilationUnit toCompilationUnit() {
             return JavaParser.parse(code);
         }
     }
