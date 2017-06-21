@@ -47,7 +47,7 @@ public class ChangesBuilder {
         for (AnnotatedBlock newBlock : newCode.getAnnotatedBlocks()) {
             final AnnotatedBlock oldBlock = oldBlocks.get(newBlock.getName());
             if (oldBlock != null && oldBlock.getType() == newBlock.getType()) {
-                if (!oldBlock.getBody().equals(newBlock.getBody())) {
+                if (!bodyEquals(oldBlock, newBlock)) {
                     changes.addChanged(oldBlock, newBlock);
                 }
                 oldBlocks.remove(newBlock.getName());
@@ -61,5 +61,11 @@ public class ChangesBuilder {
         }
 
         return changes;
+    }
+
+    private static boolean bodyEquals(final AnnotatedBlock oldBlock, final AnnotatedBlock newBlock) {
+        final String oldRaw = oldBlock.getSourceCode().asRaw();
+        final String newRaw = newBlock.getSourceCode().asRaw();
+        return oldRaw.equals(newRaw);
     }
 }

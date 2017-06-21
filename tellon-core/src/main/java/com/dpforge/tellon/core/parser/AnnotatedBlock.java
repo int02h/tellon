@@ -4,26 +4,20 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;
 
 public class AnnotatedBlock {
-    private final SourceCode sourceCode;
     private final FilePosition startPosition;
     private final FilePosition endPosition;
-    private final String body;
+    private final BlockSourceCode sourceCode;
     private final BlockType type;
     private final String name;
     private final WatcherList watchers;
 
     AnnotatedBlock(Builder builder) {
-        this.sourceCode = builder.sourceCode;
         this.startPosition = builder.startPosition;
         this.endPosition = builder.endPosition;
-        this.body = builder.body;
+        this.sourceCode = builder.sourceCode;
         this.type = builder.type;
         this.name = builder.name;
         this.watchers = builder.watchers;
-    }
-
-    public SourceCode getContainingSourceCode() {
-        return sourceCode;
     }
 
     public FilePosition getStartPosition() {
@@ -34,8 +28,8 @@ public class AnnotatedBlock {
         return endPosition;
     }
 
-    public String getBody() {
-        return body;
+    public BlockSourceCode getSourceCode() {
+        return sourceCode;
     }
 
     public BlockType getType() {
@@ -122,8 +116,7 @@ public class AnnotatedBlock {
         }
 
         final Builder builder = new Builder()
-                .type(type)
-                .sourceCode(sourceCode);
+                .type(type);
 
         final FilePosition startPosition = FilePosition.create(node.getBegin().get());
         builder.startPosition(startPosition);
@@ -131,36 +124,50 @@ public class AnnotatedBlock {
         final FilePosition endPosition = FilePosition.create(node.getEnd().get());
         builder.endPosition(endPosition);
 
-        builder.body(getBody(sourceCode, startPosition, endPosition));
+
+        final String rawSourceCode = getRawSourceCode(sourceCode, startPosition, endPosition);
+        final String sourceCodeFragment = getSourceCodeFragment(sourceCode, startPosition, endPosition);
+        builder.sourceCode(new BlockSourceCode(rawSourceCode, sourceCodeFragment));
 
         return builder;
     }
 
-    private static String getBody(final SourceCode sourceCode, final FilePosition start, final FilePosition end) {
+    private static String getRawSourceCode(final SourceCode sourceCode,
+                                           final FilePosition start,
+                                           final FilePosition end) {
         if (start.getLine() == end.getLine()) {
             final String line = sourceCode.getContent()[start.getLine()];
             return line.substring(start.getColumn(), end.getColumn() + 1);
         }
 
-        final StringBuilder body = new StringBuilder();
-        body.append(sourceCode.getContent()[start.getLine()].substring(start.getColumn())).append("\n");
+        final StringBuilder code = new StringBuilder();
+        code.append(sourceCode.getContent()[start.getLine()].substring(start.getColumn())).append("\n");
         for (int i = start.getLine() + 1; i < end.getLine(); i++) {
-            body.append(sourceCode.getContent()[i]).append("\n");
+            code.append(sourceCode.getContent()[i]).append("\n");
         }
-        body.append(sourceCode.getContent()[end.getLine()].substring(0, end.getColumn() + 1));
-        return body.toString();
+        code.append(sourceCode.getContent()[end.getLine()].substring(0, end.getColumn() + 1));
+        return code.toString();
+    }
+
+    private static String getSourceCodeFragment(final SourceCode sourceCode,
+                                                final FilePosition start,
+                                                final FilePosition end) {
+        final StringBuilder code = new StringBuilder();
+        for (int i = start.getLine(); i <= end.getLine(); i++) {
+            code.append(sourceCode.getContent()[i]).append("\n");
+        }
+        return code.toString();
     }
 
     private static class Builder {
-        private SourceCode sourceCode;
         private BlockType type;
-        private String body;
+        private BlockSourceCode sourceCode;
         private String name;
         private FilePosition startPosition;
         private FilePosition endPosition;
         private WatcherList watchers;
 
-        Builder sourceCode(SourceCode sourceCode) {
+        Builder sourceCode(BlockSourceCode sourceCode) {
             this.sourceCode = sourceCode;
             return this;
         }
@@ -190,15 +197,9 @@ public class AnnotatedBlock {
             return this;
         }
 
-        Builder body(String body) {
-            this.body = body;
-            return this;
-        }
-
         AnnotatedBlock build() {
             if (sourceCode == null
                     || type == null
-                    || body == null
                     || name == null
                     || startPosition == null
                     || endPosition == null

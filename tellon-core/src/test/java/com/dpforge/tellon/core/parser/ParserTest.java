@@ -221,7 +221,7 @@ public class ParserTest {
     }
 
     @Test
-    public void blockBody() {
+    public void blockSourceCode() {
         final String code = "package com.test;\n" +
                 "import com.dpforge.tellon.annotations.NotifyChanges;\n" +
                 "class Foo {\n" +
@@ -248,11 +248,11 @@ public class ParserTest {
                         "               3 +\n" +
                         "               4;\n" +
                         "    }",
-                block.getBody());
+                block.getSourceCode().asRaw());
     }
 
     @Test
-    public void singleLineBlockBody() {
+    public void singleLineBlockSourceCode() {
         final String code = "package com.test;\n" +
                 "import com.dpforge.tellon.annotations.NotifyChanges;\n" +
                 "class Foo {\n" +
@@ -262,7 +262,7 @@ public class ParserTest {
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
-        assertEquals("@NotifyChanges(\"test\") int sum;", block.getBody());
+        assertEquals("@NotifyChanges(\"test\") int sum;", block.getSourceCode().asRaw());
     }
 
     private static void assertBlocks(final ParsedSourceCode sourceCode, final BlockType... blockTypes) {
