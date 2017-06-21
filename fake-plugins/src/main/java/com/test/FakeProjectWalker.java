@@ -3,6 +3,7 @@ package com.test;
 import com.dpforge.tellon.core.ProjectItem;
 import com.dpforge.tellon.core.ProjectWalker;
 import com.dpforge.tellon.core.ProjectWalkerException;
+import com.dpforge.tellon.core.Revision;
 import com.dpforge.tellon.core.notifier.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
 
@@ -44,6 +45,11 @@ public class FakeProjectWalker implements ProjectWalker {
             }
 
             @Override
+            public Revision getActualRevision() {
+                return new Revision.Builder("v1").build();
+            }
+
+            @Override
             public boolean hasPrevious() {
                 return true;
             }
@@ -60,6 +66,11 @@ public class FakeProjectWalker implements ProjectWalker {
                         "    @NotifyChanges(\"test@test.com\")" +
                         "    boolean deleted;" +
                         "}");
+            }
+
+            @Override
+            public Revision getPreviousRevision() {
+                return new Revision.Builder("v0").build();
             }
         });
     }

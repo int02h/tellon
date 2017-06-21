@@ -21,6 +21,11 @@ public class HtmlBuilder {
         return this;
     }
 
+    public HtmlBuilder italic(final String text) {
+        builder.append("<i>").append(text).append("</i>");
+        return this;
+    }
+
     public HtmlBuilder br() {
         builder.append("<br/>");
         return this;

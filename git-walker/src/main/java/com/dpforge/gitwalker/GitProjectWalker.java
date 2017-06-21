@@ -3,12 +3,15 @@ package com.dpforge.gitwalker;
 import com.dpforge.tellon.core.ProjectItem;
 import com.dpforge.tellon.core.ProjectWalker;
 import com.dpforge.tellon.core.ProjectWalkerException;
+import com.dpforge.tellon.core.Revision;
 import com.dpforge.tellon.core.notifier.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
@@ -37,9 +40,9 @@ public class GitProjectWalker implements ProjectWalker {
 
     private int index;
 
-    private String newRevision;
+    private GitRevision newRev;
 
-    private String oldRevision;
+    private GitRevision oldRev;
 
     @Override
     public void init(Map<String, String> args) throws ProjectWalkerException {
@@ -53,11 +56,12 @@ public class GitProjectWalker implements ProjectWalker {
             try (final Repository repository = new FileRepositoryBuilder()
                     .setGitDir(gitFile)
                     .build()) {
-                final ObjectId newId = repository.resolve(newRevision + "^{tree}");
-                final ObjectId oldId = repository.resolve(oldRevision + "^{tree}");
-                if (newId != null && oldId != null) {
-                    List<DiffEntry> diff = buildDiff(repository, oldId, newId);
-                    items = buildProjectItems(repository, diff);
+
+                newRev.fillWith(repository);
+                oldRev.fillWith(repository);
+
+                if (newRev.isReady() && oldRev.isReady()) {
+                    items = buildProjectItems(repository, buildDiff(repository));
                 } else {
                     items = Collections.emptyList();
                 }
@@ -103,18 +107,37 @@ public class GitProjectWalker implements ProjectWalker {
             throw new ProjectWalkerException(String.format(".git folder '%s' not found", gitPath));
         }
 
-        newRevision = args.get(ARG_NEW_REVISION);
+        String newRevision = args.get(ARG_NEW_REVISION);
         if (newRevision == null) {
             newRevision = "HEAD";
         }
 
-        oldRevision = args.get(ARG_OLD_REVISION);
+        String oldRevision = args.get(ARG_OLD_REVISION);
         if (oldRevision == null) {
             oldRevision = newRevision + "^";
         }
+
+        this.newRev = new GitRevision(newRevision);
+        this.oldRev = new GitRevision(oldRevision);
     }
 
-    private static List<ProjectItem> buildProjectItems(Repository repository, List<DiffEntry> diff) {
+    private List<DiffEntry> buildDiff(Repository repo) throws IOException, GitAPIException {
+        try (ObjectReader reader = repo.newObjectReader()) {
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, oldRev.treeId);
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, newRev.treeId);
+
+            try (Git git = new Git(repo)) {
+                return git.diff()
+                        .setNewTree(newTreeIter)
+                        .setOldTree(oldTreeIter)
+                        .call();
+            }
+        }
+    }
+
+    private List<ProjectItem> buildProjectItems(Repository repository, List<DiffEntry> diff) {
         final List<ProjectItem> items = new ArrayList<>(diff.size());
         for (DiffEntry entry : diff) {
             items.add(new ProjectItem() {
@@ -144,6 +167,11 @@ public class GitProjectWalker implements ProjectWalker {
                 }
 
                 @Override
+                public Revision getActualRevision() throws IOException {
+                    return newRev.info;
+                }
+
+                @Override
                 public boolean hasPrevious() {
                     return entry.getChangeType() != DiffEntry.ChangeType.ADD;
                 }
@@ -152,6 +180,11 @@ public class GitProjectWalker implements ProjectWalker {
                 public SourceCode getPrevious() throws IOException {
                     ObjectStream os = repository.open(entry.getOldId().toObjectId()).openStream();
                     return SourceCode.createFromContent(getStreamContent(os));
+                }
+
+                @Override
+                public Revision getPreviousRevision() throws IOException {
+                    return oldRev.info;
                 }
             });
         }
@@ -169,19 +202,35 @@ public class GitProjectWalker implements ProjectWalker {
         return builder.toString();
     }
 
-    private static List<DiffEntry> buildDiff(Repository repo, ObjectId oldId, ObjectId newId) throws IOException, GitAPIException {
-        try (ObjectReader reader = repo.newObjectReader()) {
-            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-            oldTreeIter.reset(reader, oldId);
-            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-            newTreeIter.reset(reader, newId);
+    private static String getCommitAuthor(RevCommit commit) {
+        final PersonIdent author = commit.getAuthorIdent();
+        return author.getName() + " (" + author.getEmailAddress() + ")";
+    }
 
-            try (Git git = new Git(repo)) {
-                return git.diff()
-                        .setNewTree(newTreeIter)
-                        .setOldTree(oldTreeIter)
-                        .call();
+    private static class GitRevision {
+        private final String revision;
+        private ObjectId treeId;
+        private ObjectId commitId;
+        private Revision info;
+
+        GitRevision(String revision) {
+            this.revision = revision;
+        }
+
+        void fillWith(Repository repository) throws IOException {
+            treeId = repository.resolve(revision + "^{tree}");
+            commitId = repository.resolve(revision + "^{commit}");
+
+            try (RevWalk walk = new RevWalk(repository)) {
+                final RevCommit newCommit = walk.parseCommit(commitId);
+                info = new Revision.Builder(commitId.name())
+                        .author(getCommitAuthor(newCommit))
+                        .build();
             }
+        }
+
+        boolean isReady() {
+            return treeId != null || commitId != null || info != null;
         }
     }
 }

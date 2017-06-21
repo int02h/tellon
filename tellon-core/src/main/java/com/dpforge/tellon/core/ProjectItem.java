@@ -11,7 +11,11 @@ public interface ProjectItem {
 
     SourceCode getActual() throws IOException;
 
+    Revision getActualRevision() throws IOException;
+
     boolean hasPrevious();
 
     SourceCode getPrevious() throws IOException;
+
+    Revision getPreviousRevision() throws IOException;
 }

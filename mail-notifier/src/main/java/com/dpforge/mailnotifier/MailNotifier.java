@@ -3,6 +3,7 @@ package com.dpforge.mailnotifier;
 import com.dpforge.mailnotifier.format.SourceCodeHtmlFormatter;
 import com.dpforge.tellon.core.Changes;
 import com.dpforge.tellon.core.ProjectItem;
+import com.dpforge.tellon.core.Revision;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectInfo;
@@ -63,7 +64,17 @@ public class MailNotifier implements ChangesNotifier {
         final HtmlBuilder body = new HtmlBuilder();
         final MailList mailList = new MailList();
 
-        body.line("Someone has modified file '%s'.", item.getDescription()).br();
+        body.text("Some changes has been made in file ").italic(item.getDescription()).br().br();
+
+        try {
+            final Revision actualRevision = item.getActualRevision();
+            final Revision previousRevision = item.getPreviousRevision();
+            body.text("Author of changes: ").italic(actualRevision.getAuthor()).br()
+                    .text("Previous version: ").italic(previousRevision.getVersion()).br()
+                    .text("Actual version: ").italic(actualRevision.getVersion()).br()
+                    .br();
+        } catch (IOException ignored) {
+        }
 
         if (changes.hasUpdated()) {
             body.text("The following source code block(s) has been ").bold("CHANGED").text(":").br();
