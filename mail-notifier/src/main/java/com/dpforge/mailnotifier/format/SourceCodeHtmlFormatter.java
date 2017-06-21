@@ -19,7 +19,7 @@ public class SourceCodeHtmlFormatter {
     }
 
     public String getHtml(final AnnotatedBlock block) {
-        final String[] lines = block.getSourceCode().getContent();
+        final String[] lines = block.getContainingSourceCode().getContent();
         final StringBuilder lineNumberBuilder = new StringBuilder();
         final StringBuilder sourceBuilder = new StringBuilder();
 

@@ -22,7 +22,7 @@ public class AnnotatedBlock {
         this.watchers = builder.watchers;
     }
 
-    public SourceCode getSourceCode() {
+    public SourceCode getContainingSourceCode() {
         return sourceCode;
     }
 
