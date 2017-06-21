@@ -63,13 +63,16 @@ public class MailNotifier implements ChangesNotifier {
         final HtmlBuilder body = new HtmlBuilder();
         final MailList mailList = new MailList();
 
+        body.line("Someone has modified file '%s'.", item.getDescription()).br();
+
         if (changes.hasUpdated()) {
             body.text("The following source code block(s) has been ").bold("CHANGED").text(":").br();
             for (Changes.Update update : changes.getUpdated()) {
-                body.line("Was:");
-                body.line(codeFormatter.getHtml(update.getOldBlock()));
-                body.line("Now:");
-                body.line(codeFormatter.getHtml(update.getNewBlock()));
+                body.line("Was:")
+                        .line(codeFormatter.getHtml(update.getOldBlock()))
+                        .line("Now:")
+                        .line(codeFormatter.getHtml(update.getNewBlock()))
+                        .br();
 
                 extractMailWatchers(watchers, update.getOldBlock().getWatchers());
                 extractMailWatchers(watchers, update.getNewBlock().getWatchers());
@@ -85,7 +88,7 @@ public class MailNotifier implements ChangesNotifier {
         if (changes.hasAdded()) {
             body.text("The following source code block(s) has been ").bold("ADDED").text(":").br();
             for (AnnotatedBlock block : changes.getAdded()) {
-                body.line(codeFormatter.getHtml(block));
+                body.line(codeFormatter.getHtml(block)).br();
                 extractMailWatchers(watchers, block.getWatchers());
             }
 
@@ -99,7 +102,7 @@ public class MailNotifier implements ChangesNotifier {
         if (changes.hasDeleted()) {
             body.text("The following source code block(s) has been ").bold("DELETED").text(":").br();
             for (AnnotatedBlock block : changes.getDeleted()) {
-                body.line(codeFormatter.getHtml(block));
+                body.line(codeFormatter.getHtml(block)).br();
                 extractMailWatchers(watchers, block.getWatchers());
             }
 

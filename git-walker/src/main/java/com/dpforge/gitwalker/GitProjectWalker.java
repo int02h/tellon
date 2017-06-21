@@ -120,7 +120,16 @@ public class GitProjectWalker implements ProjectWalker {
             items.add(new ProjectItem() {
                 @Override
                 public String getDescription() {
-                    return entry.toString();
+                    switch (entry.getChangeType()) {
+                        case ADD:
+                            return entry.getNewPath();
+                        case MODIFY:
+                        case DELETE:
+                        case RENAME:
+                        case COPY:
+                        default:
+                            return entry.getOldPath();
+                    }
                 }
 
                 @Override
