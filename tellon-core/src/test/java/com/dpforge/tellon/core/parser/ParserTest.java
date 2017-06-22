@@ -222,34 +222,22 @@ public class ParserTest {
     }
 
     @Test
-    public void blockSourceCode() {
+    public void blockSourceCodeAsFragment() {
         final String[] code = {"package com.test;",
                 "import com.dpforge.tellon.annotations.NotifyChanges;",
-                "class Foo {",
-                "    // single line comment",
-                "    @NonNull",
-                "    @NotifyChanges(\"test\")",
-                "    int getSum() {",
-                "        return 1 +",
-                "               2 +",
-                "               3 +",
-                "               4;",
-                "    }",
+                "class",
+                "    Foo { @NotifyChanges(\"test\") int",
+                "    value ;",
                 "}"};
+
         final ParsedSourceCode sourceCode = parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
-        AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
-        assertArrayEquals(new String[]{
-                        "@NonNull",
-                        "    @NotifyChanges(\"test\")",
-                        "    int getSum() {",
-                        "        return 1 +",
-                        "               2 +",
-                        "               3 +",
-                        "               4;",
-                        "    }"},
+        final AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
+        assertArrayEquals(new String[]{"@NotifyChanges(\"test\") int", "    value ;"},
                 block.getSourceCode().asRaw());
+        assertArrayEquals(new String[]{"    Foo { @NotifyChanges(\"test\") int", "    value ;"},
+                block.getSourceCode().asFragment());
     }
 
     @Test

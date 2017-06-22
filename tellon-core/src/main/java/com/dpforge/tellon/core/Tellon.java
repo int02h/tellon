@@ -1,7 +1,6 @@
 package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
-import com.dpforge.tellon.core.notifier.ChangesNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
 
@@ -45,7 +44,7 @@ public class Tellon {
         notifiers.onFinishedProject();
     }
 
-    private static class Notifiers implements ChangesNotifier {
+    private static class Notifiers {
         private final List<ChangesNotifier> list = new ArrayList<>();
 
         void add(ChangesNotifier notifier) {
@@ -56,53 +55,31 @@ public class Tellon {
             list.addAll(notifiers);
         }
 
-        @Override
-        public String getName() {
-            return "compound";
-        }
-
-        @Override
-        public String getDescription() {
-            return "compound";
-        }
-
-        @Override
-        public void init() throws ChangesNotifierException {
-            for (ChangesNotifier notifier : list) {
-                notifier.init();
-            }
-        }
-
-        @Override
-        public void onStartProject(ProjectInfo projectInfo) {
+        void onStartProject(ProjectInfo projectInfo) {
             for (ChangesNotifier notifier : list) {
                 notifier.onStartProject(projectInfo);
             }
         }
 
-        @Override
-        public void onFinishedProject() {
+        void onFinishedProject() {
             for (ChangesNotifier notifier : list) {
                 notifier.onFinishedProject();
             }
         }
 
-        @Override
-        public void notifyChanges(ProjectItem item, Changes changes) {
+        void notifyChanges(ProjectItem item, Changes changes) {
             for (ChangesNotifier notifier : list) {
                 notifier.notifyChanges(item, changes);
             }
         }
 
-        @Override
-        public void notifyItemAdded(ProjectItem item, Changes changes) {
+        void notifyItemAdded(ProjectItem item, Changes changes) {
             for (ChangesNotifier notifier : list) {
                 notifier.notifyItemAdded(item, changes);
             }
         }
 
-        @Override
-        public void notifyItemDeleted(ProjectItem item, Changes changes) {
+        void notifyItemDeleted(ProjectItem item, Changes changes) {
             for (ChangesNotifier notifier : list) {
                 notifier.notifyItemDeleted(item, changes);
             }
