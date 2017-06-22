@@ -59,13 +59,13 @@ public class SourceCodeLinesTest {
 
         try {
             lines.get(-1);
-            fail("No exception thown");
+            fail("No exception thrown");
         } catch (IndexOutOfBoundsException ignored) {
         }
 
         try {
             lines.get(10);
-            fail("No exception thown");
+            fail("No exception thrown");
         } catch (IndexOutOfBoundsException ignored) {
         }
     }
