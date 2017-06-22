@@ -176,6 +176,91 @@ public class ChangesBuilderTest {
         assertTrue(changes.hasAdded());
     }
 
+    @Test
+    public void javaDoc() throws Exception {
+        final SourceCode src1 = createSourceCode(new String[]{
+                "interface Foo {",
+                "    /**",
+                "    /* This method does awesome things",
+                "     */",
+                "    @NotifyChanges(\"javadoc\")",
+                "    abstract int foo();",
+                "}"});
+        final SourceCode src2 = createSourceCode(new String[]{
+                "interface Foo {",
+                "    /**",
+                "    /* This method does awesome things (sometimes)",
+                "     */",
+                "    @NotifyChanges(\"javadoc\")",
+                "    abstract int foo();",
+                "}"});
+        final Changes changes = buildChanges(src1, src2);
+        assertTrue(changes.hasUpdated());
+        assertFalse(changes.hasDeleted());
+        assertFalse(changes.hasAdded());
+    }
+
+    @Test
+    public void insideLineComment() throws Exception {
+        final SourceCode src1 = createSourceCode(new String[] {
+                "class Foo {",
+                "    @NotifyChanges(\"javadoc\")",
+                "    void doSomeWork() {",
+                "        int a = 123; // magic number",
+                "        work(a);",
+                "    }",
+                "}"
+        });
+
+        final SourceCode src2 = createSourceCode(new String[] {
+                "class Foo {",
+                "    @NotifyChanges(\"javadoc\")",
+                "    void doSomeWork() {",
+                "        int a = 123; // constant from the doc",
+                "        work(a);",
+                "    }",
+                "}"
+        });
+        final Changes changes = buildChanges(src1, src2);
+        assertTrue(changes.hasUpdated());
+        assertFalse(changes.hasDeleted());
+        assertFalse(changes.hasAdded());
+    }
+
+    @Test
+    public void insideBlockComment() throws Exception {
+        final SourceCode src1 = createSourceCode(new String[] {
+                "class Foo {",
+                "    @NotifyChanges(\"javadoc\")",
+                "    void doSomeWork() {",
+                "        int a = 123;",
+                "        /*",
+                "            This method does some work",
+                "         */",
+                "        work(a);",
+                "    }",
+                "}"
+        });
+
+        final SourceCode src2 = createSourceCode(new String[] {
+                "class Foo {",
+                "    @NotifyChanges(\"javadoc\")",
+                "    void doSomeWork() {",
+                "        int a = 123;",
+                "        /*",
+                "            This method does some work",
+                "            Sometimes...",
+                "         */",
+                "        work(a);",
+                "    }",
+                "}"
+        });
+        final Changes changes = buildChanges(src1, src2);
+        assertTrue(changes.hasUpdated());
+        assertFalse(changes.hasDeleted());
+        assertFalse(changes.hasAdded());
+    }
+
     private static SourceCode createSourceCode(final String[] clazz) {
         final String[] code = new String[clazz.length + 2];
         code[0] = "package com.test;";

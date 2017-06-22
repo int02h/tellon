@@ -118,12 +118,19 @@ public class AnnotatedBlock {
         final Builder builder = new Builder()
                 .type(type);
 
-        final FilePosition startPosition = FilePosition.create(node.getBegin().get());
+        final FilePosition startPosition;
+        if (node.hasJavaDocComment()) {
+            if (!node.getComment().getBegin().isPresent()) {
+                throw new IllegalStateException("JavaDoc block position is unknown");
+            }
+            startPosition = FilePosition.create(node.getComment().getBegin().get());
+        } else {
+            startPosition = FilePosition.create(node.getBegin().get());
+        }
         builder.startPosition(startPosition);
 
         final FilePosition endPosition = FilePosition.create(node.getEnd().get());
         builder.endPosition(endPosition);
-
 
         final String[] rawSourceCode = sourceCode.getContent().getExactSubset(startPosition, endPosition);
         final String[] sourceCodeFragment = sourceCode.getContent().getLineRange(startPosition, endPosition);
