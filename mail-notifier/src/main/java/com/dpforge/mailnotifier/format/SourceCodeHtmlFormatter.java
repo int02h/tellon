@@ -20,7 +20,7 @@ public class SourceCodeHtmlFormatter {
     }
 
     public String getHtml(final AnnotatedBlock block) {
-        final String[] lines = cleanUpIndent(block.getSourceCode().asFragment().split("\n"));
+        final String[] lines = cleanUpIndent(block.getSourceCode().asFragment());
         final StringBuilder lineNumberBuilder = new StringBuilder();
         final StringBuilder sourceBuilder = new StringBuilder();
         final int startLine = block.getStartPosition().getLine();

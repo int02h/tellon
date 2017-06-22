@@ -191,15 +191,15 @@ public class GitProjectWalker implements ProjectWalker {
         return items;
     }
 
-    private static String getStreamContent(ObjectStream os) throws IOException {
-        final StringBuilder builder = new StringBuilder();
+    private static List<String> getStreamContent(ObjectStream os) throws IOException {
+        final List<String> content = new ArrayList<>();
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(os))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                builder.append(line).append("\n");
+                content.add(line);
             }
         }
-        return builder.toString();
+        return content;
     }
 
     private static String getCommitAuthor(RevCommit commit) {

@@ -32,16 +32,16 @@ public class FakeProjectWalker implements ProjectWalker {
 
             @Override
             public SourceCode getActual() {
-                return SourceCode.createFromContent("" +
-                        "package com.test; " +
-                        "import com.dpforge.tellon.annotations.NotifyChanges; " +
-                        "@NotifyChanges(\"test@test.com\")" +
-                        "class Foo {" +
-                        "    @NotifyChanges(\"test@test.com\")" +
-                        "    Integer changed;" +
-                        "    @NotifyChanges(\"test@test.com\")" +
-                        "    String added;" +
-                        "}");
+                return SourceCode.createFromContent(new String[] {
+                        "package com.test; ",
+                        "import com.dpforge.tellon.annotations.NotifyChanges; ",
+                        "@NotifyChanges(\"test@test.com\")",
+                        "class Foo {",
+                        "    @NotifyChanges(\"test@test.com\")",
+                        "    Integer changed;",
+                        "    @NotifyChanges(\"test@test.com\")",
+                        "    String added;",
+                        "}"});
             }
 
             @Override
@@ -56,16 +56,16 @@ public class FakeProjectWalker implements ProjectWalker {
 
             @Override
             public SourceCode getPrevious() {
-                return SourceCode.createFromContent("" +
-                        "package com.test; " +
-                        "import com.dpforge.tellon.annotations.NotifyChanges; " +
-                        "@NotifyChanges(\"test@test.com\")" +
-                        "final class Foo {" +
-                        "    @NotifyChanges(\"test@test.com\")" +
-                        "    int changed;" +
-                        "    @NotifyChanges(\"test@test.com\")" +
-                        "    boolean deleted;" +
-                        "}");
+                return SourceCode.createFromContent(new String[] {
+                        "package com.test; ",
+                        "import com.dpforge.tellon.annotations.NotifyChanges; ",
+                        "@NotifyChanges(\"test@test.com\")",
+                        "final class Foo {",
+                        "    @NotifyChanges(\"test@test.com\")",
+                        "    int changed;",
+                        "    @NotifyChanges(\"test@test.com\")",
+                        "    boolean deleted;",
+                        "}"});
             }
 
             @Override

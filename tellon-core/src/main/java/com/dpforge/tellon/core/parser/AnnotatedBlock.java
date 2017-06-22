@@ -125,38 +125,11 @@ public class AnnotatedBlock {
         builder.endPosition(endPosition);
 
 
-        final String rawSourceCode = getRawSourceCode(sourceCode, startPosition, endPosition);
-        final String sourceCodeFragment = getSourceCodeFragment(sourceCode, startPosition, endPosition);
+        final String[] rawSourceCode = sourceCode.getContent().getExactSubset(startPosition, endPosition);
+        final String[] sourceCodeFragment = sourceCode.getContent().getLineRange(startPosition, endPosition);
         builder.sourceCode(new BlockSourceCode(rawSourceCode, sourceCodeFragment));
 
         return builder;
-    }
-
-    private static String getRawSourceCode(final SourceCode sourceCode,
-                                           final FilePosition start,
-                                           final FilePosition end) {
-        if (start.getLine() == end.getLine()) {
-            final String line = sourceCode.getContent()[start.getLine()];
-            return line.substring(start.getColumn(), end.getColumn() + 1);
-        }
-
-        final StringBuilder code = new StringBuilder();
-        code.append(sourceCode.getContent()[start.getLine()].substring(start.getColumn())).append("\n");
-        for (int i = start.getLine() + 1; i < end.getLine(); i++) {
-            code.append(sourceCode.getContent()[i]).append("\n");
-        }
-        code.append(sourceCode.getContent()[end.getLine()].substring(0, end.getColumn() + 1));
-        return code.toString();
-    }
-
-    private static String getSourceCodeFragment(final SourceCode sourceCode,
-                                                final FilePosition start,
-                                                final FilePosition end) {
-        final StringBuilder code = new StringBuilder();
-        for (int i = start.getLine(); i <= end.getLine(); i++) {
-            code.append(sourceCode.getContent()[i]).append("\n");
-        }
-        return code.toString();
     }
 
     private static class Builder {

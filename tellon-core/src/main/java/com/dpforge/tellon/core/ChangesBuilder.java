@@ -5,6 +5,7 @@ import com.dpforge.tellon.core.parser.ParsedSourceCode;
 import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.SourceCodeParser;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,8 +65,8 @@ public class ChangesBuilder {
     }
 
     private static boolean bodyEquals(final AnnotatedBlock oldBlock, final AnnotatedBlock newBlock) {
-        final String oldRaw = oldBlock.getSourceCode().asRaw();
-        final String newRaw = newBlock.getSourceCode().asRaw();
-        return oldRaw.equals(newRaw);
+        final String[] oldRaw = oldBlock.getSourceCode().asRaw();
+        final String[] newRaw = newBlock.getSourceCode().asRaw();
+        return Arrays.equals(oldRaw, newRaw);
     }
 }

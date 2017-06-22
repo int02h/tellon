@@ -9,13 +9,6 @@ public class SourceCodeParser {
     public SourceCodeParser() {
     }
 
-    /**
-     * for tests
-     */
-    ParsedSourceCode parse(final String code) {
-        return parse(SourceCode.createFromContent(code));
-    }
-
     public ParsedSourceCode parse(SourceCode sourceCode) {
         final VisitorContext visitorContext = new VisitorContext(sourceCode);
         new Visitor().visit(sourceCode.toCompilationUnit(), visitorContext);

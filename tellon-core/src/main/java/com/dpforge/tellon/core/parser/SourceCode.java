@@ -3,37 +3,47 @@ package com.dpforge.tellon.core.parser;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
-import java.util.Arrays;
+import java.util.Collection;
 
 public abstract class SourceCode {
     private SourceCode() {
     }
 
-    abstract String[] getContent();
+    abstract SourceCodeLines getContent();
 
     abstract CompilationUnit toCompilationUnit();
 
-    public static SourceCode createFromContent(final String content) {
-        return new ContentSourceCode(content);
+    public static SourceCode createFromContent(final String[] code) {
+        return new ContentSourceCode(code);
+    }
+
+    public static SourceCode createFromContent(final Collection<String> code) {
+        return new ContentSourceCode(code);
     }
 
     private static class ContentSourceCode extends SourceCode {
-        private final String code;
-        private final String[] lines;
+        private final SourceCodeLines code;
 
-        private ContentSourceCode(String code) {
-            this.code = code;
-            this.lines = code.split("\n");
+        private ContentSourceCode(final Collection<String> code) {
+            this.code = SourceCodeLines.create(code);
+        }
+
+        private ContentSourceCode(final String[] code) {
+            this.code = SourceCodeLines.create(code);
         }
 
         @Override
-        public String[] getContent() {
-            return Arrays.copyOf(lines, lines.length);
+        SourceCodeLines getContent() {
+            return code;
         }
 
         @Override
         CompilationUnit toCompilationUnit() {
-            return JavaParser.parse(code);
+            final StringBuilder builder = new StringBuilder();
+            for (String line : code) {
+                builder.append(line).append("\n");
+            }
+            return JavaParser.parse(builder.toString());
         }
     }
 }

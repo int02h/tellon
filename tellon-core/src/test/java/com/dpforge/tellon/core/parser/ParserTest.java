@@ -2,169 +2,170 @@ package com.dpforge.tellon.core.parser;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ParserTest {
     @Test
     public void annotatedClass() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "@NotifyChanges(\"someone\")" +
-                "class Foo {}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "@NotifyChanges(\"someone\")",
+                "class Foo {}"};
+        assertBlocks(parse(code), BlockType.TYPE);
     }
 
     @Test
     public void annotatedInnerClass() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    @NotifyChanges(\"someone\") class Bar {}" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"someone\") class Bar {}",
+                "}"};
+        assertBlocks(parse(code), BlockType.TYPE);
     }
 
     @Test
     public void annotatedInnerStaticClass() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    @NotifyChanges(\"someone\") static class Bar {}" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"someone\") static class Bar {}",
+                "}"};
+        assertBlocks(parse(code), BlockType.TYPE);
     }
 
     @Test
     public void annotatedInterface() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "@NotifyChanges(\"someone\")" +
-                "interface Foo {}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "@NotifyChanges(\"someone\")",
+                "interface Foo {}"};
+        assertBlocks(parse(code), BlockType.TYPE);
     }
 
     @Test
     public void annotatedInnerInterface() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "interface Foo {" +
-                "    @NotifyChanges(\"someone\") interface Bar {}" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.TYPE);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "interface Foo {",
+                "    @NotifyChanges(\"someone\") interface Bar {}",
+                "}"};
+        assertBlocks(parse(code), BlockType.TYPE);
     }
 
     @Test
     public void annotatedAnnotation() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "@NotifyChanges(\"someone\")" +
-                "@interface Foo {}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.ANNOTATION);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "@NotifyChanges(\"someone\")",
+                "@interface Foo {}"};
+        assertBlocks(parse(code), BlockType.ANNOTATION);
     }
 
     @Test
     public void annotatedInnerAnnotation() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "@interface Foo {" +
-                "    @NotifyChanges(\"someone\") @interface Bar {}" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.ANNOTATION);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "@interface Foo {",
+                "    @NotifyChanges(\"someone\") @interface Bar {}",
+                "}"};
+        assertBlocks(parse(code), BlockType.ANNOTATION);
     }
 
     @Test
     public void annotatedClassMembers() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    @NotifyChanges(\"ctor\")" +
-                "    Foo() {}" +
-                "    @NotifyChanges(\"method\")" +
-                "    void doIt() {}" +
-                "    @NotifyChanges(\"field\")" +
-                "    int value;" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.CONSTRUCTOR, BlockType.METHOD, BlockType.FIELD);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"ctor\")",
+                "    Foo() {}",
+                "    @NotifyChanges(\"method\")",
+                "    void doIt() {}",
+                "    @NotifyChanges(\"field\")",
+                "    int value;",
+                "}"};
+        assertBlocks(parse(code), BlockType.CONSTRUCTOR, BlockType.METHOD, BlockType.FIELD);
     }
 
     @Test
     public void annotatedCompoundField() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    @NotifyChanges(\"field\")" +
-                "    int a, b, c;" +
-                "    @NotifyChanges(\"field\")" +
-                "    String x, y, z;" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.FIELD, BlockType.FIELD);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"field\")",
+                "    int a, b, c;",
+                "    @NotifyChanges(\"field\")",
+                "    String x, y, z;",
+                "}"};
+        assertBlocks(parse(code), BlockType.FIELD, BlockType.FIELD);
     }
 
     @Test
     public void annotatedInnerClassMembers() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    class Bar {" +
-                "        @NotifyChanges(\"ctor\")" +
-                "        Foo() {}" +
-                "        @NotifyChanges(\"method\")" +
-                "        void doIt() {}" +
-                "        @NotifyChanges(\"field\")" +
-                "        int value;" +
-                "    }" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.CONSTRUCTOR, BlockType.METHOD, BlockType.FIELD);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    class Bar {",
+                "        @NotifyChanges(\"ctor\")",
+                "        Foo() {}",
+                "        @NotifyChanges(\"method\")",
+                "        void doIt() {}",
+                "        @NotifyChanges(\"field\")",
+                "        int value;",
+                "    }",
+                "}"};
+        assertBlocks(parse(code), BlockType.CONSTRUCTOR, BlockType.METHOD, BlockType.FIELD);
     }
 
     @Test
     public void annotatedClassStaticMembers() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    @NotifyChanges(\"test\")" +
-                "    static final int value = 123;" +
-                "    @NotifyChanges(\"test\")" +
-                "    static String doIt(int param) { return null; }" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.FIELD, BlockType.METHOD);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"test\")",
+                "    static final int value = 123;",
+                "    @NotifyChanges(\"test\")",
+                "    static String doIt(int param) { return null; }",
+                "}"};
+        assertBlocks(parse(code), BlockType.FIELD, BlockType.METHOD);
     }
 
     @Test
     public void annotatedInterfaceMembers() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "interface Foo {" +
-                "    @NotifyChanges(\"test\")" +
-                "    void method1();" +
-                "    @NotifyChanges(\"test\")" +
-                "    void method2();" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.METHOD, BlockType.METHOD);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "interface Foo {",
+                "    @NotifyChanges(\"test\")",
+                "    void method1();",
+                "    @NotifyChanges(\"test\")",
+                "    void method2();",
+                "}"};
+        assertBlocks(parse(code), BlockType.METHOD, BlockType.METHOD);
     }
 
     @Test
     public void annotatedInterfaceStaticMembers() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "interface Foo {" +
-                "    @NotifyChanges(\"test\")" +
-                "    static void bar() {}" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.METHOD);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "interface Foo {",
+                "    @NotifyChanges(\"test\")",
+                "    static void bar() {}",
+                "}"};
+        assertBlocks(parse(code), BlockType.METHOD);
     }
 
     @Test
     public void annotatedAnnotationMembers() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "@interface Annotation {" +
-                "    @NotifyChanges(\"test\")" +
-                "    int value() default -1;" +
-                "    @NotifyChanges(\"test\")" +
-                "    int[] data();" +
-                "}";
-        assertBlocks(new SourceCodeParser().parse(code), BlockType.ANNOTATION_MEMBER, BlockType.ANNOTATION_MEMBER);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "@interface Annotation {",
+                "    @NotifyChanges(\"test\")",
+                "    int value() default -1;",
+                "    @NotifyChanges(\"test\")",
+                "    int[] data();",
+                "}"};
+        assertBlocks(parse(code), BlockType.ANNOTATION_MEMBER, BlockType.ANNOTATION_MEMBER);
     }
 
     @Test
     public void positionTest() {
-        final String code = "package com.test;\n" +
-                "import com.dpforge.tellon.annotations.NotifyChanges;\n" +
-                "class Foo {\n" +
-                "    @NotifyChanges(\"test\")\n" +
-                "    @NonNull\n" +
-                "    @Deprecated\n" +
-                "    void check() { }\n" +
-                "}";
-        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
+        final String[] code = {"package com.test;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"test\")",
+                "    @NonNull",
+                "    @Deprecated",
+                "    void check() { }",
+                "}"};
+        final ParsedSourceCode sourceCode = parse(code);
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
         assertEquals(4, block.getStartPosition().getColumn());
         assertEquals(3, block.getStartPosition().getLine());
@@ -174,29 +175,29 @@ public class ParserTest {
 
     @Test
     public void noAnnotatedMembers() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    static final int TAG = 123;" +
-                "    int a;" +
-                "    String qwe, asd, zxc;" +
-                "    Foo() {}" +
-                "    Foo(int value) {}" +
-                "    void bar() {}" +
-                "    class Bar { int innerValue; }" +
-                "    static class StaticBar { String innerValue; }" +
-                "}";
-        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    static final int TAG = 123;",
+                "    int a;",
+                "    String qwe, asd, zxc;",
+                "    Foo() {}",
+                "    Foo(int value) {}",
+                "    void bar() {}",
+                "    class Bar { int innerValue; }",
+                "    static class StaticBar { String innerValue; }",
+                "}"};
+        final ParsedSourceCode sourceCode = parse(code);
         assertTrue(sourceCode.getAnnotatedBlocks().isEmpty());
     }
 
     @Test
     public void singleWatcher() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    @NotifyChanges(\"some_watcher@example.com\")" +
-                "    int a;" +
-                "}";
-        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"some_watcher@example.com\")",
+                "    int a;",
+                "}"};
+        final ParsedSourceCode sourceCode = parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
@@ -206,12 +207,12 @@ public class ParserTest {
 
     @Test
     public void multipleWatchers() {
-        final String code = "package com.test; import com.dpforge.tellon.annotations.NotifyChanges;" +
-                "class Foo {" +
-                "    @NotifyChanges({\"watcher1@example.com\", \"watcher2@example.com\"})" +
-                "    int a;" +
-                "}";
-        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
+        final String[] code = {"package com.test; import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges({\"watcher1@example.com\", \"watcher2@example.com\"})",
+                "    int a;",
+                "}"};
+        final ParsedSourceCode sourceCode = parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
@@ -222,47 +223,51 @@ public class ParserTest {
 
     @Test
     public void blockSourceCode() {
-        final String code = "package com.test;\n" +
-                "import com.dpforge.tellon.annotations.NotifyChanges;\n" +
-                "class Foo {\n" +
-                "    // single line comment\n" +
-                "    @NonNull\n" +
-                "    @NotifyChanges(\"test\")\n" +
-                "    int getSum() {\n" +
-                "        return 1 +\n" +
-                "               2 +\n" +
-                "               3 +\n" +
-                "               4;\n" +
-                "    }\n" +
-                "}";
-        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
+        final String[] code = {"package com.test;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    // single line comment",
+                "    @NonNull",
+                "    @NotifyChanges(\"test\")",
+                "    int getSum() {",
+                "        return 1 +",
+                "               2 +",
+                "               3 +",
+                "               4;",
+                "    }",
+                "}"};
+        final ParsedSourceCode sourceCode = parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
-        assertEquals("" +
-                        "@NonNull\n" +
-                        "    @NotifyChanges(\"test\")\n" +
-                        "    int getSum() {\n" +
-                        "        return 1 +\n" +
-                        "               2 +\n" +
-                        "               3 +\n" +
-                        "               4;\n" +
-                        "    }",
+        assertArrayEquals(new String[]{
+                        "@NonNull",
+                        "    @NotifyChanges(\"test\")",
+                        "    int getSum() {",
+                        "        return 1 +",
+                        "               2 +",
+                        "               3 +",
+                        "               4;",
+                        "    }"},
                 block.getSourceCode().asRaw());
     }
 
     @Test
     public void singleLineBlockSourceCode() {
-        final String code = "package com.test;\n" +
-                "import com.dpforge.tellon.annotations.NotifyChanges;\n" +
-                "class Foo {\n" +
-                "    @NotifyChanges(\"test\") int sum;\n" +
-                "}";
-        ParsedSourceCode sourceCode = new SourceCodeParser().parse(code);
+        final String[] code = {"package com.test;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"test\") int sum;",
+                "}"};
+        final ParsedSourceCode sourceCode = parse(code);
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
-        assertEquals("@NotifyChanges(\"test\") int sum;", block.getSourceCode().asRaw());
+        assertArrayEquals(new String[]{"@NotifyChanges(\"test\") int sum;"}, block.getSourceCode().asRaw());
+    }
+
+    private static ParsedSourceCode parse(final String[] code) {
+        return new SourceCodeParser().parse(SourceCode.createFromContent(code));
     }
 
     private static void assertBlocks(final ParsedSourceCode sourceCode, final BlockType... blockTypes) {

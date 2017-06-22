@@ -56,8 +56,8 @@ public class FakeNotifier implements ChangesNotifier {
         if (changes.hasUpdated()) {
             System.out.println("Updated:");
             for (Changes.Update update : changes.getUpdated()) {
-                System.out.format("Old block: %s\n", update.getOldBlock());
-                System.out.format("New block: %s\n", update.getNewBlock());
+                System.out.format("Old block: %s%n", update.getOldBlock());
+                System.out.format("New block: %s%n", update.getNewBlock());
             }
             System.out.println();
         }
