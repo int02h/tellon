@@ -25,7 +25,7 @@ public class Changes {
         added.add(newBlock);
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return !hasUpdated() && !hasDeleted() && !hasAdded();
     }
 

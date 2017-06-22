@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class Tellon {
-    private final Notifiers notifiers = new Notifiers();
+    private final List<ChangesNotifier> notifiers = new ArrayList<>();
 
     public Tellon addNotifier(final ChangesNotifier notifier) {
         notifiers.add(notifier);
@@ -25,7 +25,7 @@ public class Tellon {
     public void process(final ProjectWalker walker) throws IOException {
         final ChangesBuilder changesBuilder = new ChangesBuilder();
 
-        notifiers.onStartProject(walker.getProjectInfo());
+        onStartProject(walker.getProjectInfo());
         while (walker.hasNext()) {
             final ProjectItem item = walker.next();
             final boolean hasActual = item.hasActual();
@@ -34,55 +34,52 @@ public class Tellon {
                 final SourceCode actual = item.getActual();
                 final SourceCode prev = item.getPrevious();
                 final Changes changes = changesBuilder.build(prev, actual);
-                notifiers.notifyChanges(item, changes);
+                notifyChanges(item, changes);
             } else if (hasActual) {
-                notifiers.notifyItemAdded(item, changesBuilder.buildInserted(item.getActual()));
+                notifyItemAdded(item, changesBuilder.buildInserted(item.getActual()));
             } else if (hasPrev) {
-                notifiers.notifyItemDeleted(item, changesBuilder.buildDeleted(item.getPrevious()));
+                notifyItemDeleted(item, changesBuilder.buildDeleted(item.getPrevious()));
             }
         }
-        notifiers.onFinishedProject();
+        onFinishedProject();
     }
 
-    private static class Notifiers {
-        private final List<ChangesNotifier> list = new ArrayList<>();
-
-        void add(ChangesNotifier notifier) {
-            list.add(notifier);
+    void onStartProject(final ProjectInfo projectInfo) {
+        for (ChangesNotifier notifier : notifiers) {
+            notifier.onStartProject(projectInfo);
         }
+    }
 
-        void addAll(Collection<ChangesNotifier> notifiers) {
-            list.addAll(notifiers);
+    void onFinishedProject() {
+        for (ChangesNotifier notifier : notifiers) {
+            notifier.onFinishedProject();
         }
+    }
 
-        void onStartProject(ProjectInfo projectInfo) {
-            for (ChangesNotifier notifier : list) {
-                notifier.onStartProject(projectInfo);
-            }
+    private void notifyChanges(final ProjectItem item, final Changes changes) {
+        if (changes.isEmpty()) {
+            return;
         }
-
-        void onFinishedProject() {
-            for (ChangesNotifier notifier : list) {
-                notifier.onFinishedProject();
-            }
+        for (ChangesNotifier notifier : notifiers) {
+            notifier.notifyChanges(item, changes);
         }
+    }
 
-        void notifyChanges(ProjectItem item, Changes changes) {
-            for (ChangesNotifier notifier : list) {
-                notifier.notifyChanges(item, changes);
-            }
+    private void notifyItemAdded(final ProjectItem item, final Changes changes) {
+        if (changes.isEmpty()) {
+            return;
         }
-
-        void notifyItemAdded(ProjectItem item, Changes changes) {
-            for (ChangesNotifier notifier : list) {
-                notifier.notifyItemAdded(item, changes);
-            }
+        for (ChangesNotifier notifier : notifiers) {
+            notifier.notifyItemAdded(item, changes);
         }
+    }
 
-        void notifyItemDeleted(ProjectItem item, Changes changes) {
-            for (ChangesNotifier notifier : list) {
-                notifier.notifyItemDeleted(item, changes);
-            }
+    private void notifyItemDeleted(final ProjectItem item, final Changes changes) {
+        if (changes.isEmpty()) {
+            return;
+        }
+        for (ChangesNotifier notifier : notifiers) {
+            notifier.notifyItemDeleted(item, changes);
         }
     }
 }
