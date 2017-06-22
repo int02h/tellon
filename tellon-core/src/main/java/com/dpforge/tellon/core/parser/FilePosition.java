@@ -27,7 +27,7 @@ public class FilePosition {
 
     @Override
     public String toString() {
-        return "{column=" + column + ", line=" + line + "}";
+        return "{line=" + line + ", column=" + column + "}";
     }
 
     static FilePosition create(Position position) {

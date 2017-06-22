@@ -11,6 +11,10 @@ public class SourceCodeLines implements Iterable<String> {
         this.lines = lines;
     }
 
+    public int size() {
+        return lines.length;
+    }
+
     public String get(int index) {
         if (index < 0 || index >= lines.length) {
             throw new IndexOutOfBoundsException(String.format(
