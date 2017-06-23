@@ -31,7 +31,7 @@ public class VerifyCommand extends Command {
         final List<ChangesNotifier> notifiers = context.getNotifiers();
         System.out.println("Notifiers");
         for (ChangesNotifier notifier : notifiers) {
-            System.out.format("  %s - %s", notifier.getName(), notifier.getDescription());
+            System.out.format("* %s%n  %s", notifier.getName(), notifier.getDescription());
             System.out.println();
         }
 
@@ -40,7 +40,7 @@ public class VerifyCommand extends Command {
         final List<ProjectWalker> walkers = context.getWalkers();
         System.out.println("Projects walkers");
         for (ProjectWalker walker : walkers) {
-            System.out.format("  %s - %s", walker.getName(), walker.getDescription());
+            System.out.format("* %s%n  %s", walker.getName(), walker.getDescription());
             System.out.println();
         }
     }
