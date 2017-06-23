@@ -23,7 +23,7 @@ public class MailNotifier implements ChangesNotifier {
 
     private Mailer mailer;
     private SourceCodeHtmlFormatter codeFormatter;
-    private ProjectInfo currentPorject;
+    private ProjectInfo currentProject;
 
     @Override
     public String getName() {
@@ -50,7 +50,7 @@ public class MailNotifier implements ChangesNotifier {
 
     @Override
     public void onStartProject(ProjectInfo projectInfo) {
-        currentPorject = projectInfo;
+        currentProject = projectInfo;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class MailNotifier implements ChangesNotifier {
         }
 
         for (MailData mailData : mailList) {
-            sendEmail(mailData.address, "Some code was changed in " + currentPorject.getName(), mailData.body);
+            sendEmail(mailData.address, "Some code was changed in " + currentProject.getName(), mailData.body);
         }
     }
 
@@ -140,7 +140,7 @@ public class MailNotifier implements ChangesNotifier {
             extractMailWatchers(watchers, block.getWatchers());
         }
 
-        sendEmail(watchers, "Some code was added in " + currentPorject.getName(), body.build());
+        sendEmail(watchers, "Some code was added in " + currentProject.getName(), body.build());
     }
 
     @Override
@@ -154,7 +154,7 @@ public class MailNotifier implements ChangesNotifier {
             extractMailWatchers(watchers, block.getWatchers());
         }
 
-        sendEmail(watchers, "Some code was deleted in " + currentPorject.getName(), body.build());
+        sendEmail(watchers, "Some code was deleted in " + currentProject.getName(), body.build());
     }
 
     private void sendEmail(String watcher, String subject, String mailBody) {
