@@ -32,8 +32,8 @@ public class MailNotifier implements ChangesNotifier {
 
     @Override
     public String getDescription() {
-        return "Send notifications about source code changes using e-mail. Use 'mailto:' prefix before e-mail address. " +
-                "For example @NotifyChanges(\"mailto:changes@example.com\").";
+        return "Send e-mail when source code changes. Use 'mailto:' prefix before e-mail address. " +
+                "For example: @NotifyChanges(\"mailto:changes@example.com\").";
     }
 
     @Override
