@@ -1,103 +1,66 @@
 package com.dpforge.javatree;
 
+import com.dpforge.javatree.commands.Command;
+import com.dpforge.javatree.commands.CommandContext;
+import com.dpforge.javatree.commands.CommandExecutionException;
+import com.dpforge.javatree.commands.CommandFactory;
 import com.dpforge.tellon.core.ProjectWalker;
-import com.dpforge.tellon.core.ProjectWalkerException;
-import com.dpforge.tellon.core.Tellon;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
-import com.dpforge.tellon.core.notifier.ChangesNotifierException;
-import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.ServiceLoader;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        final Arguments arguments = new Arguments();
-        try {
-            arguments.parse(args);
-        } catch (ParseException e) {
-            arguments.printHelp();
-            return;
-        }
-
-        if (arguments.hasVerify()) {
-            verify();
+        final String commandName;
+        if (args.length == 0) {
+            commandName = "help";
         } else {
-            notifyChanges(arguments);
-        }
-    }
-
-    private static void notifyChanges(final Arguments arguments) throws IOException {
-        final List<ProjectWalker> walkers = Extensions.getInstance().getProjectWalkers();
-
-        final ProjectWalker projectWalker;
-        if (walkers.isEmpty()) {
-            throw new IllegalStateException("No project walker found");
+            commandName = args[0];
         }
 
-        if (arguments.getProjectWalkerName() != null) {
-            projectWalker = getProjectWalker(walkers, arguments.getProjectWalkerName());
-            if (projectWalker == null) {
-                throw new IllegalArgumentException(
-                        "Could not find project walker with name '" + arguments.getProjectWalkerName() + "'");
-            }
-        } else {
-            if (walkers.size() == 1) {
-                projectWalker = walkers.get(0);
-            } else {
-                throw new IllegalStateException("More than one project walkers found. Choose one of them.");
-            }
-        }
+        args = Arrays.copyOfRange(args, 1, args.length);
 
-        try {
-            projectWalker.init(arguments.getProjectWalkerArgs());
-        } catch (ProjectWalkerException e) {
-            throw new IllegalArgumentException("Fail to initialize project walker", e);
-        }
-
-        final List<ChangesNotifier> notifiers = Extensions.getInstance().getNotifiers();
-        if (notifiers.isEmpty()) {
-            throw new IllegalStateException("No changes notifier found");
-        }
-
-        for (ChangesNotifier notifier : notifiers) {
+        final Command command = CommandFactory.create(commandName);
+        if (command.parseArguments(args)) {
+            final CommandContext commandContext = new CommandContext.Builder()
+                    .walkers(getWalkers())
+                    .notifiers(getNotifiers())
+                    .log(System.out).build();
             try {
-                notifier.init();
-            } catch (ChangesNotifierException e) {
-                throw new IllegalStateException("Fail to initialize notifier " + notifier.getName(), e);
+                command.execute(commandContext);
+            } catch (CommandExecutionException e) {
+                printErrorWithCauses(e);
             }
+        } else {
+            command.printHelp(System.out);
         }
-
-        final Tellon tellon = new Tellon();
-        tellon.addNotifiers(notifiers);
-        tellon.process(projectWalker);
     }
 
-    private static ProjectWalker getProjectWalker(final List<ProjectWalker> walkers, final String name) {
-        for (ProjectWalker walker : walkers) {
-            if (name.equals(walker.getName())) {
-                return walker;
-            }
+    private static void printErrorWithCauses(Throwable error) {
+        while (error != null) {
+            System.err.println(error.getMessage());
+            error = error.getCause();
         }
-        return null;
     }
 
-    private static void verify() {
-        final List<ChangesNotifier> notifiers = Extensions.getInstance().getNotifiers();
-        System.out.println("Notifiers");
-        for (ChangesNotifier notifier : notifiers) {
-            System.out.format("%s - %s", notifier.getName(), notifier.getDescription());
-            System.out.println();
+    private static List<ProjectWalker> getWalkers() {
+        final List<ProjectWalker> walkers = new ArrayList<>();
+        for (ProjectWalker walker : ServiceLoader.load(ProjectWalker.class)) {
+            walkers.add(walker);
         }
+        return walkers;
+    }
 
-        System.out.println();
-
-        final List<ProjectWalker> walkers = Extensions.getInstance().getProjectWalkers();
-        System.out.println("Projects walkers");
-        for (ProjectWalker walker : walkers) {
-            System.out.format("%s - %s", walker.getName(), walker.getDescription());
-            System.out.println();
+    private static List<ChangesNotifier> getNotifiers() {
+        final List<ChangesNotifier> notifiers = new ArrayList<>();
+        for (ChangesNotifier notifier : ServiceLoader.load(ChangesNotifier.class)) {
+            notifiers.add(notifier);
         }
+        return notifiers;
     }
 }

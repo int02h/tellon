@@ -1,12 +1,13 @@
-package com.dpforge.javatree;
+package com.dpforge.javatree.commands;
 
 import org.apache.commons.cli.*;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-class Arguments {
-    private static final String APP_NAME = "tellon";
+class NotifyArguments {
 
     private static final String PROJECT_WALKER_ARG = "warg";
     private static final String PROJECT_WALKER_ARG_DESCRIPTION = "Argument string for project walker";
@@ -15,34 +16,14 @@ class Arguments {
     private static final String PROJECT_WALKER_NAME_SHORT = "w";
     private static final String PROJECT_WALKER_NAME_DESCRIPTION = "Name of walker to use (if you have multiple)";
 
-    private static final String VERIFY = "verify";
-    private static final String VERIFY_DESCRIPTION = "Show information and environment";
+    private static final int LEFT_PAD = 2;
+    private static final int DESC_PAD = 4;
 
     private final Options options = new Options();
 
-    private CommandLine cmd;
-
     private final Map<String, String> walkerArgs = new HashMap<>();
 
-    Arguments() {
-        options.addOption(Option.builder()
-                .longOpt(PROJECT_WALKER_ARG)
-                .desc(PROJECT_WALKER_ARG_DESCRIPTION)
-                .hasArgs()
-                .valueSeparator('=')
-                .build());
-
-        options.addOption(Option.builder(PROJECT_WALKER_NAME_SHORT)
-                .longOpt(PROJECT_WALKER_NAME)
-                .desc(PROJECT_WALKER_NAME_DESCRIPTION)
-                .numberOfArgs(1)
-                .build());
-
-        options.addOption(Option.builder()
-                .longOpt(VERIFY)
-                .desc(VERIFY_DESCRIPTION)
-                .build());
-    }
+    private CommandLine cmd;
 
     void parse(String[] args) throws ParseException {
         final CommandLineParser parser = new DefaultParser();
@@ -57,14 +38,27 @@ class Arguments {
         }
     }
 
-    void printHelp() {
-        final HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(APP_NAME, options);
+    NotifyArguments() {
+        options.addOption(Option.builder()
+                .longOpt(PROJECT_WALKER_ARG)
+                .desc(PROJECT_WALKER_ARG_DESCRIPTION)
+                .hasArgs()
+                .valueSeparator('=')
+                .build());
+
+        options.addOption(Option.builder(PROJECT_WALKER_NAME_SHORT)
+                .longOpt(PROJECT_WALKER_NAME)
+                .desc(PROJECT_WALKER_NAME_DESCRIPTION)
+                .numberOfArgs(1)
+                .build());
     }
 
-    Map<String, String> getProjectWalkerArgs() {
-        checkParsed();
-        return new HashMap<>(walkerArgs);
+    void printHelp(final PrintStream stream) {
+        final HelpFormatter formatter = new HelpFormatter();
+        final PrintWriter writer = new PrintWriter(stream);
+        formatter.printHelp(writer, HelpFormatter.DEFAULT_WIDTH, "tellon notify", null, options,
+                LEFT_PAD, DESC_PAD, null);
+        writer.flush();
     }
 
     String getProjectWalkerName() {
@@ -72,9 +66,9 @@ class Arguments {
         return cmd.getOptionValue(PROJECT_WALKER_NAME, null);
     }
 
-    boolean hasVerify() {
+    Map<String, String> getProjectWalkerArgs() {
         checkParsed();
-        return cmd.hasOption(VERIFY);
+        return new HashMap<>(walkerArgs);
     }
 
     private void checkParsed() {
