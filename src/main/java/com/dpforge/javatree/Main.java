@@ -25,6 +25,15 @@ public class Main {
 
         args = Arrays.copyOfRange(args, 1, args.length);
 
+        try {
+            executeCommand(commandName, args);
+        } catch (Throwable t) {
+            t.printStackTrace(System.err);
+            System.exit(Errors.RUNTIME_FAIL);
+        }
+    }
+
+    private static void executeCommand(final String commandName, final String[] args) {
         final Command command = CommandFactory.create(commandName);
         if (command.parseArguments(args)) {
             final CommandContext commandContext = new CommandContext.Builder()
@@ -35,9 +44,11 @@ public class Main {
                 command.execute(commandContext);
             } catch (CommandExecutionException e) {
                 printErrorWithCauses(e);
+                System.exit(e.getErrorCode());
             }
         } else {
             command.printHelp(System.out);
+            System.exit(Errors.BAD_ARGS);
         }
     }
 

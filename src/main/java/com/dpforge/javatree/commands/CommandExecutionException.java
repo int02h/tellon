@@ -1,13 +1,19 @@
 package com.dpforge.javatree.commands;
 
-import com.dpforge.tellon.core.ProjectWalkerException;
-
 public class CommandExecutionException extends Exception {
-    public CommandExecutionException(String message) {
+    private final int errorCode;
+
+    public CommandExecutionException(int errorCode, String message) {
         super(message);
+        this.errorCode = errorCode;
     }
 
-    public CommandExecutionException(String message, Throwable cause) {
+    public CommandExecutionException(int errorCode, String message, Throwable cause) {
         super(message, cause);
+        this.errorCode = errorCode;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
     }
 }
