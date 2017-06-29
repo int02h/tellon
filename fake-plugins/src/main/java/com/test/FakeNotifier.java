@@ -1,10 +1,10 @@
 package com.test;
 
 import com.dpforge.tellon.core.Changes;
-import com.dpforge.tellon.core.ProjectItem;
+import com.dpforge.tellon.core.walker.ProjectItem;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
-import com.dpforge.tellon.core.notifier.ProjectInfo;
+import com.dpforge.tellon.core.walker.ProjectInfo;
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
 
 public class FakeNotifier implements ChangesNotifier {

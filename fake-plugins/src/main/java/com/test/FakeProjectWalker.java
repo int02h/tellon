@@ -1,10 +1,10 @@
 package com.test;
 
-import com.dpforge.tellon.core.ProjectItem;
-import com.dpforge.tellon.core.ProjectWalker;
-import com.dpforge.tellon.core.ProjectWalkerException;
-import com.dpforge.tellon.core.Revision;
-import com.dpforge.tellon.core.notifier.ProjectInfo;
+import com.dpforge.tellon.core.walker.ProjectItem;
+import com.dpforge.tellon.core.walker.ProjectWalker;
+import com.dpforge.tellon.core.walker.ProjectWalkerException;
+import com.dpforge.tellon.core.walker.Revision;
+import com.dpforge.tellon.core.walker.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
 
 import java.util.ArrayList;

@@ -1,7 +1,8 @@
 package com.dpforge.tellon.core.notifier;
 
 import com.dpforge.tellon.core.Changes;
-import com.dpforge.tellon.core.ProjectItem;
+import com.dpforge.tellon.core.walker.ProjectInfo;
+import com.dpforge.tellon.core.walker.ProjectItem;
 
 public interface ChangesNotifier {
     String getName();

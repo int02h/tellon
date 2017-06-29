@@ -1,4 +1,4 @@
-package com.dpforge.tellon.core;
+package com.dpforge.tellon.core.walker;
 
 public class Revision {
     private final String version;

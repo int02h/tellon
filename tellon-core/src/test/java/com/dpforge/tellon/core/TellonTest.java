@@ -2,9 +2,13 @@ package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
-import com.dpforge.tellon.core.notifier.ProjectInfo;
+import com.dpforge.tellon.core.walker.ProjectInfo;
 import com.dpforge.tellon.core.parser.BlockType;
 import com.dpforge.tellon.core.parser.SourceCode;
+import com.dpforge.tellon.core.walker.ProjectItem;
+import com.dpforge.tellon.core.walker.ProjectWalker;
+import com.dpforge.tellon.core.walker.ProjectWalkerException;
+import com.dpforge.tellon.core.walker.Revision;
 import org.junit.Test;
 
 import java.io.IOException;

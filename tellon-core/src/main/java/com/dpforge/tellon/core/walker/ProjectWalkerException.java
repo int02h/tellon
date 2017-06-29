@@ -1,4 +1,4 @@
-package com.dpforge.tellon.core;
+package com.dpforge.tellon.core.walker;
 
 public class ProjectWalkerException extends Exception {
     public ProjectWalkerException(String message) {

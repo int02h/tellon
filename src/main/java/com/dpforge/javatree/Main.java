@@ -4,7 +4,7 @@ import com.dpforge.javatree.commands.Command;
 import com.dpforge.javatree.commands.CommandContext;
 import com.dpforge.javatree.commands.CommandExecutionException;
 import com.dpforge.javatree.commands.CommandFactory;
-import com.dpforge.tellon.core.ProjectWalker;
+import com.dpforge.tellon.core.walker.ProjectWalker;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 
 import java.io.IOException;

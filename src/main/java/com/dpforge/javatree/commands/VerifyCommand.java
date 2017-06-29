@@ -1,6 +1,6 @@
 package com.dpforge.javatree.commands;
 
-import com.dpforge.tellon.core.ProjectWalker;
+import com.dpforge.tellon.core.walker.ProjectWalker;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 
 import java.io.PrintStream;

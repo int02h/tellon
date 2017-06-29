@@ -1,4 +1,4 @@
-package com.dpforge.tellon.core;
+package com.dpforge.tellon.core.walker;
 
 import com.dpforge.tellon.core.parser.SourceCode;
 

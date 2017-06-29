@@ -1,8 +1,8 @@
 package com.dpforge.javatree.commands;
 
 import com.dpforge.javatree.Errors;
-import com.dpforge.tellon.core.ProjectWalker;
-import com.dpforge.tellon.core.ProjectWalkerException;
+import com.dpforge.tellon.core.walker.ProjectWalker;
+import com.dpforge.tellon.core.walker.ProjectWalkerException;
 import com.dpforge.tellon.core.Tellon;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;

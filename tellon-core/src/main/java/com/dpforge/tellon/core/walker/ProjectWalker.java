@@ -1,6 +1,4 @@
-package com.dpforge.tellon.core;
-
-import com.dpforge.tellon.core.notifier.ProjectInfo;
+package com.dpforge.tellon.core.walker;
 
 import java.util.Map;
 

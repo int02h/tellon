@@ -2,11 +2,11 @@ package com.dpforge.mailnotifier;
 
 import com.dpforge.mailnotifier.format.SourceCodeHtmlFormatter;
 import com.dpforge.tellon.core.Changes;
-import com.dpforge.tellon.core.ProjectItem;
-import com.dpforge.tellon.core.Revision;
+import com.dpforge.tellon.core.walker.ProjectItem;
+import com.dpforge.tellon.core.walker.Revision;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
-import com.dpforge.tellon.core.notifier.ProjectInfo;
+import com.dpforge.tellon.core.walker.ProjectInfo;
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
 import com.dpforge.tellon.core.parser.WatcherList;
 import org.simplejavamail.email.EmailBuilder;
