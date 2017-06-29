@@ -1,11 +1,13 @@
 package com.dpforge.tellon.core.parser;
 
+import com.dpforge.tellon.core.BlockPosition;
+import com.github.javaparser.Position;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;
 
 public class AnnotatedBlock {
-    private final FilePosition startPosition;
-    private final FilePosition endPosition;
+    private final BlockPosition startPosition;
+    private final BlockPosition endPosition;
     private final BlockSourceCode sourceCode;
     private final BlockType type;
     private final String name;
@@ -20,11 +22,11 @@ public class AnnotatedBlock {
         this.watchers = builder.watchers;
     }
 
-    public FilePosition getStartPosition() {
+    public BlockPosition getStartPosition() {
         return startPosition;
     }
 
-    public FilePosition getEndPosition() {
+    public BlockPosition getEndPosition() {
         return endPosition;
     }
 
@@ -118,18 +120,18 @@ public class AnnotatedBlock {
         final Builder builder = new Builder()
                 .type(type);
 
-        final FilePosition startPosition;
+        final BlockPosition startPosition;
         if (node.hasJavaDocComment()) {
             if (!node.getComment().getBegin().isPresent()) {
                 throw new IllegalStateException("JavaDoc block position is unknown");
             }
-            startPosition = FilePosition.create(node.getComment().getBegin().get());
+            startPosition = convertPosition(node.getComment().getBegin().get());
         } else {
-            startPosition = FilePosition.create(node.getBegin().get());
+            startPosition = convertPosition(node.getBegin().get());
         }
         builder.startPosition(startPosition);
 
-        final FilePosition endPosition = FilePosition.create(node.getEnd().get());
+        final BlockPosition endPosition = convertPosition(node.getEnd().get());
         builder.endPosition(endPosition);
 
         final String[] rawSourceCode = sourceCode.getContent().getExactSubset(startPosition, endPosition);
@@ -139,12 +141,16 @@ public class AnnotatedBlock {
         return builder;
     }
 
+    private static BlockPosition convertPosition(final Position position) {
+        return BlockPosition.createHumanBased(position.line, position.column);
+    }
+
     private static class Builder {
         private BlockType type;
         private BlockSourceCode sourceCode;
         private String name;
-        private FilePosition startPosition;
-        private FilePosition endPosition;
+        private BlockPosition startPosition;
+        private BlockPosition endPosition;
         private WatcherList watchers;
 
         Builder sourceCode(BlockSourceCode sourceCode) {
@@ -162,12 +168,12 @@ public class AnnotatedBlock {
             return this;
         }
 
-        Builder startPosition(FilePosition position) {
+        Builder startPosition(BlockPosition position) {
             this.startPosition = position;
             return this;
         }
 
-        Builder endPosition(FilePosition position) {
+        Builder endPosition(BlockPosition position) {
             this.endPosition = position;
             return this;
         }

@@ -1,13 +1,11 @@
 package com.dpforge.tellon.core.parser;
 
-import com.github.javaparser.Position;
+import com.dpforge.tellon.core.BlockPosition;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class SourceCodeLinesTest {
     @Test
@@ -45,7 +43,7 @@ public class SourceCodeLinesTest {
                 "    String value;",
                 "}"
         });
-        final FilePosition position = FilePosition.create(new Position(2, 1));
+        final BlockPosition position = BlockPosition.createHumanBased(2, 1);
         assertEquals("    String value;", lines.get(position));
     }
 
@@ -78,8 +76,8 @@ public class SourceCodeLinesTest {
                 "    final int index;",
                 "}"
         });
-        final FilePosition start = FilePosition.create(new Position(3, 9));
-        final FilePosition end = FilePosition.create(new Position(3, 15));
+        final BlockPosition start = BlockPosition.createHumanBased(3, 9);
+        final BlockPosition end = BlockPosition.createHumanBased(3, 15);
         assertArrayEquals(new String[]{"l int i"}, lines.getExactSubset(start, end));
     }
 
@@ -91,8 +89,8 @@ public class SourceCodeLinesTest {
                 "    final int index;",
                 "}"
         });
-        final FilePosition start = FilePosition.create(new Position(2, 7));
-        final FilePosition end = FilePosition.create(new Position(3, 9));
+        final BlockPosition start = BlockPosition.createHumanBased(2, 7);
+        final BlockPosition end = BlockPosition.createHumanBased(3, 9);
         assertArrayEquals(new String[]{"ring value;", "    final"}, lines.getExactSubset(start, end));
     }
 
@@ -105,8 +103,8 @@ public class SourceCodeLinesTest {
                 "    // ololo",
                 "}"
         });
-        final FilePosition start = FilePosition.create(new Position(1, 11));
-        final FilePosition end = FilePosition.create(new Position(4, 5));
+        final BlockPosition start = BlockPosition.createHumanBased(1, 11);
+        final BlockPosition end = BlockPosition.createHumanBased(4, 5);
         assertArrayEquals(new String[]{"{", "    String value;", "    final int index;", "    /"},
                 lines.getExactSubset(start, end));
     }
@@ -119,8 +117,8 @@ public class SourceCodeLinesTest {
                 "    final int index;",
                 "}"
         });
-        final FilePosition start = FilePosition.create(new Position(2, 100));
-        final FilePosition end = FilePosition.create(new Position(3, 100));
+        final BlockPosition start = BlockPosition.createHumanBased(2, 100);
+        final BlockPosition end = BlockPosition.createHumanBased(3, 100);
         assertArrayEquals(new String[]{"    String value;", "    final int index;"}, lines.getLineRange(start, end));
     }
 

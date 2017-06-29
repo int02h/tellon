@@ -1,5 +1,7 @@
 package com.dpforge.tellon.core.parser;
 
+import com.dpforge.tellon.core.BlockPosition;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,11 +28,11 @@ public class SourceCodeLines implements Iterable<String> {
         return lines[index];
     }
 
-    public String get(FilePosition position) {
+    public String get(BlockPosition position) {
         return get(position.getLine());
     }
 
-    public String[] getExactSubset(final FilePosition start, final FilePosition end) {
+    public String[] getExactSubset(final BlockPosition start, final BlockPosition end) {
         if (start.getLine() == end.getLine()) {
             final String line = get(start);
             return new String[]{line.substring(start.getColumn(), end.getColumn() + 1)};
@@ -45,7 +47,7 @@ public class SourceCodeLines implements Iterable<String> {
         return code;
     }
 
-    public String[] getLineRange(final FilePosition start, final FilePosition end) {
+    public String[] getLineRange(final BlockPosition start, final BlockPosition end) {
         return Arrays.copyOfRange(lines, start.getLine(), end.getLine() + 1);
     }
 
