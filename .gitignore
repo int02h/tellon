@@ -1,7 +1,7 @@
 /build
 /tellon-annotations/build
 /tellon-core/build
-/git-observer/build
+/git-project-observer/build
 /mail-notifier/build/
 /.idea
 /out
