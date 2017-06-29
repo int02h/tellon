@@ -2,13 +2,9 @@ package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
-import com.dpforge.tellon.core.walker.ProjectInfo;
+import com.dpforge.tellon.core.walker.*;
 import com.dpforge.tellon.core.parser.BlockType;
 import com.dpforge.tellon.core.parser.SourceCode;
-import com.dpforge.tellon.core.walker.ProjectItem;
-import com.dpforge.tellon.core.walker.ProjectWalker;
-import com.dpforge.tellon.core.walker.ProjectWalkerException;
-import com.dpforge.tellon.core.walker.Revision;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,13 +20,13 @@ public class TellonTest {
     public void simple() throws Exception {
         final Tellon tellon = new Tellon();
 
-        final TestWalker walker = new TestWalker();
-        walker.init(Collections.emptyMap());
+        final TestObserver observer = new TestObserver();
+        observer.init(Collections.emptyMap());
 
         final TestNotifier notifier = new TestNotifier();
         tellon.addNotifier(notifier);
 
-        tellon.process(walker);
+        tellon.process(observer);
 
         assertTrue(notifier.finished);
         assertEquals("Test Project", notifier.projectName);
@@ -75,13 +71,12 @@ public class TellonTest {
         assertEquals("FooBarAnnotation", deletedItem.getDeleted().get(0).getName());
     }
 
-    private static class TestWalker implements ProjectWalker {
+    private static class TestObserver implements ProjectObserver {
 
         private ProjectItem[] items;
-        private int index = -1;
 
         @Override
-        public void init(Map<String, String> args) throws ProjectWalkerException {
+        public void init(Map<String, String> args) throws ProjectObserverException {
             items = new ProjectItem[] {
                     new UpdatedProjectItem(),
                     new AddedProjectItem(),
@@ -102,6 +97,22 @@ public class TellonTest {
         @Override
         public ProjectInfo getProjectInfo() {
             return new ProjectInfo.Builder().name("Test Project").build();
+        }
+
+        @Override
+        public ProjectWalker createWalker() {
+            return new TestWalker(items);
+        }
+    }
+
+    private static class TestWalker implements ProjectWalker {
+
+        private final ProjectItem[] items;
+
+        private int index = -1;
+
+        private TestWalker(ProjectItem[] items) {
+            this.items = items;
         }
 
         @Override

@@ -1,24 +1,24 @@
 package com.dpforge.javatree.commands;
 
-import com.dpforge.tellon.core.walker.ProjectWalker;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
+import com.dpforge.tellon.core.walker.ProjectObserver;
 
 import java.io.PrintStream;
 import java.util.List;
 
 public class CommandContext {
-    private final List<ProjectWalker> walkers;
+    private final List<ProjectObserver> observers;
     private final List<ChangesNotifier> notifiers;
     private final PrintStream log;
 
     private CommandContext(Builder builder) {
-        this.walkers = builder.walkers;
+        this.observers = builder.observers;
         this.notifiers = builder.notifiers;
         this.log = builder.log;
     }
 
-    public List<ProjectWalker> getWalkers() {
-        return walkers;
+    public List<ProjectObserver> getObservers() {
+        return observers;
     }
 
     public List<ChangesNotifier> getNotifiers() {
@@ -30,12 +30,12 @@ public class CommandContext {
     }
 
     public static class Builder {
-        private List<ProjectWalker> walkers;
+        private List<ProjectObserver> observers;
         private List<ChangesNotifier> notifiers;
         private PrintStream log;
 
-        public Builder walkers(final List<ProjectWalker> walkers) {
-            this.walkers = walkers;
+        public Builder observers(final List<ProjectObserver> observers) {
+            this.observers = observers;
             return this;
         }
 
@@ -50,7 +50,7 @@ public class CommandContext {
         }
 
         public CommandContext build() {
-            if (walkers == null || notifiers == null || log == null) {
+            if (observers == null || notifiers == null || log == null) {
                 throw new IllegalArgumentException("Incomplete data for command context");
             }
             return new CommandContext(this);

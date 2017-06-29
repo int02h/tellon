@@ -1,11 +1,11 @@
 package com.dpforge.javatree.commands;
 
 import com.dpforge.javatree.Errors;
-import com.dpforge.tellon.core.walker.ProjectWalker;
-import com.dpforge.tellon.core.walker.ProjectWalkerException;
 import com.dpforge.tellon.core.Tellon;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
+import com.dpforge.tellon.core.walker.ProjectObserver;
+import com.dpforge.tellon.core.walker.ProjectObserverException;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
@@ -35,32 +35,32 @@ public class NotifyCommand extends Command {
 
     @Override
     public void execute(final CommandContext context) throws CommandExecutionException {
-        final List<ProjectWalker> walkers = context.getWalkers();
+        final List<ProjectObserver> observers = context.getObservers();
 
-        final ProjectWalker projectWalker;
-        if (walkers.isEmpty()) {
-            throw new CommandExecutionException(Errors.BAD_CONFIG, "No project walker found");
+        final ProjectObserver projectObserver;
+        if (observers.isEmpty()) {
+            throw new CommandExecutionException(Errors.BAD_CONFIG, "No project observer found");
         }
 
-        if (arguments.getProjectWalkerName() != null) {
-            projectWalker = getProjectWalker(walkers, arguments.getProjectWalkerName());
-            if (projectWalker == null) {
+        if (arguments.getProjectObserverName() != null) {
+            projectObserver = getProjectObserver(observers, arguments.getProjectObserverName());
+            if (projectObserver == null) {
                 throw new CommandExecutionException(Errors.BAD_CONFIG,
-                        "Could not find project walker with name '" + arguments.getProjectWalkerName() + "'");
+                        "Could not find project observer with name '" + arguments.getProjectObserverName() + "'");
             }
         } else {
-            if (walkers.size() == 1) {
-                projectWalker = walkers.get(0);
+            if (observers.size() == 1) {
+                projectObserver = observers.get(0);
             } else {
                 throw new CommandExecutionException(Errors.BAD_CONFIG,
-                        "More than one project walkers found. Choose one of them.");
+                        "More than one project observers found. Choose one of them.");
             }
         }
 
         try {
-            projectWalker.init(arguments.getProjectWalkerArgs());
-        } catch (ProjectWalkerException e) {
-            throw new CommandExecutionException(Errors.INIT_FAIL, "Fail to initialize project walker", e);
+            projectObserver.init(arguments.getProjectObserverArgs());
+        } catch (ProjectObserverException e) {
+            throw new CommandExecutionException(Errors.INIT_FAIL, "Fail to initialize project observer", e);
         }
 
         final List<ChangesNotifier> notifiers = context.getNotifiers();
@@ -80,16 +80,16 @@ public class NotifyCommand extends Command {
         final Tellon tellon = new Tellon();
         tellon.addNotifiers(notifiers);
         try {
-            tellon.process(projectWalker);
+            tellon.process(projectObserver);
         } catch (IOException e) {
             throw new CommandExecutionException(Errors.EXECUTION_FAIL, "Fail to notify", e);
         }
     }
 
-    private static ProjectWalker getProjectWalker(final List<ProjectWalker> walkers, final String name) {
-        for (ProjectWalker walker : walkers) {
-            if (name.equals(walker.getName())) {
-                return walker;
+    private static ProjectObserver getProjectObserver(final List<ProjectObserver> observers, final String name) {
+        for (ProjectObserver observer : observers) {
+            if (name.equals(observer.getName())) {
+                return observer;
             }
         }
         return null;

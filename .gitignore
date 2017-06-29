@@ -1,8 +1,7 @@
 /build
 /tellon-annotations/build
 /tellon-core/build
-/fake-plugins/build
-/git-walker/build
+/git-observer/build
 /mail-notifier/build/
 /.idea
 /out

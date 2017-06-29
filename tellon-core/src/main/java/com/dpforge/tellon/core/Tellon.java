@@ -4,6 +4,7 @@ import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.walker.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.walker.ProjectItem;
+import com.dpforge.tellon.core.walker.ProjectObserver;
 import com.dpforge.tellon.core.walker.ProjectWalker;
 
 import java.io.IOException;
@@ -24,10 +25,11 @@ public class Tellon {
         return this;
     }
 
-    public void process(final ProjectWalker walker) throws IOException {
+    public void process(final ProjectObserver observer) throws IOException {
         final ChangesBuilder changesBuilder = new ChangesBuilder();
+        final ProjectWalker walker = observer.createWalker();
 
-        onStartProject(walker.getProjectInfo());
+        onStartProject(observer.getProjectInfo());
         while (walker.hasNext()) {
             final ProjectItem item = walker.next();
             final boolean hasActual = item.hasActual();

@@ -4,7 +4,7 @@ import com.dpforge.javatree.commands.Command;
 import com.dpforge.javatree.commands.CommandContext;
 import com.dpforge.javatree.commands.CommandExecutionException;
 import com.dpforge.javatree.commands.CommandFactory;
-import com.dpforge.tellon.core.walker.ProjectWalker;
+import com.dpforge.tellon.core.walker.ProjectObserver;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class Main {
         final Command command = CommandFactory.create(commandName);
         if (command.parseArguments(args)) {
             final CommandContext commandContext = new CommandContext.Builder()
-                    .walkers(getWalkers())
+                    .observers(getObservers())
                     .notifiers(getNotifiers())
                     .log(System.out).build();
             try {
@@ -59,12 +59,12 @@ public class Main {
         }
     }
 
-    private static List<ProjectWalker> getWalkers() {
-        final List<ProjectWalker> walkers = new ArrayList<>();
-        for (ProjectWalker walker : ServiceLoader.load(ProjectWalker.class)) {
-            walkers.add(walker);
+    private static List<ProjectObserver> getObservers() {
+        final List<ProjectObserver> observers = new ArrayList<>();
+        for (ProjectObserver observer : ServiceLoader.load(ProjectObserver.class)) {
+            observers.add(observer);
         }
-        return walkers;
+        return observers;
     }
 
     private static List<ChangesNotifier> getNotifiers() {

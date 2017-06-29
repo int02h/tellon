@@ -12,8 +12,7 @@ dependencies {
 
     compile project(':tellon-annotations')
     compile project(':tellon-core')
-    compile project(':fake-plugins')
-    compile project(':git-walker')
+    compile project(':git-project-observer')
     compile project(':mail-notifier')
 
     compile group: 'commons-cli', name: 'commons-cli', version: '1.3.1'

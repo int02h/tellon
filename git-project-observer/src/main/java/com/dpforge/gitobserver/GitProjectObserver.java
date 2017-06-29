@@ -1,11 +1,7 @@
-package com.dpforge.gitwalker;
+package com.dpforge.gitobserver;
 
-import com.dpforge.tellon.core.walker.ProjectItem;
-import com.dpforge.tellon.core.walker.ProjectWalker;
-import com.dpforge.tellon.core.walker.ProjectWalkerException;
-import com.dpforge.tellon.core.walker.Revision;
-import com.dpforge.tellon.core.walker.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
+import com.dpforge.tellon.core.walker.*;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -24,7 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class GitProjectWalker implements ProjectWalker {
+public class GitProjectObserver implements ProjectObserver {
+
     private static final String NAME = "git-walker";
     private static final String DESCRIPTION = "Tellon project walker over local git repository";
 
@@ -38,14 +35,12 @@ public class GitProjectWalker implements ProjectWalker {
 
     private List<ProjectItem> items;
 
-    private int index;
-
     private GitRevision newRev;
 
     private GitRevision oldRev;
 
     @Override
-    public void init(Map<String, String> args) throws ProjectWalkerException {
+    public void init(Map<String, String> args) throws ProjectObserverException {
         parseArguments(args);
 
         projectInfo = new ProjectInfo.Builder()
@@ -67,7 +62,7 @@ public class GitProjectWalker implements ProjectWalker {
                 }
             }
         } catch (IOException | GitAPIException e) {
-            throw new ProjectWalkerException(e);
+            throw new ProjectObserverException(e);
         }
     }
 
@@ -87,24 +82,19 @@ public class GitProjectWalker implements ProjectWalker {
     }
 
     @Override
-    public boolean hasNext() {
-        return index < items.size();
+    public ProjectWalker createWalker() {
+        return new GitProjectWalker(items);
     }
 
-    @Override
-    public ProjectItem next() {
-        return items.get(index++);
-    }
-
-    private void parseArguments(final Map<String, String> args) throws ProjectWalkerException {
+    private void parseArguments(final Map<String, String> args) throws ProjectObserverException {
         final String gitPath = args.get(ARG_GIT_PATH);
         if (gitPath == null) {
-            throw new ProjectWalkerException("Path to .git directory not provided");
+            throw new ProjectObserverException("Path to .git directory not provided");
         }
 
         gitFile = new File(gitPath);
         if (!gitFile.exists()) {
-            throw new ProjectWalkerException(String.format(".git folder '%s' not found", gitPath));
+            throw new ProjectObserverException(String.format(".git folder '%s' not found", gitPath));
         }
 
         String newRevision = args.get(ARG_NEW_REVISION);
@@ -215,11 +205,6 @@ public class GitProjectWalker implements ProjectWalker {
         return content;
     }
 
-    private static String getCommitAuthor(RevCommit commit) {
-        final PersonIdent author = commit.getAuthorIdent();
-        return author.getName() + " (" + author.getEmailAddress() + ")";
-    }
-
     private static class GitRevision {
         private final String revision;
         private ObjectId treeId;
@@ -244,6 +229,11 @@ public class GitProjectWalker implements ProjectWalker {
 
         boolean isReady() {
             return treeId != null || commitId != null || info != null;
+        }
+
+        private static String getCommitAuthor(RevCommit commit) {
+            final PersonIdent author = commit.getAuthorIdent();
+            return author.getName() + " (" + author.getEmailAddress() + ")";
         }
     }
 }

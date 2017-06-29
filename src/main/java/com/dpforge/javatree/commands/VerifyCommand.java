@@ -1,5 +1,6 @@
 package com.dpforge.javatree.commands;
 
+import com.dpforge.tellon.core.walker.ProjectObserver;
 import com.dpforge.tellon.core.walker.ProjectWalker;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 
@@ -37,10 +38,10 @@ public class VerifyCommand extends Command {
 
         System.out.println();
 
-        final List<ProjectWalker> walkers = context.getWalkers();
-        System.out.println("Projects walkers");
-        for (ProjectWalker walker : walkers) {
-            System.out.format("* %s%n  %s", walker.getName(), walker.getDescription());
+        final List<ProjectObserver> observers = context.getObservers();
+        System.out.println("Projects observers");
+        for (ProjectObserver observer : observers) {
+            System.out.format("* %s%n  %s", observer.getName(), observer.getDescription());
             System.out.println();
         }
     }
