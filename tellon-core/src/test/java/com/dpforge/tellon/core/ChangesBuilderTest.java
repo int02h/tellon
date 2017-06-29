@@ -1,10 +1,14 @@
 package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.parser.SourceCode;
+import com.dpforge.tellon.core.parser.resolver.WatcherResolver;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -259,6 +263,40 @@ public class ChangesBuilderTest {
         assertTrue(changes.hasUpdated());
         assertFalse(changes.hasDeleted());
         assertFalse(changes.hasAdded());
+    }
+
+    @Test
+    public void watcherResolver() throws Exception {
+        final SourceCode src1 = createSourceCode(new String[]{
+                "class Foo {",
+                "    @NotifyChanges(\"lower-case\")",
+                "    int a;",
+                "}"});
+
+        final SourceCode src2 = createSourceCode(new String[]{
+                "class Foo {",
+                "    @NotifyChanges(\"lower-case\")",
+                "    Integer a;",
+                "}"});
+        final Changes changes = new ChangesBuilder(new WatcherResolver() {
+            @Override
+            public List<String> resolveLiteral(String value) throws IOException {
+                return Collections.singletonList(value.toUpperCase());
+            }
+
+            @Override
+            public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+                throw new IllegalStateException();
+            }
+        }).build(src1, src2);
+
+        assertTrue(changes.hasUpdated());
+        assertFalse(changes.hasDeleted());
+        assertFalse(changes.hasAdded());
+
+        assertEquals(1, changes.getUpdated().size());
+        assertEquals("LOWER-CASE", changes.getUpdated().get(0).getOldBlock().getWatchers().get(0));
+        assertEquals("LOWER-CASE", changes.getUpdated().get(0).getNewBlock().getWatchers().get(0));
     }
 
     private static SourceCode createSourceCode(final String[] clazz) {

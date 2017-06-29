@@ -1,6 +1,11 @@
 package com.dpforge.tellon.core.parser;
 
+import com.dpforge.tellon.core.parser.resolver.WatcherResolver;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -252,6 +257,29 @@ public class ParserTest {
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
         assertArrayEquals(new String[]{"@NotifyChanges(\"test\") int sum;"}, block.getSourceCode().asRaw());
+    }
+
+    @Test
+    public void watcherResolve() {
+        final String[] code = {"package com.test;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(\"test\") int value;",
+                "}"};
+        final ParsedSourceCode parsed = new SourceCodeParser(new WatcherResolver() {
+            @Override
+            public List<String> resolveLiteral(String value) throws IOException {
+                return Collections.singletonList(value.toUpperCase());
+            }
+
+            @Override
+            public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+                throw new IllegalStateException();
+            }
+        }).parse(SourceCode.createFromContent(code));
+
+        AnnotatedBlock block = parsed.getAnnotatedBlocks().get(0);
+        assertEquals("TEST", block.getWatchers().get(0));
     }
 
     private static ParsedSourceCode parse(final String[] code) {
