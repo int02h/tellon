@@ -78,7 +78,7 @@ public class SourceCodeLinesTest {
         });
         final BlockPosition start = BlockPosition.createHumanBased(3, 9);
         final BlockPosition end = BlockPosition.createHumanBased(3, 15);
-        assertArrayEquals(new String[]{"l int i"}, lines.getExactSubset(start, end));
+        assertArrayEquals(new String[]{"l int i"}, lines.getExactRange(start, end));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class SourceCodeLinesTest {
         });
         final BlockPosition start = BlockPosition.createHumanBased(2, 7);
         final BlockPosition end = BlockPosition.createHumanBased(3, 9);
-        assertArrayEquals(new String[]{"ring value;", "    final"}, lines.getExactSubset(start, end));
+        assertArrayEquals(new String[]{"ring value;", "    final"}, lines.getExactRange(start, end));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class SourceCodeLinesTest {
         final BlockPosition start = BlockPosition.createHumanBased(1, 11);
         final BlockPosition end = BlockPosition.createHumanBased(4, 5);
         assertArrayEquals(new String[]{"{", "    String value;", "    final int index;", "    /"},
-                lines.getExactSubset(start, end));
+                lines.getExactRange(start, end));
     }
 
     @Test

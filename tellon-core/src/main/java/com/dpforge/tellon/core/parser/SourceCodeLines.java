@@ -32,7 +32,7 @@ public class SourceCodeLines implements Iterable<String> {
         return get(position.getLine());
     }
 
-    public String[] getExactSubset(final BlockPosition start, final BlockPosition end) {
+    public String[] getExactRange(final BlockPosition start, final BlockPosition end) {
         if (start.getLine() == end.getLine()) {
             final String line = get(start);
             return new String[]{line.substring(start.getColumn(), end.getColumn() + 1)};
