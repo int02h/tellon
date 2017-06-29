@@ -4,19 +4,34 @@ import com.dpforge.tellon.core.parser.AnnotatedBlock;
 import com.dpforge.tellon.core.parser.ParsedSourceCode;
 import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.SourceCodeParser;
+import com.dpforge.tellon.core.parser.resolver.AsIsWatcherResolver;
+import com.dpforge.tellon.core.parser.resolver.WatcherResolver;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChangesBuilder {
+
+    private final SourceCodeParser parser;
+
+    public ChangesBuilder() {
+        this(new AsIsWatcherResolver());
+    }
+
+    public ChangesBuilder(WatcherResolver watcherResolver) {
+        if (watcherResolver == null) {
+            throw new NullPointerException("Watcher resolver cannot be null");
+        }
+        parser = new SourceCodeParser(watcherResolver);
+    }
+
     public Changes build(SourceCode oldSrc, SourceCode newSrc) {
-        final SourceCodeParser parser = new SourceCodeParser();
         return buildChanges(parser.parse(oldSrc), parser.parse(newSrc));
     }
 
     public Changes buildInserted(SourceCode src) {
-        final ParsedSourceCode code = new SourceCodeParser().parse(src);
+        final ParsedSourceCode code = parser.parse(src);
         final Changes changes = new Changes();
 
         for (AnnotatedBlock block : code.getAnnotatedBlocks()) {
@@ -27,7 +42,7 @@ public class ChangesBuilder {
     }
 
     public Changes buildDeleted(SourceCode src) {
-        final ParsedSourceCode code = new SourceCodeParser().parse(src);
+        final ParsedSourceCode code = parser.parse(src);
         final Changes changes = new Changes();
 
         for (AnnotatedBlock block : code.getAnnotatedBlocks()) {

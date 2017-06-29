@@ -6,6 +6,7 @@ import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
@@ -20,7 +21,7 @@ public class AnnotatedBlockTest {
                 EnumSet.of(Modifier.PUBLIC),
                 true,
                 "Bar");
-        AnnotatedBlock.fromNode(SourceCode.createFromContent(EMPTY_STRING_ARRAY), node, new WatcherList(EMPTY_STRING_ARRAY));
+        AnnotatedBlock.fromNode(SourceCode.createFromContent(EMPTY_STRING_ARRAY), node, Collections.emptyList());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -31,7 +32,7 @@ public class AnnotatedBlockTest {
                 "Bar");
         node.setRange(new Range(new Position(1, 1), new Position(5, 1)));
         node.setJavadocComment("Test");
-        AnnotatedBlock.fromNode(SourceCode.createFromContent(EMPTY_STRING_ARRAY), node, new WatcherList(EMPTY_STRING_ARRAY));
+        AnnotatedBlock.fromNode(SourceCode.createFromContent(EMPTY_STRING_ARRAY), node, Collections.emptyList());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -54,7 +55,7 @@ public class AnnotatedBlockTest {
         final AnnotatedBlock block = AnnotatedBlock.fromNode(
                 SourceCode.createFromContent(new String[]{"class Bar {", " }"}),
                 node,
-                new WatcherList(new String[]{"test-watcher"}));
+                Collections.singletonList("test-watcher"));
         assertEquals("TYPE 'Bar' {line=0, column=0} - {line=1, column=1} [test-watcher]", block.toString());
     }
 }

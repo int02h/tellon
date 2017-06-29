@@ -4,13 +4,15 @@ import com.github.javaparser.Position;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;
 
+import java.util.List;
+
 public class AnnotatedBlock {
     private final BlockPosition startPosition;
     private final BlockPosition endPosition;
     private final BlockSourceCode sourceCode;
     private final BlockType type;
     private final String name;
-    private final WatcherList watchers;
+    private final List<String> watchers;
 
     AnnotatedBlock(Builder builder) {
         this.startPosition = builder.startPosition;
@@ -41,7 +43,7 @@ public class AnnotatedBlock {
         return name;
     }
 
-    public WatcherList getWatchers() {
+    public List<String> getWatchers() {
         return watchers;
     }
 
@@ -52,7 +54,7 @@ public class AnnotatedBlock {
 
     static AnnotatedBlock fromNode(final SourceCode sourceCode,
                                    final ClassOrInterfaceDeclaration node,
-                                   final WatcherList watchers) {
+                                   final List<String> watchers) {
         return createBuilder(sourceCode, node, BlockType.TYPE)
                 .name(node.getNameAsString())
                 .watchers(watchers)
@@ -61,7 +63,7 @@ public class AnnotatedBlock {
 
     static AnnotatedBlock fromNode(final SourceCode sourceCode,
                                    final AnnotationDeclaration node,
-                                   final WatcherList watchers) {
+                                   final List<String> watchers) {
         return createBuilder(sourceCode, node, BlockType.ANNOTATION)
                 .name(node.getNameAsString())
                 .watchers(watchers)
@@ -70,7 +72,7 @@ public class AnnotatedBlock {
 
     static AnnotatedBlock fromNode(final SourceCode sourceCode,
                                    final ConstructorDeclaration node,
-                                   final WatcherList watchers) {
+                                   final List<String> watchers) {
         return createBuilder(sourceCode, node, BlockType.CONSTRUCTOR)
                 .name(node.getNameAsString())
                 .watchers(watchers)
@@ -79,7 +81,7 @@ public class AnnotatedBlock {
 
     static AnnotatedBlock fromNode(final SourceCode sourceCode,
                                    final MethodDeclaration node,
-                                   final WatcherList watchers) {
+                                   final List<String> watchers) {
         return createBuilder(sourceCode, node, BlockType.METHOD)
                 .name(node.getNameAsString())
                 .watchers(watchers)
@@ -88,7 +90,7 @@ public class AnnotatedBlock {
 
     static AnnotatedBlock fromNode(final SourceCode sourceCode,
                                    final FieldDeclaration node,
-                                   final WatcherList watchers) {
+                                   final List<String> watchers) {
         StringBuilder builder = new StringBuilder();
         for (VariableDeclarator var : node.getVariables()) {
             if (builder.length() > 0) {
@@ -104,7 +106,7 @@ public class AnnotatedBlock {
 
     static AnnotatedBlock fromNode(final SourceCode sourceCode,
                                    final AnnotationMemberDeclaration node,
-                                   final WatcherList watchers) {
+                                   final List<String> watchers) {
         return createBuilder(sourceCode, node, BlockType.ANNOTATION_MEMBER)
                 .name(node.getNameAsString())
                 .watchers(watchers)
@@ -150,7 +152,7 @@ public class AnnotatedBlock {
         private String name;
         private BlockPosition startPosition;
         private BlockPosition endPosition;
-        private WatcherList watchers;
+        private List<String> watchers;
 
         Builder sourceCode(BlockSourceCode sourceCode) {
             this.sourceCode = sourceCode;
@@ -177,7 +179,7 @@ public class AnnotatedBlock {
             return this;
         }
 
-        Builder watchers(WatcherList watchers) {
+        Builder watchers(List<String> watchers) {
             this.watchers = watchers;
             return this;
         }

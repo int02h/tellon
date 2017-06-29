@@ -2,13 +2,12 @@ package com.dpforge.mailnotifier;
 
 import com.dpforge.mailnotifier.format.SourceCodeHtmlFormatter;
 import com.dpforge.tellon.core.Changes;
-import com.dpforge.tellon.core.observer.ProjectItem;
-import com.dpforge.tellon.core.observer.Revision;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
 import com.dpforge.tellon.core.observer.ProjectInfo;
+import com.dpforge.tellon.core.observer.ProjectItem;
+import com.dpforge.tellon.core.observer.Revision;
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
-import com.dpforge.tellon.core.parser.WatcherList;
 import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.util.ConfigLoader;
@@ -172,9 +171,8 @@ public class MailNotifier implements ChangesNotifier {
         mailer.sendMail(emailBuilder.build(), false);
     }
 
-    private static void extractMailWatchers(final List<String> result, final WatcherList watchers) {
-        for (int i = 0; i < watchers.size(); i++) {
-            final String watcher = watchers.get(i);
+    private static void extractMailWatchers(final List<String> result, final List<String> watchers) {
+        for (final String watcher : watchers) {
             if (watcher.startsWith(PREFIX)) {
                 final String email = watcher.substring(PREFIX.length());
                 if (!result.contains(email)) {

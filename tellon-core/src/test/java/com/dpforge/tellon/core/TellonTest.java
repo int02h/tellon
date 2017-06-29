@@ -6,6 +6,7 @@ import com.dpforge.tellon.core.observer.*;
 import com.dpforge.tellon.core.parser.BlockType;
 import com.dpforge.tellon.core.parser.SourceCode;
 import org.junit.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,6 +103,11 @@ public class TellonTest {
         @Override
         public ProjectWalker createWalker() {
             return new TestWalker(items);
+        }
+
+        @Override
+        public SourceCode getSourceCode(String qualifiedName) throws IOException {
+            throw new NotImplementedException();
         }
     }
 

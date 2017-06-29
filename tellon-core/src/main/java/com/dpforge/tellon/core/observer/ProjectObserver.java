@@ -2,7 +2,7 @@ package com.dpforge.tellon.core.observer;
 
 import java.util.Map;
 
-public interface ProjectObserver {
+public interface ProjectObserver extends SourceCodeProvider {
 
     void init(Map<String, String> args) throws ProjectObserverException;
 

@@ -11,10 +11,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +25,11 @@ public class GitProjectObserver implements ProjectObserver {
     private static final String ARG_GIT_PATH = "gitPath";
     private static final String ARG_NEW_REVISION = "newRev";
     private static final String ARG_OLD_REVISION = "oldRev";
+    private static final String ARG_SOURCE_DIR = "srcDir";
 
     private File gitFile;
+
+    private File sourceDir;
 
     private ProjectInfo projectInfo;
 
@@ -86,6 +86,13 @@ public class GitProjectObserver implements ProjectObserver {
         return new GitProjectWalker(items);
     }
 
+    @Override
+    public SourceCode getSourceCode(final String qualifiedName) throws IOException {
+        final String path = qualifiedName.replace('.', File.separatorChar) + ".java";
+        final File file = new File(sourceDir, path);
+        return SourceCode.createFromContent(getStreamContent(new FileInputStream(file)));
+    }
+
     private void parseArguments(final Map<String, String> args) throws ProjectObserverException {
         final String gitPath = args.get(ARG_GIT_PATH);
         if (gitPath == null) {
@@ -94,7 +101,17 @@ public class GitProjectObserver implements ProjectObserver {
 
         gitFile = new File(gitPath);
         if (!gitFile.exists()) {
-            throw new ProjectObserverException(String.format(".git folder '%s' not found", gitPath));
+            throw new ProjectObserverException(String.format(".git directory '%s' not found", gitPath));
+        }
+
+        final String sourceDir = args.get(ARG_SOURCE_DIR);
+        if (sourceDir == null) {
+            throw new ProjectObserverException("Source directory not provided");
+        }
+
+        this.sourceDir = new File(gitFile, sourceDir);
+        if (!this.sourceDir.exists()) {
+            throw new ProjectObserverException(String.format("Source directory '%s' not found", gitPath));
         }
 
         String newRevision = args.get(ARG_NEW_REVISION);
@@ -194,9 +211,9 @@ public class GitProjectObserver implements ProjectObserver {
         }
     }
 
-    private static List<String> getStreamContent(ObjectStream os) throws IOException {
+    private static List<String> getStreamContent(final InputStream is) throws IOException {
         final List<String> content = new ArrayList<>();
-        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(os))) {
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 content.add(line);

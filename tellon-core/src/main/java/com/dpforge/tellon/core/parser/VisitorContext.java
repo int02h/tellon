@@ -1,6 +1,7 @@
 package com.dpforge.tellon.core.parser;
 
 import com.dpforge.tellon.annotations.NotifyChanges;
+import com.dpforge.tellon.core.parser.resolver.WatcherResolver;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.PackageDeclaration;
 
@@ -11,15 +12,17 @@ class VisitorContext {
     private static final String NOTIFY_CHANGES_ANNOTATION = NotifyChanges.class.getName();
     private static final String NOTIFY_CHANGED_ANNOTATION_PACKAGE = NotifyChanges.class.getPackage().getName();
 
-    private final WatchersExtractor watchersExtractor = new WatchersExtractor(this);
+    private final WatchersExtractor watchersExtractor;
     private final SourceCode sourceCode;
 
     private boolean annotationImported;
 
     private final List<AnnotatedBlock> annotatedBlocks = new ArrayList<>();
+    private final List<ImportDeclaration> imports = new ArrayList<>();
 
-    VisitorContext(SourceCode sourceCode) {
+    VisitorContext(SourceCode sourceCode, WatcherResolver watcherResolver) {
         this.sourceCode = sourceCode;
+        this.watchersExtractor = new WatchersExtractor(this, watcherResolver);
     }
 
     SourceCode getSourceCode() {
@@ -39,6 +42,7 @@ class VisitorContext {
     }
 
     void addImport(ImportDeclaration declaration) {
+        imports.add(declaration);
         if (!annotationImported) {
             if (declaration.isAsterisk()) {
                 annotationImported = NOTIFY_CHANGED_ANNOTATION_PACKAGE.equals(declaration.getNameAsString());
@@ -57,5 +61,14 @@ class VisitorContext {
 
     boolean isAnnotationImported() {
         return annotationImported;
+    }
+
+    public String resolveClassName(String className) {
+        for (ImportDeclaration declaration : imports) {
+            if (declaration.getName().getIdentifier().equals(className)) {
+                return declaration.getNameAsString();
+            }
+        }
+        return null;
     }
 }
