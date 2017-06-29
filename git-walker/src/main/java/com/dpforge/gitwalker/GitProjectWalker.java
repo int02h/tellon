@@ -140,19 +140,15 @@ public class GitProjectWalker implements ProjectWalker {
     private List<ProjectItem> buildProjectItems(Repository repository, List<DiffEntry> diff) {
         final List<ProjectItem> items = new ArrayList<>(diff.size());
         for (DiffEntry entry : diff) {
+            final String diffEntryPath = getDiffEntryPath(entry);
+            if (shouldSkipPath(diffEntryPath)) {
+                continue;
+            }
+
             items.add(new ProjectItem() {
                 @Override
                 public String getDescription() {
-                    switch (entry.getChangeType()) {
-                        case ADD:
-                            return entry.getNewPath();
-                        case MODIFY:
-                        case DELETE:
-                        case RENAME:
-                        case COPY:
-                        default:
-                            return entry.getOldPath();
-                    }
+                    return diffEntryPath;
                 }
 
                 @Override
@@ -189,6 +185,23 @@ public class GitProjectWalker implements ProjectWalker {
             });
         }
         return items;
+    }
+
+    private static boolean shouldSkipPath(final String path) {
+        return !path.toLowerCase().endsWith(".java");
+    }
+
+    private String getDiffEntryPath(DiffEntry entry) {
+        switch (entry.getChangeType()) {
+            case ADD:
+                return entry.getNewPath();
+            case MODIFY:
+            case DELETE:
+            case RENAME:
+            case COPY:
+            default:
+                return entry.getOldPath();
+        }
     }
 
     private static List<String> getStreamContent(ObjectStream os) throws IOException {
