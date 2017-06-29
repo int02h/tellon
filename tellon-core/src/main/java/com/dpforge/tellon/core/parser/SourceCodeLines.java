@@ -1,7 +1,5 @@
 package com.dpforge.tellon.core.parser;
 
-import com.dpforge.tellon.core.BlockPosition;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.dpforge.tellon.core;
+package com.dpforge.tellon.core.parser;
 
 public class BlockPosition {
 

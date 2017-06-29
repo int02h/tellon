@@ -1,6 +1,5 @@
 package com.dpforge.tellon.core.parser;
 
-import com.dpforge.tellon.core.BlockPosition;
 import com.github.javaparser.Position;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;
