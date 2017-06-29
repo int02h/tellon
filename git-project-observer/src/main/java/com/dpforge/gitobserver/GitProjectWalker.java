@@ -1,7 +1,7 @@
 package com.dpforge.gitobserver;
 
-import com.dpforge.tellon.core.walker.ProjectItem;
-import com.dpforge.tellon.core.walker.ProjectWalker;
+import com.dpforge.tellon.core.observer.ProjectItem;
+import com.dpforge.tellon.core.observer.ProjectWalker;
 
 import java.util.List;
 

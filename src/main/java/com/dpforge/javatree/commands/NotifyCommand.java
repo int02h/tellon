@@ -4,8 +4,8 @@ import com.dpforge.javatree.Errors;
 import com.dpforge.tellon.core.Tellon;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
-import com.dpforge.tellon.core.walker.ProjectObserver;
-import com.dpforge.tellon.core.walker.ProjectObserverException;
+import com.dpforge.tellon.core.observer.ProjectObserver;
+import com.dpforge.tellon.core.observer.ProjectObserverException;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;

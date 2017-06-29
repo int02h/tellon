@@ -1,7 +1,7 @@
 package com.dpforge.gitobserver;
 
+import com.dpforge.tellon.core.observer.*;
 import com.dpforge.tellon.core.parser.SourceCode;
-import com.dpforge.tellon.core.walker.*;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class GitProjectObserver implements ProjectObserver {
 
-    private static final String NAME = "git-walker";
-    private static final String DESCRIPTION = "Tellon project walker over local git repository";
+    private static final String NAME = "git-project-observer";
+    private static final String DESCRIPTION = "Tellon project observer over local git repository";
 
     private static final String ARG_GIT_PATH = "gitPath";
     private static final String ARG_NEW_REVISION = "newRev";

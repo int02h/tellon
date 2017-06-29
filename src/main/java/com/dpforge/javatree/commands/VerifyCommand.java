@@ -1,7 +1,6 @@
 package com.dpforge.javatree.commands;
 
-import com.dpforge.tellon.core.walker.ProjectObserver;
-import com.dpforge.tellon.core.walker.ProjectWalker;
+import com.dpforge.tellon.core.observer.ProjectObserver;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 
 import java.io.PrintStream;
@@ -24,7 +23,7 @@ public class VerifyCommand extends Command {
     @Override
     public void printHelp(final PrintStream stream) {
         stream.println("usage: tellon verify");
-        stream.println("It will print info about tellon's environment: registered project walkers and notifiers");
+        stream.println("It will print info about tellon's environment: registered project observers and notifiers");
     }
 
     @Override

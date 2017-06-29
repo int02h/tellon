@@ -2,7 +2,7 @@ package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
-import com.dpforge.tellon.core.walker.*;
+import com.dpforge.tellon.core.observer.*;
 import com.dpforge.tellon.core.parser.BlockType;
 import com.dpforge.tellon.core.parser.SourceCode;
 import org.junit.Test;

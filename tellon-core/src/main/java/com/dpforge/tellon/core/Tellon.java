@@ -1,11 +1,11 @@
 package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
-import com.dpforge.tellon.core.walker.ProjectInfo;
+import com.dpforge.tellon.core.observer.ProjectInfo;
 import com.dpforge.tellon.core.parser.SourceCode;
-import com.dpforge.tellon.core.walker.ProjectItem;
-import com.dpforge.tellon.core.walker.ProjectObserver;
-import com.dpforge.tellon.core.walker.ProjectWalker;
+import com.dpforge.tellon.core.observer.ProjectItem;
+import com.dpforge.tellon.core.observer.ProjectObserver;
+import com.dpforge.tellon.core.observer.ProjectWalker;
 
 import java.io.IOException;
 import java.util.ArrayList;

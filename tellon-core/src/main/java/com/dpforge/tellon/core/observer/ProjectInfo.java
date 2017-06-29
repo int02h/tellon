@@ -1,4 +1,4 @@
-package com.dpforge.tellon.core.walker;
+package com.dpforge.tellon.core.observer;
 
 public class ProjectInfo {
     private final String name;
