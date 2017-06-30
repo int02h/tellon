@@ -30,6 +30,7 @@ public class BlockPosition {
     /**
      * Human-readable (1-based) line in source code
      */
+    @SuppressWarnings("unused")
     public int getHumanLine() {
         return line + 1;
     }
@@ -37,6 +38,7 @@ public class BlockPosition {
     /**
      * Human-readable (1-based) column in source code
      */
+    @SuppressWarnings("unused")
     public int getHumanColumn() {
         return column + 1;
     }
@@ -46,6 +48,7 @@ public class BlockPosition {
         return "{line=" + line + ", column=" + column + "}";
     }
 
+    @SuppressWarnings("unused")
     public static BlockPosition createZeroBased(int line, int column) {
         return new BlockPosition(line, column);
     }
