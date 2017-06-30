@@ -4,6 +4,7 @@ import com.dpforge.tellon.core.parser.resolver.WatcherResolver;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -239,9 +240,9 @@ public class ParserTest {
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         final AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
-        assertArrayEquals(new String[]{"@NotifyChanges(\"test\") int", "    value ;"},
+        assertEquals(Arrays.asList("@NotifyChanges(\"test\") int", "    value ;"),
                 block.getSourceCode().asRaw());
-        assertArrayEquals(new String[]{"    Foo { @NotifyChanges(\"test\") int", "    value ;"},
+        assertEquals(Arrays.asList("    Foo { @NotifyChanges(\"test\") int", "    value ;"),
                 block.getSourceCode().asFragment());
     }
 
@@ -256,7 +257,7 @@ public class ParserTest {
         assertEquals(1, sourceCode.getAnnotatedBlocks().size());
 
         AnnotatedBlock block = sourceCode.getAnnotatedBlocks().get(0);
-        assertArrayEquals(new String[]{"@NotifyChanges(\"test\") int sum;"}, block.getSourceCode().asRaw());
+        assertEquals(Collections.singletonList("@NotifyChanges(\"test\") int sum;"), block.getSourceCode().asRaw());
     }
 
     @Test

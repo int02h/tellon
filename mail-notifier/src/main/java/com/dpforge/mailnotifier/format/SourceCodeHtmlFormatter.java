@@ -5,6 +5,8 @@ import com.dpforge.tellon.core.parser.AnnotatedBlock;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SourceCodeHtmlFormatter {
 
@@ -20,19 +22,19 @@ public class SourceCodeHtmlFormatter {
     }
 
     public String getHtml(final AnnotatedBlock block) {
-        final String[] lines = cleanUpIndent(block.getSourceCode().asFragment());
+        final List<String> lines = cleanUpIndent(block.getSourceCode().asFragment());
         final StringBuilder lineNumberBuilder = new StringBuilder();
         final StringBuilder sourceBuilder = new StringBuilder();
         final int startLine = block.getStartPosition().getLine();
 
-        for (int i = 0; i < lines.length; i++) {
+        for (int i = 0; i < lines.size(); i++) {
             if (i >= MAX_LINES) {
                 lineNumberBuilder.append(MORE_CODE_MARKER);
                 sourceBuilder.append(MORE_CODE_MARKER);
                 break;
             }
             lineNumberBuilder.append(startLine + i + 1).append(LINE_SEPARATOR);
-            sourceBuilder.append(lines[i]).append(LINE_SEPARATOR);
+            sourceBuilder.append(lines.get(i)).append(LINE_SEPARATOR);
         }
 
         return String.format(pattern, lineNumberBuilder.toString(), sourceBuilder.toString());
@@ -51,21 +53,22 @@ public class SourceCodeHtmlFormatter {
         return new SourceCodeHtmlFormatter(pattern);
     }
 
-    private static String[] cleanUpIndent(final String[] lines) {
-        if (lines.length == 0) {
+    private static List<String> cleanUpIndent(final List<String> lines) {
+        if (lines.isEmpty()) {
             return lines;
         }
 
-        int min = countWhitespaceAtStart(lines[0]);
-        for (int i = 1; i < lines.length; i++) {
-            min = Math.min(min, countWhitespaceAtStart(lines[i]));
+        int min = countWhitespaceAtStart(lines.get(0));
+        for (int i = 1; i < lines.size(); i++) {
+            min = Math.min(min, countWhitespaceAtStart(lines.get(i)));
         }
 
-        for (int i = 0; i < lines.length; i++) {
-            lines[i] = lines[i].substring(min);
+        final List<String> cleaned = new ArrayList<>(lines.size());
+        for (String line : lines) {
+            cleaned.add(line.substring(min));
         }
 
-        return lines;
+        return cleaned;
     }
 
     private static int countWhitespaceAtStart(final String line) {

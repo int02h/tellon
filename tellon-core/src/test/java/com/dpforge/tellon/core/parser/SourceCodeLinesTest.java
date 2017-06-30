@@ -3,6 +3,7 @@ package com.dpforge.tellon.core.parser;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -77,7 +78,7 @@ public class SourceCodeLinesTest {
         });
         final BlockPosition start = BlockPosition.createHumanBased(3, 9);
         final BlockPosition end = BlockPosition.createHumanBased(3, 15);
-        assertArrayEquals(new String[]{"l int i"}, lines.getExactRange(start, end));
+        assertEquals(Collections.singletonList("l int i"), lines.getExactRange(start, end));
     }
 
     @Test
@@ -90,7 +91,7 @@ public class SourceCodeLinesTest {
         });
         final BlockPosition start = BlockPosition.createHumanBased(2, 7);
         final BlockPosition end = BlockPosition.createHumanBased(3, 9);
-        assertArrayEquals(new String[]{"ring value;", "    final"}, lines.getExactRange(start, end));
+        assertEquals(Arrays.asList("ring value;", "    final"), lines.getExactRange(start, end));
     }
 
     @Test
@@ -104,7 +105,7 @@ public class SourceCodeLinesTest {
         });
         final BlockPosition start = BlockPosition.createHumanBased(1, 11);
         final BlockPosition end = BlockPosition.createHumanBased(4, 5);
-        assertArrayEquals(new String[]{"{", "    String value;", "    final int index;", "    /"},
+        assertEquals(Arrays.asList("{", "    String value;", "    final int index;", "    /"),
                 lines.getExactRange(start, end));
     }
 
@@ -118,7 +119,7 @@ public class SourceCodeLinesTest {
         });
         final BlockPosition start = BlockPosition.createHumanBased(2, 100);
         final BlockPosition end = BlockPosition.createHumanBased(3, 100);
-        assertArrayEquals(new String[]{"    String value;", "    final int index;"}, lines.getLineRange(start, end));
+        assertEquals(Arrays.asList("    String value;", "    final int index;"), lines.getLineRange(start, end));
     }
 
     @Test

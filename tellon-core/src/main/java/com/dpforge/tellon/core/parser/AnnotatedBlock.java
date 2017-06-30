@@ -135,8 +135,8 @@ public class AnnotatedBlock {
         final BlockPosition endPosition = convertPosition(node.getEnd().get());
         builder.endPosition(endPosition);
 
-        final String[] rawSourceCode = sourceCode.getContent().getExactRange(startPosition, endPosition);
-        final String[] sourceCodeFragment = sourceCode.getContent().getLineRange(startPosition, endPosition);
+        final List<String> rawSourceCode = sourceCode.getContent().getExactRange(startPosition, endPosition);
+        final List<String> sourceCodeFragment = sourceCode.getContent().getLineRange(startPosition, endPosition);
         builder.sourceCode(new BlockSourceCode(rawSourceCode, sourceCodeFragment));
 
         return builder;

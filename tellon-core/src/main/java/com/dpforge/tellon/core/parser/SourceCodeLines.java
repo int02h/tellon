@@ -1,76 +1,63 @@
 package com.dpforge.tellon.core.parser;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 public class SourceCodeLines implements Iterable<String> {
-    private final String[] lines;
+    private final List<String> lines;
 
-    private SourceCodeLines(String[] lines) {
+    private SourceCodeLines(List<String> lines) {
         this.lines = lines;
     }
 
     public int size() {
-        return lines.length;
+        return lines.size();
     }
 
     public String get(int index) {
-        if (index < 0 || index >= lines.length) {
+        if (index < 0 || index >= lines.size()) {
             throw new IndexOutOfBoundsException(String.format(
                     "Trying to get line with index %d but source contains only %d line(s)",
                     index,
-                    lines.length
+                    lines.size()
             ));
         }
-        return lines[index];
+        return lines.get(index);
     }
 
     public String get(BlockPosition position) {
         return get(position.getLine());
     }
 
-    public String[] getExactRange(final BlockPosition start, final BlockPosition end) {
+    public List<String> getExactRange(final BlockPosition start, final BlockPosition end) {
         if (start.getLine() == end.getLine()) {
             final String line = get(start);
-            return new String[]{line.substring(start.getColumn(), end.getColumn() + 1)};
+            return Collections.singletonList(line.substring(start.getColumn(), end.getColumn() + 1));
         }
 
-        final String[] code = new String[end.getLine() - start.getLine() + 1];
-        code[0] = get(start).substring(start.getColumn());
-        if (code.length > 2) {
-            System.arraycopy(lines, start.getLine() + 1, code, 1, code.length - 2);
+        final int rangeLength = end.getLine() - start.getLine() + 1;
+        final List<String> code = new ArrayList<>(rangeLength);
+        code.add(get(start).substring(start.getColumn()));
+        if (rangeLength > 2) {
+            code.addAll(lines.subList(start.getLine() + 1, end.getLine()));
         }
-        code[code.length - 1] = get(end).substring(0, end.getColumn() + 1);
+        code.add(get(end).substring(0, end.getColumn() + 1));
         return code;
     }
 
-    public String[] getLineRange(final BlockPosition start, final BlockPosition end) {
-        return Arrays.copyOfRange(lines, start.getLine(), end.getLine() + 1);
+    public List<String> getLineRange(final BlockPosition start, final BlockPosition end) {
+        return lines.subList(start.getLine(), end.getLine() + 1);
     }
 
     @Override
     public Iterator<String> iterator() {
-        return new Iterator<String>() {
-            int index = -1;
-
-            @Override
-            public boolean hasNext() {
-                return index + 1 < lines.length;
-            }
-
-            @Override
-            public String next() {
-                return lines[++index];
-            }
-        };
+        return lines.iterator();
     }
 
     public static SourceCodeLines create(Collection<String> lines) {
-        return new SourceCodeLines(lines.toArray(new String[lines.size()]));
+        return new SourceCodeLines(new ArrayList<>(lines));
     }
 
     public static SourceCodeLines create(String[] code) {
-        return new SourceCodeLines(code);
+        return new SourceCodeLines(Arrays.asList(code));
     }
 }
