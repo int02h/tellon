@@ -1,13 +1,20 @@
 package com.dpforge.tellon.core.notifier;
 
-import java.io.IOException;
-
+@SuppressWarnings("unused")
 public class ProjectNotifierException extends Exception {
     public ProjectNotifierException() {
-
+        super();
     }
 
-    public ProjectNotifierException(IOException e) {
-        super(e);
+    public ProjectNotifierException(String message) {
+        super(message);
+    }
+
+    public ProjectNotifierException(Throwable cause) {
+        super(cause);
+    }
+
+    public ProjectNotifierException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
