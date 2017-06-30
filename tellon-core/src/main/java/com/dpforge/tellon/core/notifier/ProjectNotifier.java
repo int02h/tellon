@@ -7,5 +7,7 @@ public interface ProjectNotifier {
 
     void init() throws ChangesNotifierException;
 
+    void reportError(final String watcher, final String errorMessage);
+
     ChangesNotifier getChangesNotifier();
 }

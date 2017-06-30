@@ -3,6 +3,7 @@ package com.dpforge.mailnotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectNotifier;
+import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.util.ConfigLoader;
 
@@ -10,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class MailNotifier implements ProjectNotifier {
+
+    static final String PREFIX = "mailto:";
 
     private Mailer mailer;
     private MailChangesNotifier changesNotifier;
@@ -35,6 +38,21 @@ public class MailNotifier implements ProjectNotifier {
         } catch (IOException e) {
             throw new ChangesNotifierException(e);
         }
+    }
+
+    @Override
+    public void reportError(String watcher, String errorMessage) {
+        if (!watcher.startsWith(PREFIX)) {
+            return;
+        }
+
+        final String email = watcher.substring(PREFIX.length());
+        final EmailBuilder emailBuilder = new EmailBuilder()
+                .from("Tellon", ConfigLoader.getProperty(ConfigLoader.Property.SMTP_USERNAME))
+                .subject("Error occurred in Tellon")
+                .text(errorMessage)
+                .to(email);
+        mailer.sendMail(emailBuilder.build(), false);
     }
 
     @Override

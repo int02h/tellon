@@ -16,7 +16,7 @@ import java.util.*;
 
 class MailChangesNotifier implements ChangesNotifier {
 
-    private static final String PREFIX = "mailto:";
+    private static final String PREFIX = MailNotifier.PREFIX;
 
     private final SourceCodeHtmlFormatter codeFormatter;
     private final Mailer mailer;

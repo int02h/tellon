@@ -10,6 +10,8 @@ import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 public class NotifyCommand extends Command {
@@ -35,6 +37,58 @@ public class NotifyCommand extends Command {
 
     @Override
     public void execute(final CommandContext context) throws CommandExecutionException {
+        final Tellon tellon = new Tellon();
+        final List<ProjectNotifier> notifiers = initNotifiers(context, tellon);
+
+        try {
+            tellon.process(initObserver(context));
+        } catch (IOException e) {
+            reportError(e, notifiers);
+            throw new CommandExecutionException(Errors.EXECUTION_FAIL, "Fail to notify", e);
+        } catch (CommandExecutionException e) {
+            reportError(e, notifiers);
+            throw e;
+        }
+    }
+
+    private void reportError(final Throwable t, final List<ProjectNotifier> notifiers) {
+        final String masterWatcher = arguments.getMasterWatcher();
+        if (masterWatcher == null || masterWatcher.isEmpty()) {
+            return;
+        }
+
+        final StringWriter out = new StringWriter();
+        final PrintWriter writer = new PrintWriter(out);
+        writer.println("Some error has occurred during Tellon execution");
+        writer.println();
+        t.printStackTrace(writer);
+
+        final String message = out.toString();
+        if (!message.isEmpty()) {
+            for (ProjectNotifier notifier : notifiers) {
+                notifier.reportError(masterWatcher, message);
+            }
+        }
+    }
+
+    private List<ProjectNotifier> initNotifiers(final CommandContext context, final Tellon tellon) throws CommandExecutionException {
+        final List<ProjectNotifier> notifiers = context.getNotifiers();
+        if (notifiers.isEmpty()) {
+            throw new CommandExecutionException(Errors.BAD_CONFIG, "No project notifiers found");
+        }
+        for (ProjectNotifier notifier : notifiers) {
+            try {
+                notifier.init();
+                tellon.addNotifier(notifier.getChangesNotifier());
+            } catch (ChangesNotifierException e) {
+                throw new CommandExecutionException(Errors.INIT_FAIL,
+                        "Fail to initialize project notifier " + notifier.getName(), e);
+            }
+        }
+        return notifiers;
+    }
+
+    private ProjectObserver initObserver(final CommandContext context) throws CommandExecutionException {
         final List<ProjectObserver> observers = context.getObservers();
 
         final ProjectObserver projectObserver;
@@ -63,28 +117,7 @@ public class NotifyCommand extends Command {
             throw new CommandExecutionException(Errors.INIT_FAIL, "Fail to initialize project observer", e);
         }
 
-        final List<ProjectNotifier> notifiers = context.getNotifiers();
-        if (notifiers.isEmpty()) {
-            throw new CommandExecutionException(Errors.BAD_CONFIG, "No project notifiers found");
-        }
-
-        final Tellon tellon = new Tellon();
-
-        for (ProjectNotifier notifier : notifiers) {
-            try {
-                notifier.init();
-                tellon.addNotifier(notifier.getChangesNotifier());
-            } catch (ChangesNotifierException e) {
-                throw new CommandExecutionException(Errors.INIT_FAIL,
-                        "Fail to initialize project notifier " + notifier.getName(), e);
-            }
-        }
-
-        try {
-            tellon.process(projectObserver);
-        } catch (IOException e) {
-            throw new CommandExecutionException(Errors.EXECUTION_FAIL, "Fail to notify", e);
-        }
+        return projectObserver;
     }
 
     private static ProjectObserver getProjectObserver(final List<ProjectObserver> observers, final String name) {
