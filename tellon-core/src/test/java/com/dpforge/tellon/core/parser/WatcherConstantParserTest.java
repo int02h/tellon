@@ -50,6 +50,19 @@ public class WatcherConstantParserTest {
     }
 
     @Test
+    public void referenceToMultiple() {
+        Map<String, List<String>> map = parse(
+                "class Foo {",
+                "    static final String A = {\"Hello\", \"World\"};",
+                "    static final String B = A;",
+                "}");
+        assertEquals("Hello", map.get("A").get(0));
+        assertEquals("World", map.get("A").get(1));
+        assertEquals("Hello", map.get("B").get(0));
+        assertEquals("World", map.get("B").get(1));
+    }
+
+    @Test
     public void multipleReferenceInitializer() {
         Map<String, List<String>> map = parse(
                 "class Foo {",
