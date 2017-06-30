@@ -2,7 +2,7 @@ package com.dpforge.javatree.commands;
 
 import com.dpforge.javatree.Errors;
 import com.dpforge.tellon.core.Tellon;
-import com.dpforge.tellon.core.notifier.ChangesNotifierException;
+import com.dpforge.tellon.core.notifier.ProjectNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectNotifier;
 import com.dpforge.tellon.core.observer.ProjectObserver;
 import com.dpforge.tellon.core.observer.ProjectObserverException;
@@ -80,7 +80,7 @@ public class NotifyCommand extends Command {
             try {
                 notifier.init();
                 tellon.addNotifier(notifier.getChangesNotifier());
-            } catch (ChangesNotifierException e) {
+            } catch (ProjectNotifierException e) {
                 throw new CommandExecutionException(Errors.INIT_FAIL,
                         "Fail to initialize project notifier " + notifier.getName(), e);
             }

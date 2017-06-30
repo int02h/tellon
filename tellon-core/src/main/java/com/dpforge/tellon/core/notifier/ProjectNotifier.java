@@ -5,7 +5,7 @@ public interface ProjectNotifier {
 
     String getDescription();
 
-    void init() throws ChangesNotifierException;
+    void init() throws ProjectNotifierException;
 
     void reportError(final String watcher, final String errorMessage);
 

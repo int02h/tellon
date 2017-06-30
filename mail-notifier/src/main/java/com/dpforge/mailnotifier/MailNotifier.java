@@ -1,7 +1,7 @@
 package com.dpforge.mailnotifier;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
-import com.dpforge.tellon.core.notifier.ChangesNotifierException;
+import com.dpforge.tellon.core.notifier.ProjectNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectNotifier;
 import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
@@ -29,14 +29,14 @@ public class MailNotifier implements ProjectNotifier {
     }
 
     @Override
-    public void init() throws ChangesNotifierException {
+    public void init() throws ProjectNotifierException {
         ConfigLoader.loadProperties(new File(".", "mail-notifier.properties"), false);
         mailer = new Mailer();
 
         try {
             changesNotifier = MailChangesNotifier.create(mailer);
         } catch (IOException e) {
-            throw new ChangesNotifierException(e);
+            throw new ProjectNotifierException(e);
         }
     }
 
