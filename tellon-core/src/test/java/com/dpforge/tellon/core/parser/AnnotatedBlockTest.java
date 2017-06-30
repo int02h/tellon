@@ -13,15 +13,13 @@ import static org.junit.Assert.assertEquals;
 
 public class AnnotatedBlockTest {
 
-    public static final String[] EMPTY_STRING_ARRAY = new String[0];
-
     @Test(expected = IllegalStateException.class)
     public void nodeWithoutPosition() {
         final ClassOrInterfaceDeclaration node = new ClassOrInterfaceDeclaration(
                 EnumSet.of(Modifier.PUBLIC),
                 true,
                 "Bar");
-        AnnotatedBlock.fromNode(SourceCode.createFromContent(EMPTY_STRING_ARRAY), node, Collections.emptyList());
+        AnnotatedBlock.fromNode(SourceCode.createFromContent(), node, Collections.emptyList());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -32,7 +30,7 @@ public class AnnotatedBlockTest {
                 "Bar");
         node.setRange(new Range(new Position(1, 1), new Position(5, 1)));
         node.setJavadocComment("Test");
-        AnnotatedBlock.fromNode(SourceCode.createFromContent(EMPTY_STRING_ARRAY), node, Collections.emptyList());
+        AnnotatedBlock.fromNode(SourceCode.createFromContent(), node, Collections.emptyList());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -42,7 +40,7 @@ public class AnnotatedBlockTest {
                 true,
                 "Bar");
         node.setRange(new Range(new Position(1, 1), new Position(2, 1)));
-        AnnotatedBlock.fromNode(SourceCode.createFromContent(new String[]{"class Bar {", "}"}), node, null);
+        AnnotatedBlock.fromNode(SourceCode.createFromContent("class Bar {", "}"), node, null);
     }
 
     @Test
@@ -53,7 +51,7 @@ public class AnnotatedBlockTest {
                 "Bar");
         node.setRange(new Range(new Position(1, 1), new Position(2, 2)));
         final AnnotatedBlock block = AnnotatedBlock.fromNode(
-                SourceCode.createFromContent(new String[]{"class Bar {", " }"}),
+                SourceCode.createFromContent("class Bar {", " }"),
                 node,
                 Collections.singletonList("test-watcher"));
         assertEquals("TYPE 'Bar' {line=0, column=0} - {line=1, column=1} [test-watcher]", block.toString());

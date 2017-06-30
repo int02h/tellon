@@ -8,28 +8,26 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ChangesBuilderTest {
     @Test
     public void swappedFields() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"a\")",
                 "    int a;",
                 "    @NotifyChanges(\"b\")",
                 "    String b;",
-                "}"});
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[]{
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"b\")",
                 "    String b;",
                 "    @NotifyChanges(\"a\")",
                 "    int a;",
-                "}"});
+                "}");
 
         final Changes changes = buildChanges(src1, src2);
         assertTrue(changes.isEmpty());
@@ -37,21 +35,21 @@ public class ChangesBuilderTest {
 
     @Test
     public void swappedAndUpdatedFields() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"a\")",
                 "    int a;",
                 "    @NotifyChanges(\"b\")",
                 "    String b;",
-                "}"});
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[]{
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"b\")",
                 "    String b;",
                 "    @NotifyChanges(\"a\")",
                 "    Integer a;",
-                "}"});
+                "}");
 
         final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
@@ -62,21 +60,21 @@ public class ChangesBuilderTest {
 
     @Test
     public void swappedAndRenamedFields() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"a\")",
                 "    int a;",
                 "    @NotifyChanges(\"b\")",
                 "    String b;",
-                "}"});
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[]{
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"b\")",
                 "    String b;",
                 "    @NotifyChanges(\"a\")",
                 "    Integer aaa;",
-                "}"});
+                "}");
 
         final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
@@ -87,19 +85,19 @@ public class ChangesBuilderTest {
 
     @Test
     public void swappedClassContent() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "@NotifyChanges(\"all\")",
                 "class Foo {",
                 "    int a;",
                 "    String b;",
-                "}"});
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[]{
+        final SourceCode src2 = createSourceCode(
                 "@NotifyChanges(\"all\")",
                 "class Foo {",
                 "    String b;",
                 "    int a;",
-                "}"});
+                "}");
 
         final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
@@ -108,16 +106,16 @@ public class ChangesBuilderTest {
 
     @Test
     public void deletedField() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"a\")",
                 "    int a;",
-                "}"});
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[]{
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    String b;",
-                "}"});
+                "}");
 
         final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
@@ -126,16 +124,16 @@ public class ChangesBuilderTest {
 
     @Test
     public void addedField() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    String b;",
-                "}"});
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[]{
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"a\")",
                 "    int a;",
-                "}"});
+                "}");
 
         final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
@@ -144,17 +142,17 @@ public class ChangesBuilderTest {
 
     @Test
     public void updatedField() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"a\")",
                 "    int a;",
-                "}"});
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[]{
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"a\")",
                 "    Integer a;",
-                "}"});
+                "}");
 
         final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.isEmpty());
@@ -163,16 +161,16 @@ public class ChangesBuilderTest {
 
     @Test
     public void sameName() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"field\")",
                 "    int a;",
-                "}"});
-        final SourceCode src2 = createSourceCode(new String[]{
+                "}");
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"field\")",
                 "    int a() { return 0; }",
-                "}"});
+                "}");
 
         final Changes changes = buildChanges(src1, src2);
         assertFalse(changes.hasUpdated());
@@ -182,22 +180,22 @@ public class ChangesBuilderTest {
 
     @Test
     public void javaDoc() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "interface Foo {",
                 "    /**",
                 "    /* This method does awesome things",
                 "     */",
                 "    @NotifyChanges(\"javadoc\")",
                 "    abstract int foo();",
-                "}"});
-        final SourceCode src2 = createSourceCode(new String[]{
+                "}");
+        final SourceCode src2 = createSourceCode(
                 "interface Foo {",
                 "    /**",
                 "    /* This method does awesome things (sometimes)",
                 "     */",
                 "    @NotifyChanges(\"javadoc\")",
                 "    abstract int foo();",
-                "}"});
+                "}");
         final Changes changes = buildChanges(src1, src2);
         assertTrue(changes.hasUpdated());
         assertFalse(changes.hasDeleted());
@@ -206,25 +204,23 @@ public class ChangesBuilderTest {
 
     @Test
     public void insideLineComment() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[] {
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"javadoc\")",
                 "    void doSomeWork() {",
                 "        int a = 123; // magic number",
                 "        work(a);",
                 "    }",
-                "}"
-        });
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[] {
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"javadoc\")",
                 "    void doSomeWork() {",
                 "        int a = 123; // constant from the doc",
                 "        work(a);",
                 "    }",
-                "}"
-        });
+                "}");
         final Changes changes = buildChanges(src1, src2);
         assertTrue(changes.hasUpdated());
         assertFalse(changes.hasDeleted());
@@ -233,7 +229,7 @@ public class ChangesBuilderTest {
 
     @Test
     public void insideBlockComment() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[] {
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"javadoc\")",
                 "    void doSomeWork() {",
@@ -243,10 +239,9 @@ public class ChangesBuilderTest {
                 "         */",
                 "        work(a);",
                 "    }",
-                "}"
-        });
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[] {
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"javadoc\")",
                 "    void doSomeWork() {",
@@ -257,8 +252,7 @@ public class ChangesBuilderTest {
                 "         */",
                 "        work(a);",
                 "    }",
-                "}"
-        });
+                "}");
         final Changes changes = buildChanges(src1, src2);
         assertTrue(changes.hasUpdated());
         assertFalse(changes.hasDeleted());
@@ -267,17 +261,17 @@ public class ChangesBuilderTest {
 
     @Test
     public void watcherResolver() throws Exception {
-        final SourceCode src1 = createSourceCode(new String[]{
+        final SourceCode src1 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"lower-case\")",
                 "    int a;",
-                "}"});
+                "}");
 
-        final SourceCode src2 = createSourceCode(new String[]{
+        final SourceCode src2 = createSourceCode(
                 "class Foo {",
                 "    @NotifyChanges(\"lower-case\")",
                 "    Integer a;",
-                "}"});
+                "}");
         final Changes changes = new ChangesBuilder(new WatcherResolver() {
             @Override
             public List<String> resolveLiteral(String value) throws IOException {
@@ -299,7 +293,7 @@ public class ChangesBuilderTest {
         assertEquals("LOWER-CASE", changes.getUpdated().get(0).getNewBlock().getWatchers().get(0));
     }
 
-    private static SourceCode createSourceCode(final String[] clazz) {
+    private static SourceCode createSourceCode(final String... clazz) {
         final String[] code = new String[clazz.length + 2];
         code[0] = "package com.test;";
         code[1] = "import com.dpforge.tellon.annotations.NotifyChanges;";

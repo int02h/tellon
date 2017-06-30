@@ -9,12 +9,11 @@ import static org.junit.Assert.*;
 public class SourceCodeTest {
     @Test
     public void createFromContentArray() throws Exception {
-        final SourceCode sourceCode = SourceCode.createFromContent(new String[]{
+        final SourceCode sourceCode = SourceCode.createFromContent(
                 "class Foo {",
                 "    int a;",
                 "    String b;",
-                "}"
-        });
+                "}");
         assertEquals(4, sourceCode.getContent().size());
     }
 

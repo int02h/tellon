@@ -145,7 +145,7 @@ public class TellonTest {
 
         @Override
         public SourceCode getActual() throws IOException {
-            return SourceCode.createFromContent(new String[]{
+            return SourceCode.createFromContent(
                     "package com.test;",
                     "import com.dpforge.tellon.annotations.NotifyChanges;",
                     "class Foo",
@@ -153,7 +153,7 @@ public class TellonTest {
                     "    String value = null;",
                     "    @NotifyChanges(\"added@test.com\")",
                     "    int added() { return   0  ; }",
-                    "}"});
+                    "}");
         }
 
         @Override
@@ -168,7 +168,7 @@ public class TellonTest {
 
         @Override
         public SourceCode getPrevious() throws IOException {
-            return SourceCode.createFromContent(new String[] {
+            return SourceCode.createFromContent(
                     "package com.test;",
                     "import com.dpforge.tellon.annotations.NotifyChanges;",
                     "class Foo {",
@@ -177,7 +177,7 @@ public class TellonTest {
                     "        value;",
                     "    @NotifyChanges(\"removed@test.com\")",
                     "    @interface Removed {}",
-                    "}"});
+                    "}");
         }
 
         @Override
@@ -200,11 +200,11 @@ public class TellonTest {
 
         @Override
         public SourceCode getActual() throws IOException {
-            return SourceCode.createFromContent(new String[]{
+            return SourceCode.createFromContent(
                     "package com.test;",
                     "import com.dpforge.tellon.annotations.NotifyChanges;",
                     "@NotifyChanges(\"new@test.com\")",
-                    "class NewClass {}"});
+                    "class NewClass {}");
         }
 
         @Override
@@ -257,11 +257,11 @@ public class TellonTest {
 
         @Override
         public SourceCode getPrevious() throws IOException {
-            return SourceCode.createFromContent(new String[]{
+            return SourceCode.createFromContent(
                     "package com.test;",
                     "import com.dpforge.tellon.annotations.NotifyChanges;",
                     "@NotifyChanges(\"foobar@test.com\")",
-                    "@interface FooBarAnnotation {}"});
+                    "@interface FooBarAnnotation {}");
         }
 
         @Override

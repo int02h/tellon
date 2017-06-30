@@ -13,7 +13,7 @@ public abstract class SourceCode {
 
     abstract CompilationUnit toCompilationUnit();
 
-    public static SourceCode createFromContent(final String[] code) {
+    public static SourceCode createFromContent(final String... code) {
         return new ContentSourceCode(code);
     }
 
@@ -28,7 +28,7 @@ public abstract class SourceCode {
             this.code = SourceCodeLines.create(code);
         }
 
-        private ContentSourceCode(final String[] code) {
+        private ContentSourceCode(final String... code) {
             this.code = SourceCodeLines.create(code);
         }
 

@@ -57,7 +57,7 @@ public class SourceCodeLines implements Iterable<String> {
         return new SourceCodeLines(new ArrayList<>(lines));
     }
 
-    public static SourceCodeLines create(String[] code) {
+    public static SourceCodeLines create(String... code) {
         return new SourceCodeLines(Arrays.asList(code));
     }
 }
