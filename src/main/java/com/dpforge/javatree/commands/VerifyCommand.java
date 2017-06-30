@@ -1,5 +1,6 @@
 package com.dpforge.javatree.commands;
 
+import com.dpforge.tellon.core.notifier.ProjectNotifier;
 import com.dpforge.tellon.core.observer.ProjectObserver;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 
@@ -28,9 +29,9 @@ public class VerifyCommand extends Command {
 
     @Override
     public void execute(final CommandContext context) throws CommandExecutionException {
-        final List<ChangesNotifier> notifiers = context.getNotifiers();
+        final List<ProjectNotifier> notifiers = context.getNotifiers();
         System.out.println("Notifiers");
-        for (ChangesNotifier notifier : notifiers) {
+        for (ProjectNotifier notifier : notifiers) {
             System.out.format("* %s%n  %s", notifier.getName(), notifier.getDescription());
             System.out.println();
         }

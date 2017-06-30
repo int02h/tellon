@@ -5,12 +5,6 @@ import com.dpforge.tellon.core.observer.ProjectInfo;
 import com.dpforge.tellon.core.observer.ProjectItem;
 
 public interface ChangesNotifier {
-    String getName();
-
-    String getDescription();
-
-    void init() throws ChangesNotifierException;
-
     void onStartProject(final ProjectInfo projectInfo);
 
     void onFinishedProject();

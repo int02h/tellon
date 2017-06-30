@@ -4,6 +4,7 @@ import com.dpforge.javatree.commands.Command;
 import com.dpforge.javatree.commands.CommandContext;
 import com.dpforge.javatree.commands.CommandExecutionException;
 import com.dpforge.javatree.commands.CommandFactory;
+import com.dpforge.tellon.core.notifier.ProjectNotifier;
 import com.dpforge.tellon.core.observer.ProjectObserver;
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 
@@ -67,9 +68,9 @@ public class Main {
         return observers;
     }
 
-    private static List<ChangesNotifier> getNotifiers() {
-        final List<ChangesNotifier> notifiers = new ArrayList<>();
-        for (ChangesNotifier notifier : ServiceLoader.load(ChangesNotifier.class)) {
+    private static List<ProjectNotifier> getNotifiers() {
+        final List<ProjectNotifier> notifiers = new ArrayList<>();
+        for (ProjectNotifier notifier : ServiceLoader.load(ProjectNotifier.class)) {
             notifiers.add(notifier);
         }
         return notifiers;

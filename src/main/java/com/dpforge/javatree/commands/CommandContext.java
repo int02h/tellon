@@ -1,6 +1,6 @@
 package com.dpforge.javatree.commands;
 
-import com.dpforge.tellon.core.notifier.ChangesNotifier;
+import com.dpforge.tellon.core.notifier.ProjectNotifier;
 import com.dpforge.tellon.core.observer.ProjectObserver;
 
 import java.io.PrintStream;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CommandContext {
     private final List<ProjectObserver> observers;
-    private final List<ChangesNotifier> notifiers;
+    private final List<ProjectNotifier> notifiers;
     private final PrintStream log;
 
     private CommandContext(Builder builder) {
@@ -21,7 +21,7 @@ public class CommandContext {
         return observers;
     }
 
-    public List<ChangesNotifier> getNotifiers() {
+    public List<ProjectNotifier> getNotifiers() {
         return notifiers;
     }
 
@@ -31,7 +31,7 @@ public class CommandContext {
 
     public static class Builder {
         private List<ProjectObserver> observers;
-        private List<ChangesNotifier> notifiers;
+        private List<ProjectNotifier> notifiers;
         private PrintStream log;
 
         public Builder observers(final List<ProjectObserver> observers) {
@@ -39,7 +39,7 @@ public class CommandContext {
             return this;
         }
 
-        public Builder notifiers(final List<ChangesNotifier> notifiers) {
+        public Builder notifiers(final List<ProjectNotifier> notifiers) {
             this.notifiers = notifiers;
             return this;
         }

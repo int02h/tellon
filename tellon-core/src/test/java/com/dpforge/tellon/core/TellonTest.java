@@ -1,7 +1,6 @@
 package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
-import com.dpforge.tellon.core.notifier.ChangesNotifierException;
 import com.dpforge.tellon.core.observer.*;
 import com.dpforge.tellon.core.parser.BlockType;
 import com.dpforge.tellon.core.parser.SourceCode;
@@ -279,21 +278,6 @@ public class TellonTest {
         private final List<Changes> changesList = new ArrayList<>();
         private final List<Changes> addedList = new ArrayList<>();
         private final List<Changes> deletedList = new ArrayList<>();
-
-        @Override
-        public String getName() {
-            return "test notifier";
-        }
-
-        @Override
-        public String getDescription() {
-            return "for test purposes";
-        }
-
-        @Override
-        public void init() throws ChangesNotifierException {
-
-        }
 
         @Override
         public void onStartProject(ProjectInfo projectInfo) {

@@ -2,8 +2,8 @@ package com.dpforge.javatree.commands;
 
 import com.dpforge.javatree.Errors;
 import com.dpforge.tellon.core.Tellon;
-import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.notifier.ChangesNotifierException;
+import com.dpforge.tellon.core.notifier.ProjectNotifier;
 import com.dpforge.tellon.core.observer.ProjectObserver;
 import com.dpforge.tellon.core.observer.ProjectObserverException;
 import org.apache.commons.cli.ParseException;
@@ -63,22 +63,23 @@ public class NotifyCommand extends Command {
             throw new CommandExecutionException(Errors.INIT_FAIL, "Fail to initialize project observer", e);
         }
 
-        final List<ChangesNotifier> notifiers = context.getNotifiers();
+        final List<ProjectNotifier> notifiers = context.getNotifiers();
         if (notifiers.isEmpty()) {
-            throw new CommandExecutionException(Errors.BAD_CONFIG, "No changes notifier found");
-        }
-
-        for (ChangesNotifier notifier : notifiers) {
-            try {
-                notifier.init();
-            } catch (ChangesNotifierException e) {
-                throw new CommandExecutionException(Errors.INIT_FAIL,
-                        "Fail to initialize notifier " + notifier.getName(), e);
-            }
+            throw new CommandExecutionException(Errors.BAD_CONFIG, "No project notifiers found");
         }
 
         final Tellon tellon = new Tellon();
-        tellon.addNotifiers(notifiers);
+
+        for (ProjectNotifier notifier : notifiers) {
+            try {
+                notifier.init();
+                tellon.addNotifier(notifier.getChangesNotifier());
+            } catch (ChangesNotifierException e) {
+                throw new CommandExecutionException(Errors.INIT_FAIL,
+                        "Fail to initialize project notifier " + notifier.getName(), e);
+            }
+        }
+
         try {
             tellon.process(projectObserver);
         } catch (IOException e) {
