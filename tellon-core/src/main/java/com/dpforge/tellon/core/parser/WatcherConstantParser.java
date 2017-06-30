@@ -8,7 +8,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.util.*;
 
-public class ConstantParser {
+public class WatcherConstantParser {
 
     public Map<String, List<String>> parse(SourceCode sourceCode) {
         final Map<String, List<String>> fields = new HashMap<>();

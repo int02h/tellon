@@ -8,7 +8,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class ConstantParserTest {
+public class WatcherConstantParserTest {
     @Test
     public void singleLiteral() {
         final String[] code = {
@@ -137,6 +137,6 @@ public class ConstantParserTest {
     }
 
     private static Map<String, List<String>> parse(final String[] code) {
-        return new ConstantParser().parse(SourceCode.createFromContent(code));
+        return new WatcherConstantParser().parse(SourceCode.createFromContent(code));
     }
 }
