@@ -1,13 +1,13 @@
 package com.dpforge.tellon.core.parser.resolver;
 
 import com.dpforge.tellon.core.observer.SourceCodeProvider;
-import com.dpforge.tellon.core.parser.WatcherConstantParser;
 import com.dpforge.tellon.core.parser.SourceCode;
+import com.dpforge.tellon.core.parser.WatcherConstantParser;
+import com.dpforge.tellon.core.parser.WatcherMap;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class SourceCodeWatcherResolver implements WatcherResolver {
 
@@ -29,10 +29,10 @@ public class SourceCodeWatcherResolver implements WatcherResolver {
     @Override
     public List<String> resolveReference(String qualifiedName, String field) throws IOException {
         final SourceCode code = sourceCodeProvider.getSourceCode(qualifiedName);
-        final Map<String, List<String>> watcherMap = watcherConstantParser.parse(code);
-        final List<String> addresses = watcherMap.get(field);
+        final WatcherMap watcherMap = watcherConstantParser.parse(code);
+        final List<String> addresses = watcherMap.getUnmodifiable(field);
         verifyAddresses(field, addresses);
-        return Collections.unmodifiableList(addresses);
+        return addresses;
     }
 
     private static void verifyAddresses(final String field, final List<String> addresses) {

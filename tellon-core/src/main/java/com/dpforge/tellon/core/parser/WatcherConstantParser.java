@@ -10,16 +10,16 @@ import java.util.*;
 
 public class WatcherConstantParser {
 
-    public Map<String, List<String>> parse(SourceCode sourceCode) {
-        final Map<String, List<String>> fields = new HashMap<>();
+    public WatcherMap parse(SourceCode sourceCode) {
+        final WatcherMap fields = new WatcherMap();
         new Visitor(fields).visit(sourceCode.toCompilationUnit(), null);
         return fields;
     }
 
     private static class Visitor extends VoidVisitorAdapter<Void> {
-        private final Map<String, List<String>> map;
+        private final WatcherMap map;
 
-        private Visitor(Map<String, List<String>> map) {
+        private Visitor(final WatcherMap map) {
             this.map = map;
         }
 
@@ -34,7 +34,7 @@ public class WatcherConstantParser {
                 final Expression initializer = var.getInitializer().get();
                 if (initializer instanceof StringLiteralExpr) {
                     final String value = ((StringLiteralExpr) initializer).getValue();
-                    if (map.put(name, Collections.singletonList(value)) != null) {
+                    if (map.put(name, value) != null) {
                         throw new RuntimeException("Field '" + name + "' initialized more than once");
                     }
                 } else if (initializer instanceof ArrayInitializerExpr) {
