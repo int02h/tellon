@@ -268,6 +268,11 @@ public class ParserTest {
         assertEquals("TEST", block.getWatchers().get(0));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void nullWatcherResolver() {
+        new SourceCodeParser(null);
+    }
+
     private static ParsedSourceCode parse(final String... code) {
         return new SourceCodeParser().parse(SourceCode.createFromContent(code));
     }

@@ -293,6 +293,12 @@ public class ChangesBuilderTest {
         assertEquals("LOWER-CASE", changes.getUpdated().get(0).getNewBlock().getWatchers().get(0));
     }
 
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void nullWatcherResolver() {
+        new ChangesBuilder(null);
+    }
+
     private static SourceCode createSourceCode(final String... clazz) {
         final String[] code = new String[clazz.length + 2];
         code[0] = "package com.test;";
