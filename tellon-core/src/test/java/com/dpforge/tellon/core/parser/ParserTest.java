@@ -249,7 +249,7 @@ public class ParserTest {
         final WatcherResolver watcherResolver = new WatcherResolver() {
             @Override
             public List<String> resolveLiteral(String value) throws IOException {
-                return Collections.singletonList(value.toUpperCase());
+                return Collections.singletonList("Resolved!");
             }
 
             @Override
@@ -265,12 +265,87 @@ public class ParserTest {
                 "}"));
 
         AnnotatedBlock block = parsed.getAnnotatedBlocks().get(0);
-        assertEquals("TEST", block.getWatchers().get(0));
+        assertEquals("Resolved!", block.getWatchers().get(0));
     }
 
     @Test(expected = NullPointerException.class)
     public void nullWatcherResolver() {
         new SourceCodeParser(null);
+    }
+
+    @Test
+    public void referenceWatcher() {
+        final WatcherResolver watcherResolver = new WatcherResolver() {
+            @Override
+            public List<String> resolveLiteral(String value) throws IOException {
+                throw new IllegalStateException();
+            }
+
+            @Override
+            public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+                if ("com.watcher.Contacts".equals(qualifiedName) && "JOHNY".equals(field)) {
+                    return Collections.singletonList("John Developer");
+                }
+                throw new IllegalArgumentException();
+            }
+        };
+        final ParsedSourceCode parsed = new SourceCodeParser(watcherResolver).parse(SourceCode.createFromContent(
+                "package com.test;",
+                "import com.watcher.Contacts;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(Contacts.JOHNY) int value;",
+                "}"));
+
+        AnnotatedBlock block = parsed.getAnnotatedBlocks().get(0);
+        assertEquals("John Developer", block.getWatchers().get(0));
+    }
+
+    @Test
+    public void arrayReferenceWatcher() {
+        final WatcherResolver watcherResolver = new WatcherResolver() {
+            @Override
+            public List<String> resolveLiteral(String value) throws IOException {
+                throw new IllegalStateException();
+            }
+
+            @Override
+            public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+                if ("com.watcher.Contacts".equals(qualifiedName)) {
+                    if ("JOHNY".equals(field)) {
+                        return Collections.singletonList("John Developer");
+                    }
+                    if ("BOB".equals(field)) {
+                        return Collections.singletonList("Bob Lead");
+                    }
+                }
+                throw new IllegalArgumentException();
+            }
+        };
+        final ParsedSourceCode parsed = new SourceCodeParser(watcherResolver).parse(SourceCode.createFromContent(
+                "package com.test;",
+                "import com.watcher.Contacts;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges({Contacts.JOHNY, Contacts.BOB}) int value;",
+                "}"));
+
+        AnnotatedBlock block = parsed.getAnnotatedBlocks().get(0);
+        assertEquals("John Developer", block.getWatchers().get(0));
+        assertEquals("Bob Lead", block.getWatchers().get(1));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void unsupportedWatcher() {
+        final ParsedSourceCode parsed = new SourceCodeParser().parse(SourceCode.createFromContent(
+                "package com.test;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(value = {\"test\"})",
+                "    int value;",
+                "}"));
+
+        parsed.getAnnotatedBlocks().get(0);
     }
 
     private static ParsedSourceCode parse(final String... code) {

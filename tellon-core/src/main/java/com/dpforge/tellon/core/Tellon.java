@@ -2,10 +2,10 @@ package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.observer.ProjectInfo;
-import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.observer.ProjectItem;
 import com.dpforge.tellon.core.observer.ProjectObserver;
 import com.dpforge.tellon.core.observer.ProjectWalker;
+import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.resolver.SourceCodeWatcherResolver;
 
 import java.io.IOException;
