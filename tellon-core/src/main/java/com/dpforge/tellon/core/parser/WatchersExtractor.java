@@ -57,37 +57,35 @@ class WatchersExtractor {
 
     private List<String> extractArguments(AnnotationExpr annotation) throws IOException {
         if (annotation instanceof SingleMemberAnnotationExpr) {
-            return processArgumentExpression(((SingleMemberAnnotationExpr) annotation).getMemberValue());
+            return processAnnotationArgument(((SingleMemberAnnotationExpr) annotation).getMemberValue());
         }
         throw new UnsupportedOperationException();
     }
 
-    private List<String> processArgumentExpression(Expression expression) throws IOException {
+    private List<String> processAnnotationArgument(Expression expression) throws IOException {
         if (expression instanceof ArrayInitializerExpr) {
             return processArrayExpression((ArrayInitializerExpr) expression);
-        } else if (expression instanceof StringLiteralExpr) {
-            final String value = ((StringLiteralExpr) expression).getValue();
-            return watcherResolver.resolveLiteral(value);
-        } else if (expression instanceof FieldAccessExpr) {
-            return processFieldAccess((FieldAccessExpr) expression);
         }
-        throw new UnsupportedOperationException();
+        return processExpression(expression);
     }
 
     private List<String> processArrayExpression(ArrayInitializerExpr expression) throws IOException {
         final NodeList<Expression> values = expression.getValues();
         final List<String> result = new ArrayList<>(values.size());
         for (Expression val : values) {
-            if (val instanceof StringLiteralExpr) {
-                String value = ((StringLiteralExpr) val).getValue();
-                result.addAll(watcherResolver.resolveLiteral(value));
-            } else if (val instanceof FieldAccessExpr) {
-                result.addAll(processFieldAccess((FieldAccessExpr) val));
-            } else {
-                throw new UnsupportedOperationException();
-            }
+            result.addAll(processExpression(val));
         }
         return result;
+    }
+
+    private List<String> processExpression(Expression expression) throws IOException {
+        if (expression instanceof StringLiteralExpr) {
+            final String value = ((StringLiteralExpr) expression).getValue();
+            return watcherResolver.resolveLiteral(value);
+        } else if (expression instanceof FieldAccessExpr) {
+            return processFieldAccess((FieldAccessExpr) expression);
+        }
+        throw new UnsupportedOperationException();
     }
 
     private List<String> processFieldAccess(FieldAccessExpr expression) throws IOException {
