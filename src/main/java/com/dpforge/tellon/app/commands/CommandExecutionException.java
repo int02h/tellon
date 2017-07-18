@@ -1,4 +1,4 @@
-package com.dpforge.javatree.commands;
+package com.dpforge.tellon.app.commands;
 
 public class CommandExecutionException extends Exception {
     private final int errorCode;

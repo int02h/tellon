@@ -1,4 +1,4 @@
-package com.dpforge.javatree.commands;
+package com.dpforge.tellon.app.commands;
 
 import com.dpforge.tellon.core.notifier.ProjectNotifier;
 import com.dpforge.tellon.core.observer.ProjectObserver;

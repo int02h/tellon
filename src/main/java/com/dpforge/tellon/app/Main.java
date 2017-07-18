@@ -1,12 +1,11 @@
-package com.dpforge.javatree;
+package com.dpforge.tellon.app;
 
-import com.dpforge.javatree.commands.Command;
-import com.dpforge.javatree.commands.CommandContext;
-import com.dpforge.javatree.commands.CommandExecutionException;
-import com.dpforge.javatree.commands.CommandFactory;
+import com.dpforge.tellon.app.commands.Command;
+import com.dpforge.tellon.app.commands.CommandContext;
+import com.dpforge.tellon.app.commands.CommandExecutionException;
+import com.dpforge.tellon.app.commands.CommandFactory;
 import com.dpforge.tellon.core.notifier.ProjectNotifier;
 import com.dpforge.tellon.core.observer.ProjectObserver;
-import com.dpforge.tellon.core.notifier.ChangesNotifier;
 
 import java.io.IOException;
 import java.util.ArrayList;

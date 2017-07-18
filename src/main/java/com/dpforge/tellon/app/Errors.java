@@ -1,4 +1,4 @@
-package com.dpforge.javatree;
+package com.dpforge.tellon.app;
 
 public final class Errors {
 

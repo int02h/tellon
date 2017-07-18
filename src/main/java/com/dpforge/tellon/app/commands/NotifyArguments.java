@@ -1,4 +1,4 @@
-package com.dpforge.javatree.commands;
+package com.dpforge.tellon.app.commands;
 
 import org.apache.commons.cli.*;
 

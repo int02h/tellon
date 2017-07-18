@@ -1,6 +1,6 @@
-package com.dpforge.javatree.commands;
+package com.dpforge.tellon.app.commands;
 
-import com.dpforge.javatree.Errors;
+import com.dpforge.tellon.app.Errors;
 import com.dpforge.tellon.core.Tellon;
 import com.dpforge.tellon.core.notifier.ProjectNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectNotifier;
