@@ -2,17 +2,19 @@ package com.dpforge.tellon.core.parser;
 
 import org.junit.Test;
 
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class WatcherConstantParserTest {
     @Test
     public void singleLiteral() {
-        final WatcherMap map = parse(
+        final Map<String, String> map = parse(
                 "class Foo {",
                 "    static final String A = \"Hello\";",
                 "}");
-        assertEquals("Hello", map.get("A", 0));
+        assertEquals("Hello", map.get("A"));
     }
 
     @Test
@@ -30,13 +32,13 @@ public class WatcherConstantParserTest {
 
     @Test
     public void singleReference() {
-        final WatcherMap map = parse(
+        final Map<String, String> map = parse(
                 "class Foo {",
                 "    static final String A = \"Hello\";",
                 "    static final String B = A;",
                 "}");
-        assertEquals("Hello", map.get("A", 0));
-        assertEquals("Hello", map.get("B", 0));
+        assertEquals("Hello", map.get("A"));
+        assertEquals("Hello", map.get("B"));
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -147,7 +149,7 @@ public class WatcherConstantParserTest {
         }
     }
 
-    private static WatcherMap parse(final String... code) {
+    private static Map<String, String> parse(final String... code) {
         return new WatcherConstantParser().parse(SourceCode.createFromContent(code));
     }
 }

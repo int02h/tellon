@@ -3,11 +3,11 @@ package com.dpforge.tellon.core.parser.resolver;
 import com.dpforge.tellon.core.observer.SourceCodeProvider;
 import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.WatcherConstantParser;
-import com.dpforge.tellon.core.parser.WatcherMap;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class SourceCodeWatcherResolver implements WatcherResolver {
 
@@ -29,20 +29,15 @@ public class SourceCodeWatcherResolver implements WatcherResolver {
     @Override
     public List<String> resolveReference(String qualifiedName, String field) throws IOException {
         final SourceCode code = sourceCodeProvider.getSourceCode(qualifiedName);
-        final WatcherMap watcherMap = watcherConstantParser.parse(code);
-        final List<String> addresses = watcherMap.getUnmodifiable(field);
-        verifyAddresses(field, addresses);
-        return addresses;
+        final Map<String, String> watcherMap = watcherConstantParser.parse(code);
+        final String address = watcherMap.get(field);
+        verifyAddress(field, address);
+        return Collections.singletonList(address);
     }
 
-    private static void verifyAddresses(final String field, final List<String> addresses) {
-        if (addresses == null || addresses.isEmpty()) {
-            throw new RuntimeException("Addresses for field '" + field + "' is null or empty");
-        }
-        for (String address : addresses) {
-            if (address == null || address.isEmpty()) {
-                throw new RuntimeException("Address for field '" + field + "' is null or empty");
-            }
+    private static void verifyAddress(final String field, final String address) {
+        if (address == null) {
+            throw new RuntimeException("Address for field '" + field + "' is null");
         }
     }
 }

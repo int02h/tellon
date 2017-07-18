@@ -10,16 +10,16 @@ import java.util.*;
 
 public class WatcherConstantParser {
 
-    public WatcherMap parse(SourceCode sourceCode) {
-        final WatcherMap fields = new WatcherMap();
+    public Map<String, String> parse(SourceCode sourceCode) {
+        final Map<String, String> fields = new HashMap<>();
         new Visitor(fields).visit(sourceCode.toCompilationUnit(), null);
         return fields;
     }
 
     private static class Visitor extends VoidVisitorAdapter<Void> {
-        private final WatcherMap map;
+        private final Map<String, String> map;
 
-        private Visitor(final WatcherMap map) {
+        private Visitor(final Map<String, String> map) {
             this.map = map;
         }
 
@@ -46,13 +46,13 @@ public class WatcherConstantParser {
             super.visit(field, arg);
         }
 
-        private List<String> processNameReference(NameExpr expr) {
+        private String processNameReference(NameExpr expr) {
             final String name = expr.getNameAsString();
-            final List<String> mapped = map.get(name);
-            if (mapped == null || mapped.isEmpty()) {
+            final String mapped = map.get(name);
+            if (mapped == null) {
                 throw new RuntimeException("Reference to non-declared name: " + name);
             }
-            return Collections.unmodifiableList(mapped);
+            return mapped;
         }
 
         private static void verifyField(FieldDeclaration field) {
