@@ -81,7 +81,7 @@ class WatchersExtractor {
             if (val instanceof StringLiteralExpr) {
                 String value = ((StringLiteralExpr) val).getValue();
                 result.addAll(watcherResolver.resolveLiteral(value));
-            } if (val instanceof FieldAccessExpr) {
+            } else if (val instanceof FieldAccessExpr) {
                 result.addAll(processFieldAccess((FieldAccessExpr) val));
             } else {
                 throw new UnsupportedOperationException();
