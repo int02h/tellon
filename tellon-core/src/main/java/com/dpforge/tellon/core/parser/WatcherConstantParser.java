@@ -1,9 +1,9 @@
 package com.dpforge.tellon.core.parser;
 
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.type.ArrayType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.util.*;
@@ -37,39 +37,13 @@ public class WatcherConstantParser {
                     if (map.put(name, value) != null) {
                         throw new RuntimeException("Field '" + name + "' initialized more than once");
                     }
-                } else if (initializer instanceof ArrayInitializerExpr) {
-                    map.put(name, processArrayExpression((ArrayInitializerExpr) initializer));
-                } else if (initializer instanceof ArrayCreationExpr) {
-                    map.put(name, processArrayCreation((ArrayCreationExpr) initializer, name));
                 } else if (initializer instanceof NameExpr) {
                     map.put(name, processNameReference((NameExpr) initializer));
                 } else {
-                    throw new RuntimeException("Field '" + name + "' must be initialized with string literal or string literal array");
+                    throw new UnsupportedOperationException("Field '" + name + "' must be initialized with string literal or string literal array");
                 }
             }
             super.visit(field, arg);
-        }
-
-        private List<String> processArrayExpression(ArrayInitializerExpr expression) {
-            final NodeList<Expression> values = expression.getValues();
-            final List<String> result = new ArrayList<>(values.size());
-            for (Expression val : values) {
-                if (val instanceof StringLiteralExpr) {
-                    result.add(((StringLiteralExpr) val).getValue());
-                } else if (val instanceof NameExpr) {
-                    result.addAll(processNameReference((NameExpr) val));
-                } else {
-                    throw new UnsupportedOperationException();
-                }
-            }
-            return result;
-        }
-
-        private List<String> processArrayCreation(ArrayCreationExpr expr, String name) {
-            if (!expr.getInitializer().isPresent()) {
-                throw new RuntimeException("Array creation without initializer: " + name);
-            }
-            return processArrayExpression(expr.getInitializer().get());
         }
 
         private List<String> processNameReference(NameExpr expr) {
@@ -90,6 +64,11 @@ public class WatcherConstantParser {
             }
             if (!"String".equals(field.getElementType().toString())) {
                 throw new RuntimeException("Field must be of type String");
+            }
+            if (field.getElementType().getParentNode().isPresent()) {
+                if (field.getElementType().getParentNode().get() instanceof ArrayType) {
+                    throw new RuntimeException("Field must be constant string not array");
+                }
             }
         }
     }
