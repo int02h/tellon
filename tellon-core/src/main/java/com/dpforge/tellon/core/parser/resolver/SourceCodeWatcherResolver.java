@@ -14,7 +14,7 @@ public class SourceCodeWatcherResolver extends SingleWatcherResolver {
 
     public SourceCodeWatcherResolver(SourceCodeProvider sourceCodeProvider) {
         if (sourceCodeProvider == null) {
-            throw new NullPointerException("Source code retriever cannot be null");
+            throw new IllegalArgumentException("Source code retriever cannot be null");
         }
         this.sourceCodeProvider = sourceCodeProvider;
     }

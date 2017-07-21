@@ -149,6 +149,13 @@ public class WatcherConstantParserTest {
         }
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void nullWatcher() {
+        parse("class Foo {",
+                "   static final String ABC = null;",
+                "}");
+    }
+
     private static Map<String, String> parse(final String... code) {
         return new WatcherConstantParser().parse(SourceCode.createFromContent(code));
     }

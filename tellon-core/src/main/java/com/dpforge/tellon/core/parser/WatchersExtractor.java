@@ -89,9 +89,9 @@ class WatchersExtractor {
     }
 
     private List<String> processFieldAccess(FieldAccessExpr expression) throws IOException {
-        if (!expression.getScope().isPresent()) {
-            throw new RuntimeException("Field comes without class name: " + expression.getNameAsString());
-        }
+        // At this case there is no way to get FieldAccess expression without scope.
+        // Because UnsupportedOperationException will be thrown earlier.
+        // noinspection OptionalGetWithoutIsPresent
         final String className = expression.getScope().get().toString();
         final String fieldName = expression.getNameAsString();
         final String qualifiedName = visitorContext.resolveClassName(className);
