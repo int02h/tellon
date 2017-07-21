@@ -1,5 +1,6 @@
 package com.dpforge.tellon.core.parser;
 
+import com.dpforge.tellon.core.parser.resolver.SingleWatcherResolver;
 import com.dpforge.tellon.core.parser.resolver.WatcherResolver;
 import org.junit.Test;
 
@@ -246,14 +247,14 @@ public class ParserTest {
 
     @Test
     public void watcherResolve() {
-        final WatcherResolver watcherResolver = new WatcherResolver() {
+        final WatcherResolver watcherResolver = new SingleWatcherResolver() {
             @Override
-            public List<String> resolveLiteral(String value) throws IOException {
-                return Collections.singletonList("Resolved!");
+            public String resolveLiteralSingle(String value) throws IOException {
+                return "Resolved!";
             }
 
             @Override
-            public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+            public String resolveReferenceSingle(String qualifiedName, String field) throws IOException {
                 throw new IllegalStateException();
             }
         };
@@ -275,16 +276,16 @@ public class ParserTest {
 
     @Test
     public void referenceWatcher() {
-        final WatcherResolver watcherResolver = new WatcherResolver() {
+        final WatcherResolver watcherResolver = new SingleWatcherResolver() {
             @Override
-            public List<String> resolveLiteral(String value) throws IOException {
+            public String resolveLiteralSingle(String value) throws IOException {
                 throw new IllegalStateException();
             }
 
             @Override
-            public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+            public String resolveReferenceSingle(String qualifiedName, String field) throws IOException {
                 if ("com.watcher.Contacts".equals(qualifiedName) && "JOHNY".equals(field)) {
-                    return Collections.singletonList("John Developer");
+                    return "John Developer";
                 }
                 throw new IllegalArgumentException();
             }
@@ -303,20 +304,20 @@ public class ParserTest {
 
     @Test
     public void arrayReferenceWatcher() {
-        final WatcherResolver watcherResolver = new WatcherResolver() {
+        final WatcherResolver watcherResolver = new SingleWatcherResolver() {
             @Override
-            public List<String> resolveLiteral(String value) throws IOException {
+            public String resolveLiteralSingle(String value) throws IOException {
                 throw new IllegalStateException();
             }
 
             @Override
-            public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+            public String resolveReferenceSingle(String qualifiedName, String field) throws IOException {
                 if ("com.watcher.Contacts".equals(qualifiedName)) {
                     if ("JOHNY".equals(field)) {
-                        return Collections.singletonList("John Developer");
+                        return "John Developer";
                     }
                     if ("BOB".equals(field)) {
-                        return Collections.singletonList("Bob Lead");
+                        return "Bob Lead";
                     }
                 }
                 throw new IllegalArgumentException();

@@ -5,11 +5,9 @@ import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.WatcherConstantParser;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
-public class SourceCodeWatcherResolver implements WatcherResolver {
+public class SourceCodeWatcherResolver extends SingleWatcherResolver {
 
     private final SourceCodeProvider sourceCodeProvider;
     private final WatcherConstantParser watcherConstantParser = new WatcherConstantParser();
@@ -22,17 +20,17 @@ public class SourceCodeWatcherResolver implements WatcherResolver {
     }
 
     @Override
-    public List<String> resolveLiteral(String value) {
-        return Collections.singletonList(value);
+    public String resolveLiteralSingle(String value) {
+        return value;
     }
 
     @Override
-    public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+    public String resolveReferenceSingle(String qualifiedName, String field) throws IOException {
         final SourceCode code = sourceCodeProvider.getSourceCode(qualifiedName);
         final Map<String, String> watcherMap = watcherConstantParser.parse(code);
         final String address = watcherMap.get(field);
         verifyAddress(field, address);
-        return Collections.singletonList(address);
+        return address;
     }
 
     private static void verifyAddress(final String field, final String address) {

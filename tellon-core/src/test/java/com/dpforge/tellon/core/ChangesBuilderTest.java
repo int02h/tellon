@@ -1,6 +1,7 @@
 package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.parser.SourceCode;
+import com.dpforge.tellon.core.parser.resolver.SingleWatcherResolver;
 import com.dpforge.tellon.core.parser.resolver.WatcherResolver;
 import org.junit.Test;
 
@@ -272,14 +273,14 @@ public class ChangesBuilderTest {
                 "    @NotifyChanges(\"lower-case\")",
                 "    Integer a;",
                 "}");
-        final Changes changes = new ChangesBuilder(new WatcherResolver() {
+        final Changes changes = new ChangesBuilder(new SingleWatcherResolver() {
             @Override
-            public List<String> resolveLiteral(String value) throws IOException {
-                return Collections.singletonList(value.toUpperCase());
+            public String resolveLiteralSingle(String value) throws IOException {
+                return value.toUpperCase();
             }
 
             @Override
-            public List<String> resolveReference(String qualifiedName, String field) throws IOException {
+            public String resolveReferenceSingle(String qualifiedName, String field) throws IOException {
                 throw new IllegalStateException();
             }
         }).build(src1, src2);

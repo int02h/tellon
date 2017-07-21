@@ -1,17 +1,14 @@
 package com.dpforge.tellon.core.parser.resolver;
 
-import java.util.Collections;
-import java.util.List;
-
-public class AsIsWatcherResolver implements WatcherResolver {
+public class AsIsWatcherResolver extends SingleWatcherResolver {
 
     @Override
-    public List<String> resolveLiteral(String value) {
-        return Collections.singletonList(value);
+    public String resolveLiteralSingle(String value) {
+        return value;
     }
 
     @Override
-    public List<String> resolveReference(String qualifiedName, String field) {
-        return Collections.singletonList(qualifiedName + "." + field);
+    public String resolveReferenceSingle(String qualifiedName, String field) {
+        return qualifiedName + "." + field;
     }
 }
