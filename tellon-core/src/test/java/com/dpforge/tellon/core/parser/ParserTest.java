@@ -7,10 +7,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ParserTest {
     @Test
@@ -338,15 +336,70 @@ public class ParserTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedWatcher() {
-        final ParsedSourceCode parsed = new SourceCodeParser().parse(SourceCode.createFromContent(
+        final ParsedSourceCode parsed = parse(
                 "package com.test;",
                 "import com.dpforge.tellon.annotations.NotifyChanges;",
                 "class Foo {",
                 "    @NotifyChanges(value = {\"test\"})",
                 "    int value;",
-                "}"));
+                "}");
 
         parsed.getAnnotatedBlocks().get(0);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void noClassReferenceWatcher() {
+        parse(
+                "package com.test;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges(SOME_DEVELOPER)",
+                "    int value;",
+                "}");
+    }
+
+    @Test
+    public void referenceWatcherException() {
+        final WatcherResolver referenceWatcher = new SingleWatcherResolver() {
+            @Override
+            protected String resolveLiteralSingle(String value) throws IOException {
+                throw new IOException("Test IO exception");
+            }
+
+            @Override
+            protected String resolveReferenceSingle(String qualifiedName, String field) throws IOException {
+                throw new IllegalStateException();
+            }
+        };
+        try {
+            new SourceCodeParser(referenceWatcher).parse(SourceCode.createFromContent(
+                    "package com.test;",
+                    "import com.dpforge.tellon.annotations.NotifyChanges;",
+                    "class Foo {",
+                    "    @NotifyChanges(\"test\")",
+                    "    int value;",
+                    "}"));
+            fail("No exception thrown");
+        } catch (Exception ex) {
+            assertNotNull(ex.getCause());
+            assertEquals("Test IO exception", ex.getCause().getMessage());
+        }
+    }
+
+    @Test
+    public void notImportedReferenceWatcher() {
+        try {
+            parse(
+                    "package com.test;",
+                    "import com.dpforge.tellon.annotations.NotifyChanges;",
+                    "class Foo {",
+                    "    @NotifyChanges(Contacts.SOME_DEVELOPER)",
+                    "    int value;",
+                    "}");
+            fail("No exception thrown");
+        } catch (Exception e) {
+            assertEquals("Class 'Contacts' is not imported or imported in unsupported way", e.getMessage());
+        }
     }
 
     private static ParsedSourceCode parse(final String... code) {
