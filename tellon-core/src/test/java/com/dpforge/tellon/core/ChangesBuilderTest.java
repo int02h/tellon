@@ -2,12 +2,9 @@ package com.dpforge.tellon.core;
 
 import com.dpforge.tellon.core.parser.SourceCode;
 import com.dpforge.tellon.core.parser.resolver.SingleWatcherResolver;
-import com.dpforge.tellon.core.parser.resolver.WatcherResolver;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.*;
 

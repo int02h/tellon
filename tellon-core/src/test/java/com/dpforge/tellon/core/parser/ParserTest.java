@@ -402,6 +402,17 @@ public class ParserTest {
         }
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void emptyWatcherArgument() {
+        parse(
+                "package com.test;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges",
+                "    int value;",
+                "}");
+    }
+
     private static ParsedSourceCode parse(final String... code) {
         return new SourceCodeParser().parse(SourceCode.createFromContent(code));
     }
