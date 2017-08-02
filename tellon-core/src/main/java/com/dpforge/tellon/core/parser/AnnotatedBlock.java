@@ -14,7 +14,7 @@ public class AnnotatedBlock {
     private final String name;
     private final List<String> watchers;
 
-    AnnotatedBlock(Builder builder) {
+    private AnnotatedBlock(Builder builder) {
         this.startPosition = builder.startPosition;
         this.endPosition = builder.endPosition;
         this.sourceCode = builder.sourceCode;
