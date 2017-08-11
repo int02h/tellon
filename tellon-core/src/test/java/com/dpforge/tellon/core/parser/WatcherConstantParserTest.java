@@ -119,7 +119,7 @@ public class WatcherConstantParserTest {
                     "}");
             fail("No exception thrown");
         } catch (RuntimeException e) {
-            assertEquals("Field 'ABC' must be initialized with string literal or string literal array", e.getMessage());
+            assertEquals("Field 'ABC' must be initialized with string literal or reference another string literal in this class", e.getMessage());
         }
     }
 
