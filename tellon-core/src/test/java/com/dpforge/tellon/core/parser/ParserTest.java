@@ -336,15 +336,13 @@ public class ParserTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedWatcher() {
-        final ParsedSourceCode parsed = parse(
+        parse(
                 "package com.test;",
                 "import com.dpforge.tellon.annotations.NotifyChanges;",
                 "class Foo {",
                 "    @NotifyChanges(value = {\"test\"})",
                 "    int value;",
                 "}");
-
-        parsed.getAnnotatedBlocks().get(0);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -411,6 +409,21 @@ public class ParserTest {
                 "    @NotifyChanges",
                 "    int value;",
                 "}");
+    }
+
+    @Test
+    public void mixedWatchers() {
+        final ParsedSourceCode parsed = new SourceCodeParser().parse(SourceCode.createFromContent(
+                "package com.test;",
+                "import com.watcher.Contacts;",
+                "import com.dpforge.tellon.annotations.NotifyChanges;",
+                "class Foo {",
+                "    @NotifyChanges({\"test\", Contacts.TEST})",
+                "    int value;",
+                "}"));
+        final AnnotatedBlock block = parsed.getAnnotatedBlocks().get(0);
+        assertEquals("test", block.getWatchers().get(0));
+        assertEquals("com.watcher.Contacts.TEST", block.getWatchers().get(1));
     }
 
     private static ParsedSourceCode parse(final String... code) {
