@@ -40,7 +40,7 @@ public class WatcherConstantParser {
                 } else if (initializer instanceof NameExpr) {
                     map.put(name, processNameReference((NameExpr) initializer));
                 } else {
-                    throw new UnsupportedOperationException("Field '" + name + "' must be initialized with string literal or string literal array");
+                    throw new UnsupportedOperationException("Field '" + name + "' must be initialized with string literal or reference another string literal in this class");
                 }
             }
             super.visit(field, arg);
