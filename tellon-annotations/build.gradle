@@ -2,6 +2,7 @@ group 'com.dpforge'
 version '1.0'
 
 apply plugin: 'java'
+apply plugin: 'maven'
 
 repositories {
     mavenCentral()
@@ -9,4 +10,25 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'tellon'
+                description 'Tellon is a Java library that analyzes source code written in Java and notifies concerned people when annotated code has been modified'
+                url 'https://github.com/int02h/tellon'
+
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'https://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
+    }
 }
