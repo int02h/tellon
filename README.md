@@ -1,5 +1,5 @@
 # Tellon
-Tellon is a Java library that analyzes source code written in Java and notifies concerned people when annotated code is modified.
+Tellon is a Java library that analyzes source code written in Java and notifies concerned people when annotated code has been modified.
 
 Tellon is abstracted from source code observer and notification machanism as much as possible. Source code observer can be implemented over Git or SVN, notifications can be sent through e-mail or instant messengers. You are able to implement it any way you want.
 
