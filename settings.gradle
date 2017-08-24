@@ -3,4 +3,5 @@ include 'tellon-core'
 include 'tellon-annotations'
 include 'mail-notifier'
 include 'git-project-observer'
+include 'tellon-app'
 
