@@ -6,3 +6,4 @@
 /.idea
 /out
 mail-notifier.properties
+/.gradle
