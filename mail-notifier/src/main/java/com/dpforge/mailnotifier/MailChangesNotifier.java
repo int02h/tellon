@@ -146,8 +146,9 @@ class MailChangesNotifier implements ChangesNotifier {
     }
 
     private void sendEmail(List<String> watchers, String subject, String mailBody) {
+        final String username = ConfigLoader.getProperty(ConfigLoader.Property.SMTP_USERNAME);
         final EmailBuilder emailBuilder = new EmailBuilder()
-                .from("Tellon", ConfigLoader.getProperty(ConfigLoader.Property.SMTP_USERNAME))
+                .from("Tellon", username)
                 .subject(subject)
                 .textHTML(mailBody);
         for (String watcher : watchers) {
@@ -202,6 +203,11 @@ class MailChangesNotifier implements ChangesNotifier {
                 public MailData next() {
                     final Map.Entry<String, StringBuilder> entry = mapIterator.next();
                     return new MailData(entry.getKey(), entry.getValue().toString());
+                }
+
+                @Override
+                public void remove() {
+                    mapIterator.remove();
                 }
             };
         }

@@ -47,8 +47,9 @@ public class MailNotifier implements ProjectNotifier {
         }
 
         final String email = watcher.substring(PREFIX.length());
+        final String username = ConfigLoader.getProperty(ConfigLoader.Property.SMTP_USERNAME);
         final EmailBuilder emailBuilder = new EmailBuilder()
-                .from("Tellon", ConfigLoader.getProperty(ConfigLoader.Property.SMTP_USERNAME))
+                .from("Tellon", username)
                 .subject("Error occurred in Tellon")
                 .text(errorMessage)
                 .to(email);

@@ -144,9 +144,9 @@ public class GitProjectObserver implements ProjectObserver {
         }
     }
 
-    private List<ProjectItem> buildProjectItems(Repository repository, List<DiffEntry> diff) {
+    private List<ProjectItem> buildProjectItems(final Repository repository, List<DiffEntry> diff) {
         final List<ProjectItem> items = new ArrayList<>(diff.size());
-        for (DiffEntry entry : diff) {
+        for (final DiffEntry entry : diff) {
             final String diffEntryPath = getDiffEntryPath(entry);
             if (shouldSkipPath(diffEntryPath)) {
                 continue;
