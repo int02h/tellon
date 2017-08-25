@@ -77,8 +77,8 @@ Code | Desciption
 
 ## Git Project Observer
 Tellon works with source code provided by project observer. In this repository you may find the implementation based on Git (using [JGit](https://github.com/eclipse/jgit)). It calculates difference between two specified revisions and let Tellon to find out what source code blocks has been changed. Git-Observer has four following arguments:
-  - *gitPath* (required) - path to .git folder of your repository;
-  - *srcDir* (required) - path to source code directory where all of your java packages are placed. It makes Git-observer able to retrieve source code of the class by its qualified name so you can use constant fields as arguments for @NotifyChanges annotation;
+  - *gitDir* (required) - path to root folder of your repository (not to .git folder);
+  - *srcDir* (required) - path (relative to *gitDir*) to source code directory where all of your java packages are placed. It makes Git-observer able to retrieve source code of the class by its qualified name so you can use constant fields as arguments for @NotifyChanges annotation;
   - *newRev* (optional) - latest revision of your source code. Up to this revision Tellon will try to find changes. By default it is *HEAD*;
   - *oldRev* (optional) - oldest revision of your source code. From this revision Tellon will try to find changes. By default it is previous revision relatively to *newRev*.
 

@@ -22,12 +22,12 @@ public class GitProjectObserver implements ProjectObserver {
     private static final String NAME = "git-project-observer";
     private static final String DESCRIPTION = "Tellon project observer over local git repository";
 
-    private static final String ARG_GIT_PATH = "gitPath";
+    private static final String ARG_GIT_DIR = "gitDir";
     private static final String ARG_NEW_REVISION = "newRev";
     private static final String ARG_OLD_REVISION = "oldRev";
     private static final String ARG_SOURCE_DIR = "srcDir";
 
-    private File gitFile;
+    private File gitDir;
 
     private File sourceDir;
 
@@ -44,12 +44,12 @@ public class GitProjectObserver implements ProjectObserver {
         parseArguments(args);
 
         projectInfo = new ProjectInfo.Builder()
-                .name(gitFile.getParentFile().getName())
+                .name(gitDir.getParentFile().getName())
                 .build();
 
         try {
             try (final Repository repository = new FileRepositoryBuilder()
-                    .setGitDir(gitFile)
+                    .setGitDir(gitDir)
                     .build()) {
 
                 newRev.fillWith(repository);
@@ -94,38 +94,38 @@ public class GitProjectObserver implements ProjectObserver {
     }
 
     private void parseArguments(final Map<String, String> args) throws ProjectObserverException {
-        final String gitPath = args.get(ARG_GIT_PATH);
-        if (gitPath == null) {
+        final String gitDirArg = args.get(ARG_GIT_DIR);
+        if (gitDirArg == null) {
             throw new ProjectObserverException("Path to .git directory not provided");
         }
 
-        gitFile = new File(gitPath);
-        if (!gitFile.exists()) {
-            throw new ProjectObserverException(String.format(".git directory '%s' not found", gitPath));
+        gitDir = new File(gitDirArg, ".git");
+        if (!gitDir.exists()) {
+            throw new ProjectObserverException(String.format("git directory '%s' not found", gitDirArg));
         }
 
-        final String sourceDir = args.get(ARG_SOURCE_DIR);
-        if (sourceDir == null) {
+        final String sourceDirArg = args.get(ARG_SOURCE_DIR);
+        if (sourceDirArg == null) {
             throw new ProjectObserverException("Source directory not provided");
         }
 
-        this.sourceDir = new File(gitFile, sourceDir);
-        if (!this.sourceDir.exists()) {
-            throw new ProjectObserverException(String.format("Source directory '%s' not found", gitPath));
+        sourceDir = new File(gitDirArg, sourceDirArg);
+        if (!sourceDir.exists()) {
+            throw new ProjectObserverException(String.format("Source directory '%s' not found", gitDirArg));
         }
 
-        String newRevision = args.get(ARG_NEW_REVISION);
-        if (newRevision == null) {
-            newRevision = "HEAD";
+        String newRevisionArg = args.get(ARG_NEW_REVISION);
+        if (newRevisionArg == null) {
+            newRevisionArg = "HEAD";
         }
 
-        String oldRevision = args.get(ARG_OLD_REVISION);
-        if (oldRevision == null) {
-            oldRevision = newRevision + "^";
+        String oldRevisionArg = args.get(ARG_OLD_REVISION);
+        if (oldRevisionArg == null) {
+            oldRevisionArg = newRevisionArg + "^";
         }
 
-        this.newRev = new GitRevision(newRevision);
-        this.oldRev = new GitRevision(oldRevision);
+        newRev = new GitRevision(newRevisionArg);
+        oldRev = new GitRevision(oldRevisionArg);
     }
 
     private List<DiffEntry> buildDiff(Repository repo) throws IOException, GitAPIException {
