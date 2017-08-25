@@ -56,9 +56,11 @@ Name of the command is passed as first argument.
 
 ### Notify Command
 *Notify* command does all the magic! It has several arguments:
-  - **observer-args** - you can pass arguments to the project observer such as specific Git-revision or something else;
-  - **observer** or **o** - lets you choose project observer. Tellon will use it to retrieve source code for the further changes detection;
+  - **observer-args** - arguments of the project observer such as specific Git-revision or something else;
+  - **observer** or **o** - name of project observer. Tellon will use it to retrieve source code for the further changes detection;
+  - **notifiers** - names of project notifiers. Tellon will use them to notify watchers about found changes;
   - **masters** - contacts of the responsible developers, who will be notified if something goes wrong with Tellon.
+
 
 **WARNING!** Be careful! Master developer will be notified only if notification system has been correctly initialized. Otherwise application error code will help you to find out what happened.
 
