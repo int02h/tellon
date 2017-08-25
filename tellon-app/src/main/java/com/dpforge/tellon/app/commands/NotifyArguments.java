@@ -7,8 +7,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 class NotifyArguments {
 
@@ -19,6 +21,10 @@ class NotifyArguments {
     private static final String PROJECT_OBSERVER_NAME_SHORT = "o";
     private static final String PROJECT_OBSERVER_NAME_DESCRIPTION = "Name of project observer to use (if you have multiple)";
 
+    private static final String PROJECT_NOTIFIER_NAMES = "notifiers";
+    private static final String PROJECT_NOTIFIER_NAMES_SHORT = "n";
+    private static final String PROJECT_NOTIFIER_NAMES_DESCRIPTION = "Names of project notifiers to use. If you want to use all available notifiers omit this argument.";
+
     private static final String MASTER_WATCHERS = "masters";
     private static final String MASTER_WATCHERS_DESCRIPTION = "Master watchers that will be notified when the error occurs in Tellon";
 
@@ -28,6 +34,7 @@ class NotifyArguments {
     private final Options options = new Options();
 
     private final Map<String, String> observerArgs = new HashMap<>();
+    private final Set<String> enabledNotifiers = new HashSet<>();
     private final List<String> masterWatchers = new ArrayList<>();
 
     private CommandLine cmd;
@@ -37,10 +44,10 @@ class NotifyArguments {
         cmd = parser.parse(options, args);
 
         observerArgs.clear();
-        final String[] values = cmd.getOptionValues(PROJECT_OBSERVER_ARGS);
-        if (values != null && values.length % 2 == 0) {
-            for (int i = 0; i < values.length; i += 2) {
-                observerArgs.put(values[i], values[i + 1]);
+        final String[] argPairs = cmd.getOptionValues(PROJECT_OBSERVER_ARGS);
+        if (argPairs != null && argPairs.length % 2 == 0) {
+            for (int i = 0; i < argPairs.length; i += 2) {
+                observerArgs.put(argPairs[i], argPairs[i + 1]);
             }
         }
 
@@ -48,6 +55,12 @@ class NotifyArguments {
         final String[] watchers = cmd.getOptionValues(MASTER_WATCHERS);
         if (watchers != null) {
             Collections.addAll(masterWatchers, watchers);
+        }
+
+        enabledNotifiers.clear();
+        final String[] notifiers = cmd.getOptionValues(PROJECT_NOTIFIER_NAMES);
+        if (notifiers != null) {
+            Collections.addAll(enabledNotifiers, notifiers);
         }
     }
 
@@ -65,9 +78,16 @@ class NotifyArguments {
                 .numberOfArgs(1)
                 .build());
 
+        options.addOption(Option.builder(PROJECT_NOTIFIER_NAMES_SHORT)
+                .longOpt(PROJECT_NOTIFIER_NAMES)
+                .desc(PROJECT_NOTIFIER_NAMES_DESCRIPTION)
+                .hasArgs()
+                .build());
+
         options.addOption(Option.builder()
                 .longOpt(MASTER_WATCHERS)
                 .desc(MASTER_WATCHERS_DESCRIPTION)
+                .hasArgs()
                 .build());
     }
 
@@ -87,6 +107,11 @@ class NotifyArguments {
     Map<String, String> getProjectObserverArgs() {
         checkParsed();
         return Collections.unmodifiableMap(observerArgs);
+    }
+
+    Set<String> getEnabledNotifiers() {
+        checkParsed();
+        return Collections.unmodifiableSet(enabledNotifiers);
     }
 
     List<String> getMasterWatchers() {

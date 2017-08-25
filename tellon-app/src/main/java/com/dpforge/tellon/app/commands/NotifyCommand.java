@@ -12,7 +12,12 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class NotifyCommand extends Command {
     private final NotifyArguments arguments = new NotifyArguments();
@@ -63,11 +68,21 @@ public class NotifyCommand extends Command {
         writer.println();
         t.printStackTrace(writer);
 
-        final String message = out.toString();
-        if (!message.isEmpty()) {
-            for (ProjectNotifier notifier : notifiers) {
-                notifier.reportError(masterWatchers, message);
-            }
+        reportError(out.toString(), notifiers);
+    }
+
+    private void reportError(final String message, final List<ProjectNotifier> notifiers) {
+        if (message.isEmpty()) {
+            return;
+        }
+
+        final List<String> masterWatchers = arguments.getMasterWatchers();
+        if (masterWatchers.isEmpty()) {
+            return;
+        }
+
+        for (ProjectNotifier notifier : notifiers) {
+            notifier.reportError(masterWatchers, message);
         }
     }
 
@@ -76,16 +91,41 @@ public class NotifyCommand extends Command {
         if (notifiers.isEmpty()) {
             throw new CommandExecutionException(Errors.BAD_CONFIG, "No project notifiers found");
         }
+
+        final Set<String> enabled = new HashSet<>(arguments.getEnabledNotifiers());
+        final List<ProjectNotifier> initialized = new ArrayList<>();
+        final Map<ProjectNotifier, ProjectNotifierException> failed = new HashMap<>();
+
         for (ProjectNotifier notifier : notifiers) {
-            try {
-                notifier.init();
-                tellon.addNotifier(notifier.getChangesNotifier());
-            } catch (ProjectNotifierException e) {
-                throw new CommandExecutionException(Errors.INIT_FAIL,
-                        "Fail to initialize project notifier " + notifier.getName(), e);
+            boolean needInit = enabled.isEmpty() || enabled.contains(notifier.getName());
+
+            if (needInit) {
+                try {
+                    notifier.init();
+                    initialized.add(notifier);
+                    tellon.addNotifier(notifier.getChangesNotifier());
+                } catch (ProjectNotifierException e) {
+                    failed.put(notifier, e);
+                }
+                enabled.remove(notifier.getName());
             }
         }
-        return notifiers;
+
+        if (initialized.isEmpty()) {
+            throw new CommandExecutionException(Errors.INIT_FAIL, "Neither of project notifiers has been initialized");
+        }
+
+        if (!failed.isEmpty()) {
+            reportError(getFailedNotifiersMessage(failed), initialized);
+            throw new CommandExecutionException(Errors.INIT_FAIL, "Project notifiers has not been initialized: " + getNames(failed));
+        }
+
+        if (!enabled.isEmpty()) {
+            reportError(getNotFoundNotifiersMessage(enabled), initialized);
+            throw new CommandExecutionException(Errors.INIT_FAIL, "Project notifiers has not been found: " + getNames(enabled));
+        }
+
+        return initialized;
     }
 
     private ProjectObserver initObserver(final CommandContext context) throws CommandExecutionException {
@@ -127,5 +167,51 @@ public class NotifyCommand extends Command {
             }
         }
         return null;
+    }
+
+    private static String getFailedNotifiersMessage(final Map<ProjectNotifier, ProjectNotifierException> failed) {
+        final StringWriter out = new StringWriter();
+        final PrintWriter writer = new PrintWriter(out);
+        writer.println("Following project notifiers has not been initialized:");
+        writer.println();
+        for (Map.Entry<ProjectNotifier, ProjectNotifierException> entry : failed.entrySet()) {
+            writer.println(entry.getKey().getName());
+            entry.getValue().printStackTrace(writer);
+            writer.println();
+        }
+        return out.toString();
+    }
+
+    private static String getNotFoundNotifiersMessage(final Set<String> names) {
+        final StringWriter out = new StringWriter();
+        final PrintWriter writer = new PrintWriter(out);
+        writer.println("Following project notifiers has not been found:");
+        for (String name : names) {
+            writer.print("- ");
+            writer.println(name);
+        }
+        return out.toString();
+    }
+
+    private static String getNames(final Map<ProjectNotifier, ProjectNotifierException> names) {
+        final StringBuilder builder = new StringBuilder();
+        for (ProjectNotifier notifier : names.keySet()) {
+            if (builder.length() > 0) {
+                builder.append(", ");
+            }
+            builder.append(notifier.getName());
+        }
+        return builder.toString();
+    }
+
+    private String getNames(final Set<String> names) {
+        final StringBuilder builder = new StringBuilder();
+        for (String notifier : names) {
+            if (builder.length() > 0) {
+                builder.append(", ");
+            }
+            builder.append(notifier);
+        }
+        return builder.toString();
     }
 }
