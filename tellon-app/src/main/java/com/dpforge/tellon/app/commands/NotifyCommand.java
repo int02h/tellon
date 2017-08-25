@@ -112,7 +112,9 @@ public class NotifyCommand extends Command {
         }
 
         if (initialized.isEmpty()) {
-            throw new CommandExecutionException(Errors.INIT_FAIL, "Neither of project notifiers has been initialized");
+            final String message = "Neither of project notifiers has been initialized";
+            reportError(message, initialized);
+            throw new CommandExecutionException(Errors.INIT_FAIL, message);
         }
 
         if (!failed.isEmpty()) {
