@@ -1,5 +1,7 @@
 package com.dpforge.tellon.core.notifier;
 
+import java.util.Collection;
+
 public interface ProjectNotifier {
     String getName();
 
@@ -7,7 +9,7 @@ public interface ProjectNotifier {
 
     void init() throws ProjectNotifierException;
 
-    void reportError(final String watcher, final String errorMessage);
+    void reportError(final Collection<String> watchers, final String errorMessage);
 
     ChangesNotifier getChangesNotifier();
 }

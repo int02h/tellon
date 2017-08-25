@@ -9,6 +9,7 @@ import org.simplejavamail.util.ConfigLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 public class MailNotifier implements ProjectNotifier {
 
@@ -41,7 +42,18 @@ public class MailNotifier implements ProjectNotifier {
     }
 
     @Override
-    public void reportError(String watcher, String errorMessage) {
+    public void reportError(Collection<String> watchers, String errorMessage) {
+        for (String watcher : watchers) {
+            reportError(watcher, errorMessage);
+        }
+    }
+
+    @Override
+    public ChangesNotifier getChangesNotifier() {
+        return changesNotifier;
+    }
+
+    private void reportError(final String watcher, final String errorMessage) {
         if (!watcher.startsWith(PREFIX)) {
             return;
         }
@@ -54,10 +66,5 @@ public class MailNotifier implements ProjectNotifier {
                 .text(errorMessage)
                 .to(email);
         mailer.sendMail(emailBuilder.build(), false);
-    }
-
-    @Override
-    public ChangesNotifier getChangesNotifier() {
-        return changesNotifier;
     }
 }

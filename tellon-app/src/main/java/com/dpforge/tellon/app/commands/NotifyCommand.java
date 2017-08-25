@@ -52,8 +52,8 @@ public class NotifyCommand extends Command {
     }
 
     private void reportError(final Throwable t, final List<ProjectNotifier> notifiers) {
-        final String masterWatcher = arguments.getMasterWatcher();
-        if (masterWatcher == null || masterWatcher.isEmpty()) {
+        final List<String> masterWatchers = arguments.getMasterWatchers();
+        if (masterWatchers.isEmpty()) {
             return;
         }
 
@@ -66,7 +66,7 @@ public class NotifyCommand extends Command {
         final String message = out.toString();
         if (!message.isEmpty()) {
             for (ProjectNotifier notifier : notifiers) {
-                notifier.reportError(masterWatcher, message);
+                notifier.reportError(masterWatchers, message);
             }
         }
     }
