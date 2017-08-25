@@ -2,17 +2,17 @@ package com.dpforge.tellon.app.commands;
 
 import com.dpforge.tellon.app.Errors;
 import com.dpforge.tellon.core.Tellon;
-import com.dpforge.tellon.core.notifier.ProjectNotifierException;
 import com.dpforge.tellon.core.notifier.ProjectNotifier;
+import com.dpforge.tellon.core.notifier.ProjectNotifierException;
 import com.dpforge.tellon.core.observer.ProjectObserver;
 import com.dpforge.tellon.core.observer.ProjectObserverException;
 import org.apache.commons.cli.ParseException;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -42,17 +42,15 @@ public class NotifyCommand extends Command {
 
     @Override
     public void execute(final CommandContext context) throws CommandExecutionException {
-        final Tellon tellon = new Tellon();
-        final List<ProjectNotifier> notifiers = initNotifiers(context, tellon);
+        List<ProjectNotifier> notifiers = Collections.emptyList();
 
         try {
+            final Tellon tellon = new Tellon();
+            notifiers = initNotifiers(context, tellon);
             tellon.process(initObserver(context));
-        } catch (IOException e) {
+        } catch (Throwable e) {
             reportError(e, notifiers);
             throw new CommandExecutionException(Errors.EXECUTION_FAIL, "Fail to notify", e);
-        } catch (CommandExecutionException e) {
-            reportError(e, notifiers);
-            throw e;
         }
     }
 
