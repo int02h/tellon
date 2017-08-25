@@ -19,8 +19,8 @@ class NotifyArguments {
     private static final String PROJECT_OBSERVER_NAME_SHORT = "o";
     private static final String PROJECT_OBSERVER_NAME_DESCRIPTION = "Name of project observer to use (if you have multiple)";
 
-    private static final String MASTER_WATCHER = "master";
-    private static final String MASTER_WATCHER_DESCRIPTION = "Master watcher that will be notified when the error occurs in Tellon";
+    private static final String MASTER_WATCHERS = "masters";
+    private static final String MASTER_WATCHERS_DESCRIPTION = "Master watchers that will be notified when the error occurs in Tellon";
 
     private static final int LEFT_PAD = 2;
     private static final int DESC_PAD = 4;
@@ -45,7 +45,7 @@ class NotifyArguments {
         }
 
         masterWatchers.clear();
-        final String[] watchers = cmd.getOptionValues(MASTER_WATCHER);
+        final String[] watchers = cmd.getOptionValues(MASTER_WATCHERS);
         if (watchers != null) {
             Collections.addAll(masterWatchers, watchers);
         }
@@ -66,8 +66,8 @@ class NotifyArguments {
                 .build());
 
         options.addOption(Option.builder()
-                .longOpt(MASTER_WATCHER)
-                .desc(MASTER_WATCHER_DESCRIPTION)
+                .longOpt(MASTER_WATCHERS)
+                .desc(MASTER_WATCHERS_DESCRIPTION)
                 .build());
     }
 
