@@ -7,3 +7,4 @@
 /out
 mail-notifier.properties
 /.gradle
+*.iml
