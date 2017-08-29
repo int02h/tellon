@@ -2,6 +2,7 @@
 /tellon-annotations/build
 /tellon-core/build
 /git-project-observer/build
+/log-notifier/build/
 /mail-notifier/build/
 /.idea
 /out

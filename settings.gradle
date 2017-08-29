@@ -2,6 +2,7 @@ rootProject.name = 'tellon'
 include 'tellon-core'
 include 'tellon-annotations'
 include 'mail-notifier'
+include 'log-notifier'
 include 'git-project-observer'
 include 'tellon-app'
 
