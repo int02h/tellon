@@ -91,11 +91,12 @@ public class NotifyCommand extends Command {
         }
 
         final Set<String> enabled = new HashSet<>(arguments.getEnabledNotifiers());
+        boolean useAllNotifiers = enabled.isEmpty();
         final List<ProjectNotifier> initialized = new ArrayList<>();
         final Map<ProjectNotifier, ProjectNotifierException> failed = new HashMap<>();
 
         for (ProjectNotifier notifier : notifiers) {
-            boolean needInit = enabled.isEmpty() || enabled.contains(notifier.getName());
+            boolean needInit = useAllNotifiers || enabled.contains(notifier.getName());
 
             if (needInit) {
                 try {
