@@ -43,3 +43,6 @@ shadowJar {
 
     classifier = null
 }
+
+tasks.remove jar
+task jar(dependsOn: shadowJar)
