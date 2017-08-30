@@ -17,8 +17,9 @@ dependencies {
 
     compile project(':tellon-annotations')
     compile project(':tellon-core')
-    compile project(':git-project-observer')
-    compile project(':mail-notifier')
+    compile project(':observers:git-project-observer')
+    compile project(':notifiers:mail-notifier')
+    compile project(':notifiers:log-notifier')
 
     compile group: 'commons-cli', name: 'commons-cli', version: '1.3.1'
 }

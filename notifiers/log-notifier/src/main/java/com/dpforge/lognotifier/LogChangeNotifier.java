@@ -43,7 +43,7 @@ public class LogChangeNotifier implements ChangesNotifier {
             return;
         }
         String watchers = String.join(" ", filteredWatchers);
-        String lines = (block.getStartPosition().getLine() + 1) + ".." + (block.getEndPosition().getLine() + 1);
+        String lines = (block.getStartPosition().getLine() + 1) + "" + (block.getEndPosition().getLine() + 1);
         String message = suffix + ": " + item.getDescription() + ": " + lines + ": " + block.getName();
         logger.log(watchers + ": " + message);
     }

@@ -1,9 +1,9 @@
 /tellon-app/build
 /tellon-annotations/build
 /tellon-core/build
-/git-project-observer/build
-/log-notifier/build/
-/mail-notifier/build/
+/observers/git-project-observer/build
+/notifiers/log-notifier/build/
+/notifiers/mail-notifier/build/
 /.idea
 /out
 mail-notifier.properties
