@@ -16,16 +16,13 @@ import java.util.ServiceLoader;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        final String commandName;
         if (args.length == 0) {
-            commandName = "help";
-        } else {
-            commandName = args[0];
+            args = new String[]{"help"};
         }
 
-        args = Arrays.copyOfRange(args, 1, args.length);
-
         try {
+            final String commandName = args[0];
+            args = Arrays.copyOfRange(args, 1, args.length);
             executeCommand(commandName, args);
         } catch (Throwable t) {
             t.printStackTrace(System.err);
