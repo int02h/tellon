@@ -4,7 +4,6 @@ import com.dpforge.tellon.core.notifier.ChangesNotifier;
 import com.dpforge.tellon.core.observer.*;
 import com.dpforge.tellon.core.parser.SourceCode;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -152,7 +151,7 @@ public class TellonTest {
 
         @Override
         public SourceCode getSourceCode(String qualifiedName) throws IOException {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
     }
 
