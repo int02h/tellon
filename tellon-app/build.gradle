@@ -1,7 +1,17 @@
 group 'com.dpforge'
 version '1.0.6'
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
 apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
     mavenCentral()
@@ -24,14 +34,12 @@ dependencies {
     compile group: 'commons-cli', name: 'commons-cli', version: '1.3.1'
 }
 
-jar {
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it).matching { excludes = [ 'META-INF/*.RSA', 'META-INF/*.SF' ] }
-        }
-    }
+shadowJar {
+    mergeServiceFiles()
 
     manifest {
         attributes 'Main-Class': 'com.dpforge.tellon.app.Main'
     }
+
+    classifier = null
 }
