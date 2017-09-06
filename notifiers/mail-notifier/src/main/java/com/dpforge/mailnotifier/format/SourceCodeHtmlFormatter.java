@@ -4,7 +4,6 @@ import com.dpforge.mailnotifier.FileUtils;
 import com.dpforge.tellon.core.parser.AnnotatedBlock;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,15 +40,7 @@ public class SourceCodeHtmlFormatter {
     }
 
     public static SourceCodeHtmlFormatter create() throws IOException {
-        final URL resource = SourceCodeHtmlFormatter.class
-                .getClassLoader()
-                .getResource(RESOURCE_NAME);
-
-        if (resource == null) {
-            throw new IOException("Could not find resource " + RESOURCE_NAME);
-        }
-
-        final String pattern = FileUtils.readFile(resource.getFile());
+        final String pattern = FileUtils.readResource(RESOURCE_NAME);
         return new SourceCodeHtmlFormatter(pattern);
     }
 
