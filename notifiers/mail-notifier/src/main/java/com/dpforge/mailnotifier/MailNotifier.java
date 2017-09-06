@@ -31,7 +31,9 @@ public class MailNotifier implements ProjectNotifier {
 
     @Override
     public void init() throws ProjectNotifierException {
-        ConfigLoader.loadProperties(new File(".", "mail-notifier.properties"), false);
+        File codeLocation = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+        File propertyFile = new File(codeLocation.getParentFile(), "mail-notifier.properties");
+        ConfigLoader.loadProperties(propertyFile, false);
         mailer = new Mailer();
 
         try {
